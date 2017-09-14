@@ -1,4 +1,4 @@
-
+const webpack = require('webpack');
 const getPlugins = () => {
     const plugins = [
         new webpack.optimize.CommonsChunkPlugin({
