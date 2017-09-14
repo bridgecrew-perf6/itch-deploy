@@ -1,0 +1,9 @@
+{
+  "name": "dev-seguimiento-residencias",
+  "version": "1.0.0",
+  "description": "Sistema web de seguimiento de residencias en el ITCH",
+  "main": "server.js",
+  "repository": "https://00fblanco@bitbucket.org/00fblanco/dev-seguimiento-residencias.git",
+  "author": "Francisco Blanco Romero, email: 00fblanco@gmail.com",
+  "license": "MIT"
+}
