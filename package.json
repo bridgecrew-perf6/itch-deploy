@@ -20,12 +20,23 @@
   },
   "dependencies": {
     "antd": "^2.13.1",
+    "bcrypt-nodejs": "^0.0.3",
+    "body-parser": "^1.18.1",
+    "cookie-parser": "^1.4.3",
     "express": "^4.15.4",
+    "express-session": "^1.15.5",
+    "method-override": "^2.3.9",
+    "morgan": "^1.8.2",
+    "mysql2": "^1.4.2",
+    "passport": "^0.4.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "sequelize": "^4.8.3"
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
+    "sequelize": "^4.8.3",
+    "superagent": "^3.6.0"
   },
-  "scripts":{
+  "scripts": {
     "start": "nodemon server.js",
     "dev": "concurrently \"nodemon server.js\" \"webpack -w\""
   }

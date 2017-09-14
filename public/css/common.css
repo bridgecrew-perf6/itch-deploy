@@ -1,0 +1,11 @@
+full-height{
+    height: 100%;
+}
+html, body, #app, #app>div {
+    height: 100%;
+    background: #fafbfc;
+}
+
+border-radius{
+    border-radius: 25px;
+}
