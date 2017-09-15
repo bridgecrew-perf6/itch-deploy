@@ -1,21 +1,44 @@
 // Dependencies
 import React, {Component} from 'react';
-import { Form, Icon, Input, Button, Checkbox } from 'antd';
+import { Form, Icon, Input, Button, Checkbox, message, Alert} from 'antd';
 const FormItem = Form.Item;
 // api
 import request from 'superagent';
 
 class FormLogin extends Component{
+    constructor(){
+        super();
+        this.state = {
+            getErrorMessage: <div></div>
+        }
+    }
     handleSubmit = (e) => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
+        const {correo, contrasenia} = values;
           if (!err) {
               request
-                .post('/users')
-                .send({values})
+                .post('/usuario/auth')
+                .send({correo, contrasenia})
                 .end((err, res)=>{
-                    alert(err + res.statusCode);
-                    console.log("culooo", res);
+                    if(res.status === 401){
+                        // error de autenticación
+                        //message.error(res.body.message);
+                        this.setState({
+                            getErrorMessage: <Alert
+                                                message="Error"
+                                                description={res.body.message}
+                                                type="error"
+                                                showIcon
+                                                closable
+                                            />
+                            
+                        })
+                    }
+                    if (res.status === 200){
+                        // autenticado redirigir
+                        alert(res.body.message)
+                    }
                 });
             console.log('Received values of form: ', values);
           }
@@ -26,22 +49,23 @@ class FormLogin extends Component{
         return(
             <Form onSubmit={this.handleSubmit} className="login-form">
                 <FormItem>
-                    {getFieldDecorator('username', {
-                        rules: [{required: true, message: 'Debe de ingresar su nombre de usuario.'}]
+                    {getFieldDecorator('correo', {
+                        rules: [{type: 'email',message: 'El email no es correcto'},{required: true, message: 'Necesita su correo para autentificarse en el sistema.'}]
                     })(
-                        <Input prefix={<Icon type="user" style={{fontSize: 13}} />} placeholder="Username" />
+                        <Input prefix={<Icon type="user" style={{fontSize: 13}} />} type="email" placeholder="Ingrese su correo electronico" />
                     )}
                 </FormItem>
                 <FormItem>
-                    {getFieldDecorator('password', {
-                        rules: [{ required: true, message: 'Favor de ingresar su contraseña' }],
+                    {getFieldDecorator('contrasenia', {
+                        rules: [{ required: true, message: 'Necesita su contraseña para autentificarse en el sistema.' }],
                     })(
                         <Input prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" placeholder="Password" />
                     )}
                 </FormItem> 
-                <Button type="primary" htmlType="submit" style={{maxWidth:100}}>
+                <Button icon="unlock" type="primary" htmlType="submit" style={{maxWidth:100, marginTop: 20, marginBottom: 20}}>
                     Ingresar
                 </Button>
+                {this.state.getErrorMessage}
             </Form>
         )
     }

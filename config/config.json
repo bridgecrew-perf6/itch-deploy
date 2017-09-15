@@ -2,7 +2,7 @@
     "PORT": 3000,
     "db": {
         "host": "localhost",
-        "username": "fblanco",
+        "username": "root",
         "password": "123456",
         "database": "test_residencia"
     }

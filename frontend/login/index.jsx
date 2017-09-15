@@ -6,8 +6,6 @@ const {Content, Header} = Layout;
 import { Form, Icon, Input, Button, Checkbox } from 'antd';
 const FormItem = Form.Item;
 
-
-
 // Componentes
 import WrappedLoginForm from './components/FormLogin.jsx';
 
@@ -17,12 +15,17 @@ export default class Login extends Component{
             <div>
                 <Row type="flex" justify="center" align="middle" style={{height: '100%'}}>
                     <Col lg={16} xs={22} >
-                        <Card style={{padding:0, borderBottomRightRadius: 7, borderBottomLeftRadius: 7, borderTopLeftRadius: 7, borderTopRightRadius: 7}}>
-                            <Row type="flex" justify="left" align="top" style={{ padding: 0}} className="full-height">
-                                <Col span={12} style={{backgroundColor: '#4da1ff'}}>
-                                    <h2 style={{marginBottom: 10, color: 'white', fontStyle:'Bold', justifyContent: 'center'}}> Sistema de seguimiento de residencias del Instituto Tecnológico de Chilpancingo </h2>
+                        <Card style={{borderBottomRightRadius: 7, borderBottomLeftRadius: 7, borderTopLeftRadius: 7, borderTopRightRadius: 7, paddingTop: 25, paddingBottom: 25}}>
+                            <Row type="flex" justify="center" align="middle">
+                                <Col lg={12} xs={22} style={{paddingLeft: 20, paddingRight: 20}}>
+                                    <Row className="custom-image" type="flex" justify="center">
+                                        <img src="/img/tec_logo.png" alt="logo_tec" width="30%" />
+                                    </Row>
+                                    <h2 style={{marginTop: 20, marginBottom: 20,textAlign: 'center', color: "#505962"}} className="color-font"> SSRITCH v1 </h2>
+                                    <p style={{textAlign: 'center'}}>Sistema de seguimiento de residencias del Instituto Tecnológico de Chilpancingo</p>
                                 </Col>
-                                <Col span={12}>
+                                <Col lg={12} xs={22} className="col-login" style={{marginTop: 20}}>
+                                    <h1 style={{color: "#1f90e6", marginBottom: 20}} >Autenticación de usuario</h1>
                                     <WrappedLoginForm/>
                                 </Col>
                             </Row>

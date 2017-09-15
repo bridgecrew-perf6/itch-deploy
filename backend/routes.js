@@ -1,12 +1,33 @@
 
 // Controllers
+const usuarioCTRL = require('./controllers/UsuarioCTRL');
+const departamentoCTRL = require('./controllers/DepartamentoCTRL');
+module.exports =  (app, express, passport) => {
+   
+    const router = express.Router();
+    // USUARIO
+    router.post('/usuario/auth/', passport.authenticate('local-login',
+        {
+            successRedirect: '/usuario/auth/',
+            failureRedirect: '/usuario/auth/'
+        }
+    ))
+    router.get('/usuario/auth', usuarioCTRL.authRedirect);
 
-module.exports =  (app, express, passport, db) => {
+    // DEPARTAMENTO
+    router.route('/departamento')
+        .get(departamentoCTRL.findAll)
 
-    app.post('/users/', (req, res)=> {
-        console.log('llego -> '+req.body.values.username);
-        res.status(200).json({res: 'yeah'});
-    })
+
+    app.use('/api',router);
+
+     // Redirect trafict to react app
+     app.get('*', (req, res) => {
+        res.render('index');
+    });
+
+    
+
     function isLoggedIn(req, res, next){
         if(req.isAuthenticated())
             return next()
