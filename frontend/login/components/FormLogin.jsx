@@ -18,7 +18,7 @@ class FormLogin extends Component{
         const {correo, contrasenia} = values;
           if (!err) {
               request
-                .post('/usuario/auth')
+                .post('/api/usuario/auth')
                 .send({correo, contrasenia})
                 .end((err, res)=>{
                     if(res.status === 401){
@@ -62,7 +62,7 @@ class FormLogin extends Component{
                         <Input prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" placeholder="Password" />
                     )}
                 </FormItem> 
-                <Button icon="unlock" type="primary" htmlType="submit" style={{maxWidth:100, marginTop: 20, marginBottom: 20}}>
+                <Button icon="login" type="primary" htmlType="submit" style={{maxWidth:100, marginTop: 20, marginBottom: 20}}>
                     Ingresar
                 </Button>
                 {this.state.getErrorMessage}

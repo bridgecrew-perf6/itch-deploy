@@ -1,13 +1,86 @@
 // Dependencies
 import React, {Component} from 'react';
 import {render} from 'react-dom';
-import {Row, Col, Card, Layout} from 'antd';
+import {Row, Col, Card, Layout, Button, Table, Modal} from 'antd';
 const {Content, Header} = Layout;
+const { Column, ColumnGroup } = Table;
+
+
+// Components
+import FormDepartamento from './components/FormDepartamento.jsx';
 
 class Departamento extends Component{
+   constructor(){
+       super();
+       this.state = {
+            data: [
+                {
+                    key: '1',
+                    id: 1,
+                    nombre: 'Sistemas y computación',
+                    jefe_departamento: 'Jose Angel Nava',
+                    acciones: 'alv'
+                },
+                
+            ],
+            visible: false
+       }
+       
+   }
+   showModal = () => {
+       this.setState({
+           visible: true
+       })
+   }
     render(){
+        const { visible, data } = this.state;
         return(
-            <h1> Departamento </h1>
+            <div>
+                <Row type="flex" justify="left" align="middle">
+                    <Col style={{marginRight: 20}}>
+                        <h1> Departamento </h1>
+                    </Col>
+                    <Col>
+                        <Button type="primary" icon="plus" onClick={this.showModal}>Agregar</Button>
+                    </Col>
+                </Row>
+                <Row type="flex" justify="center" align="middle" style={{marginTop: 30}}>
+                    <Table dataSource={data} className="full-width">
+                        <Column 
+                            title="ID"
+                            dataIndex="id"
+                            key="id"
+                            className="center-text"
+                        />
+                        <Column 
+                            title="Nombre"
+                            dataIndex="nombre"
+                            key="nombre"
+                            className="center-text"
+                        />
+                        <Column 
+                            title="Jefe de departamento"
+                            dataIndex="jefe_departamento"
+                            key="jefe_departamento"
+                            className="center-text"
+                        />
+                        <Column 
+                            title="Acciones"
+                            key="acciones"
+                            render={(text, record) => (
+                                <span>
+                                    {/* {record.id} */}
+                                    <Button icon="edit" > Cambiar jefe de departamento </Button>
+                                </span>
+                            )}
+                            className="center-text"
+                        />
+                    </Table>
+                </Row>
+                <FormDepartamento visible={visible}/>
+                                
+            </div>
+            
         )
     }
 }

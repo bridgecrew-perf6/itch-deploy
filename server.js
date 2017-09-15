@@ -37,7 +37,7 @@ require('./config/passport/passport')(passport);
 require('./backend/routes')(app, express, passport);
 
 // sync db
-db.sync();
+// db.sync();
 app.listen(config.PORT, () => {
     console.log(`servidor levantado en el puerto ${config.PORT}` );
 })

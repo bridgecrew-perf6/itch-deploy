@@ -8,11 +8,12 @@ module.exports =  (app, express, passport) => {
     // USUARIO
     router.post('/usuario/auth/', passport.authenticate('local-login',
         {
-            successRedirect: '/usuario/auth/',
-            failureRedirect: '/usuario/auth/'
+            successRedirect: '/api/usuario/auth',
+            failureRedirect: '/api/usuario/auth'
         }
     ))
     router.get('/usuario/auth', usuarioCTRL.authRedirect);
+    router.get('/usuario/isAuth', usuarioCTRL.isAuth);
 
     // DEPARTAMENTO
     router.route('/departamento')

@@ -6,6 +6,8 @@ import { Layout, Menu, Breadcrumb, Icon } from 'antd';
 const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
 
+import request from 'superagent';
+
 class LayoutAdmin extends Component{
     state = {
         collapsed: false
@@ -17,6 +19,13 @@ class LayoutAdmin extends Component{
     }
     static propTypes = {
         children: PropTypes.object.isRequired
+    }
+    componentDidMount() {
+        request('/api/usuario/isAuth')
+            .end((err, res)=>{
+                alert(res.body.auth);
+                console.warn('api', res)
+            })
     }
     render(){
         const {children} = this.props
@@ -52,25 +61,19 @@ class LayoutAdmin extends Component{
                 </Sider>
                 <Layout>
                     <Header style={{background: '#fff', padding: 0}}>
-                    <Icon
-                        className="trigger"
-                        type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-                        onClick={this.toggle}
-                    />
+                        <Icon
+                            className="trigger"
+                            type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
+                            onClick={this.toggle}
+                        />
+                        
                     </Header>
                     <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
-                    <Breadcrumb style={{ margin: '12px 0' }}>
-                        <Breadcrumb.Item>User</Breadcrumb.Item>
-                        <Breadcrumb.Item>Bill</Breadcrumb.Item>
-                    </Breadcrumb>
-                    <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
-                        Bill is a cat.
                         {children}
-                    </div>
-                    <Footer style={{ textAlign: 'center' }}>
-                        Ant Design ©2016 Created by Ant UED
-                    </Footer>
                     </Content>
+                    <Footer style={{ textAlign: 'center' }}>
+                        Sistema de Seguimiento de residencias del ITCH ©2017 Creado por Francisco Blanco 00fblanco@gmail.com
+                    </Footer>
                 </Layout>
                 
             </Layout>
