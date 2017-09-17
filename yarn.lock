@@ -282,6 +282,13 @@ aws4@^1.2.1:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.6.0.tgz#83ef5ca860b2b32e4a0deedee8c771b9db57471e"
 
+axios@^0.16.2:
+  version "0.16.2"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.16.2.tgz#ba4f92f17167dfbab40983785454b9ac149c3c6d"
+  dependencies:
+    follow-redirects "^1.2.3"
+    is-buffer "^1.1.5"
+
 babel-code-frame@^6.11.0, babel-code-frame@^6.26.0:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-code-frame/-/babel-code-frame-6.26.0.tgz#63fd43f7dc1e3bb7ce35947db8fe369a3f58c74b"
@@ -820,6 +827,12 @@ babel-plugin-transform-regenerator@^6.24.1:
   resolved "https://registry.yarnpkg.com/babel-plugin-transform-regenerator/-/babel-plugin-transform-regenerator-6.26.0.tgz#e0703696fbde27f0a3efcacf8b4dca2f7b3a8f2f"
   dependencies:
     regenerator-transform "^0.10.0"
+
+babel-plugin-transform-runtime@^6.23.0:
+  version "6.23.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-transform-runtime/-/babel-plugin-transform-runtime-6.23.0.tgz#88490d446502ea9b8e7efb0fe09ec4d99479b1ee"
+  dependencies:
+    babel-runtime "^6.22.0"
 
 babel-plugin-transform-strict-mode@^6.24.1:
   version "6.24.1"
@@ -1424,7 +1437,7 @@ cookie-signature@1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/cookie-signature/-/cookie-signature-1.0.6.tgz#e303a882b342cc3ee8ca513a79999734dab3ae2c"
 
-cookie@0.3.1:
+cookie@0.3.1, cookie@^0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.3.1.tgz#e7e0a1f9ef43b4c8ba925c5c5a96e806d16873bb"
 
@@ -1618,7 +1631,7 @@ date-now@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
 
-debug@2.6.8, debug@^2.2.0, debug@^2.6.0, debug@^2.6.8:
+debug@2.6.8, debug@^2.2.0, debug@^2.4.5, debug@^2.6.0, debug@^2.6.8:
   version "2.6.8"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.8.tgz#e731531ca2ede27d188222427da17821d68ff4fc"
   dependencies:
@@ -2082,6 +2095,12 @@ flatten@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/flatten/-/flatten-1.0.2.tgz#dae46a9d78fbe25292258cc1e780a41d95c03782"
 
+follow-redirects@^1.2.3:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.2.4.tgz#355e8f4d16876b43f577b0d5ce2668b9723214ea"
+  dependencies:
+    debug "^2.4.5"
+
 for-each@~0.3.2:
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/for-each/-/for-each-0.3.2.tgz#2c40450b9348e97f281322593ba96704b9abd4d4"
@@ -2333,7 +2352,7 @@ hoek@2.x.x:
   version "2.16.3"
   resolved "https://registry.yarnpkg.com/hoek/-/hoek-2.16.3.tgz#20bb7403d3cea398e91dc4710a8ff1b8274a25ed"
 
-hoist-non-react-statics@1.x:
+hoist-non-react-statics@1.x, hoist-non-react-statics@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-1.2.0.tgz#aa448cf0986d55cc40773b17174b7dd066cb7cfb"
 
@@ -2756,6 +2775,10 @@ loader-utils@^1.0.2, loader-utils@^1.1.0:
     big.js "^3.1.3"
     emojis-list "^2.0.0"
     json5 "^0.5.0"
+
+loaders.css@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/loaders.css/-/loaders.css-0.1.2.tgz#3a9fb43726c73334a38142af9d0629019b658743"
 
 locate-path@^2.0.0:
   version "2.0.0"
@@ -3602,7 +3625,7 @@ promise@^7.0.1, promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@15.x, prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.6, prop-types@^15.5.7, prop-types@^15.5.8, prop-types@^15.5.9:
+prop-types@15.x, prop-types@^15.0.0, prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.6, prop-types@^15.5.7, prop-types@^15.5.8, prop-types@^15.5.9:
   version "15.5.10"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.5.10.tgz#2797dfc3126182e3a95e3dfbb2e893ddd7456154"
   dependencies:
@@ -4130,6 +4153,14 @@ rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-cookie@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/react-cookie/-/react-cookie-2.1.1.tgz#3fd55cdcfe72350858b46e2709dba1dd60475e10"
+  dependencies:
+    hoist-non-react-statics "^1.2.0"
+    prop-types "^15.0.0"
+    universal-cookie "^2.1.0"
+
 react-dom@^15.6.1:
   version "15.6.1"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-15.6.1.tgz#2cb0ed4191038e53c209eb3a79a23e2a4cf99470"
@@ -4147,6 +4178,14 @@ react-lazy-load@^3.0.10:
     lodash.debounce "^4.0.0"
     lodash.throttle "^4.0.0"
     prop-types "^15.5.8"
+
+react-loaders@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/react-loaders/-/react-loaders-2.5.0.tgz#fb23e9545995a403f8214e893037549aae5088c8"
+  dependencies:
+    classnames "^2.2.3"
+    prop-types "^15.5.8"
+    react "^15.4.2"
 
 react-router-dom@^4.2.2:
   version "4.2.2"
@@ -4183,7 +4222,7 @@ react-slick@~0.15.0:
     object-assign "^4.1.0"
     slick-carousel "^1.6.0"
 
-react@^15.6.1:
+react@^15.4.2, react@^15.6.1:
   version "15.6.1"
   resolved "https://registry.yarnpkg.com/react/-/react-15.6.1.tgz#baa8434ec6780bde997cdc380b79cd33b96393df"
   dependencies:
@@ -4929,6 +4968,13 @@ uniqid@^4.0.0:
 uniqs@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/uniqs/-/uniqs-2.0.0.tgz#ffede4b36b25290696e6e165d4a59edb998e6b02"
+
+universal-cookie@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/universal-cookie/-/universal-cookie-2.1.0.tgz#2e9aa6b4eb992e34161693c943ba42b1931f6976"
+  dependencies:
+    cookie "^0.3.1"
+    object-assign "^4.1.0"
 
 unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"

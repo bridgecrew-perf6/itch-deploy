@@ -2,6 +2,7 @@
 import React, {Component} from 'react';
 import { Form, Icon, Input, Button, Checkbox, message, Alert} from 'antd';
 const FormItem = Form.Item;
+import {Redirect} from 'react-router-dom';
 // api
 import request from 'superagent';
 
@@ -9,7 +10,7 @@ class FormLogin extends Component{
     constructor(){
         super();
         this.state = {
-            getErrorMessage: <div></div>
+            successAuth: <div/>
         }
     }
     handleSubmit = (e) => {
@@ -21,13 +22,18 @@ class FormLogin extends Component{
                 .post('/api/usuario/auth')
                 .send({correo, contrasenia})
                 .end((err, res)=>{
-                    if(res.status === 401){
-                        // error de autenticación
-                        //message.error(res.body.message);
+                    console.log(res)
+                    if(res.status === 200 && res.body.isAuth === true){
+                        // autenticado redirigir
                         this.setState({
-                            getErrorMessage: <Alert
+                            successAuth : <Redirect to="/departamento"  />
+                        })
+                    }else{
+                        // error en la autenticación
+                        this.setState({
+                            successAuth: <Alert
                                                 message="Error"
-                                                description={res.body.message}
+                                                description="Error en la autenticación"
                                                 type="error"
                                                 showIcon
                                                 closable
@@ -35,12 +41,9 @@ class FormLogin extends Component{
                             
                         })
                     }
-                    if (res.status === 200){
-                        // autenticado redirigir
-                        alert(res.body.message)
-                    }
+                    
                 });
-            console.log('Received values of form: ', values);
+            // console.log('Received values of form: ', values);
           }
         });
       }
@@ -65,7 +68,7 @@ class FormLogin extends Component{
                 <Button icon="login" type="primary" htmlType="submit" style={{maxWidth:100, marginTop: 20, marginBottom: 20}}>
                     Ingresar
                 </Button>
-                {this.state.getErrorMessage}
+                {this.state.successAuth}
             </Form>
         )
     }

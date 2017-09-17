@@ -30,7 +30,7 @@ app.use(express.static(__dirname + '/public'));
 app.use(session({secret: '%$itch12$%', resave: true, saveUninitialized: true}));
 app.use(passport.initialize());
 app.use(passport.session());
-const Usuario = require('./backend/models/Usuario');
+
 require('./config/passport/passport')(passport);
 
 // ROUTES
@@ -38,6 +38,7 @@ require('./backend/routes')(app, express, passport);
 
 // sync db
 // db.sync();
+
 app.listen(config.PORT, () => {
     console.log(`servidor levantado en el puerto ${config.PORT}` );
 })

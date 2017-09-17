@@ -6,3 +6,8 @@
         ["import", { "libraryName": "antd", "style": "css" }]
       ]
 }
+
+// ["transform-runtime", {
+        //     "polyfill": false,
+        //     "regenerator": true
+        //   }]

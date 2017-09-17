@@ -8,7 +8,7 @@ module.exports = (passport) =>{
     });
 	passport.deserializeUser((id, done) => {
         Usuario.findById(id).then(usuario => {
-            done(null, usuario)
+            done(null, {id: usuario.id, isAdmin: usuario.isAdmin})
         })
     });
     passport.use('local-login', new LocalStrategy({

@@ -12,7 +12,7 @@ const getPlugins = () => {
             compress: {
                 screw_ie8: true,
                 warnings: false
-            }
+            }, comments: false
         })
     );
   return plugins;

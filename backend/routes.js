@@ -6,13 +6,13 @@ module.exports =  (app, express, passport) => {
    
     const router = express.Router();
     // USUARIO
-    router.post('/usuario/auth/', passport.authenticate('local-login',
+    router.post('/usuario/auth', passport.authenticate('local-login',
         {
-            successRedirect: '/api/usuario/auth',
-            failureRedirect: '/api/usuario/auth'
+            successRedirect: '/api/usuario/isAuth',
+            failureRedirect: '/api/usuario/isAuth'
         }
     ))
-    router.get('/usuario/auth', usuarioCTRL.authRedirect);
+
     router.get('/usuario/isAuth', usuarioCTRL.isAuth);
 
     // DEPARTAMENTO

@@ -8,24 +8,19 @@ var generateHash = (contrasenia) => {
 }
 
 const Usuario = db.define('usuario', {
-    id: {
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
-    },
     correo: {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true,
         validate: {
-            isEmail: true,
-            notEmpty: true
+            isEmail: {msg: 'Debe tener un formato de email.'},
+            notEmpty: {msg: 'El campo no debe estar vacio'}
         }
     },
     contrasenia: {
         type: Sequelize.STRING,
         validate: {
-            notEmpty: true
+            notEmpty: {msg: 'El campo no debe estar vacio'}
         }
     },
     isAdmin: {
