@@ -1,10 +1,17 @@
 {
-    "PORT": 3000,
-    "db": {
-        "host": "localhost",
-        "username": "root",
-        "password": "123456",
-        "database": "test_residencia"
-    }
-    
+  "PORT": 3000,
+  "development": {
+    "username": "root",
+    "password": "123456",
+    "database":  "test_residencia",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": "123456",
+    "database": "test_residencia",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
 }

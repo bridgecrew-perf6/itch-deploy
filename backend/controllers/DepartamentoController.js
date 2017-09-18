@@ -1,4 +1,4 @@
-const Departamento = require('../models/Departamento');
+const Departamento = require('../models').Departamento;
 
 module.exports.findAll = (req, res) => {
     Departamento.findAll()

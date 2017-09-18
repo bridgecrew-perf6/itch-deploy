@@ -1,21 +1,20 @@
-// DATABASE
-const db = require('../../config/sequelize');
-const Sequelize = require('sequelize');
-
-const Carrera = db.define('carrera', {
+'use strict';
+module.exports = (sequelize, DataTypes) => {
+  const Carrera = sequelize.define('Carrera', {
     nombre: {
-        type: Sequelize.STRING,
-        unique: true,
+        type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
         validate: {
             notEmpty: {msg: 'El campo no debe estar vacio'}
         }
     }
-});
-
-// db.sync();
-const Departamento = require('./Departamento');
-// Carrera.belongsTo(Departamento);
-
-
-module.exports = Carrera;
+  });
+  Carrera.associate = (models) => {
+    Carrera.belongsTo(models.Departamento, {
+      foreignKey: 'departamentoId',
+      onDelete: 'CASCADE'
+    });
+  }
+  return Carrera;
+};

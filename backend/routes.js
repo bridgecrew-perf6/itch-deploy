@@ -1,7 +1,7 @@
 
 // Controllers
-const usuarioCTRL = require('./controllers/UsuarioCTRL');
-const departamentoCTRL = require('./controllers/DepartamentoCTRL');
+const usuarioController = require('./controllers/UsuarioController');
+const departamentoController = require('./controllers/DepartamentoController');
 module.exports =  (app, express, passport) => {
    
     const router = express.Router();
@@ -13,11 +13,11 @@ module.exports =  (app, express, passport) => {
         }
     ))
 
-    router.get('/usuario/isAuth', usuarioCTRL.isAuth);
+    router.get('/usuario/isAuth', usuarioController.isAuth);
 
     // DEPARTAMENTO
     router.route('/departamento')
-        .get(departamentoCTRL.findAll)
+        .get(departamentoController.findAll)
 
 
     app.use('/api',router);

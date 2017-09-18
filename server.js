@@ -8,12 +8,8 @@ const passport = require('passport');
 const session = require('express-session');
 const methodOverride = require('method-override');
 
-//DB
-const db = require('./config/sequelize');
-
-
-// CONFIG 
-const config = require('./config/config.json');
+// CONFIG ENVIROMENT
+require('dotenv').config()
 
 
 // MIDDLEWARES
@@ -39,6 +35,6 @@ require('./backend/routes')(app, express, passport);
 // sync db
 // db.sync();
 
-app.listen(config.PORT, () => {
-    console.log(`servidor levantado en el puerto ${config.PORT}` );
+app.listen(process.env.NODE_PORT, () => {
+    console.log(`servidor levantado en el puerto ${process.env.NODE_PORT}` );
 })
