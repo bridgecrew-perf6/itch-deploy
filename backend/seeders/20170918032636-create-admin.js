@@ -16,12 +16,6 @@ module.exports = {
         createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
         updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
       }], {});
-
-    // return queryInterface.bulkInsert('Usuario', [{
-    //   correo: '00fblanco@gmail.com',
-    //   isAdmin: true,
-    //   contrasenia: '123456',
-    // }], {});
   },
 
   down: (queryInterface, Sequelize) => {

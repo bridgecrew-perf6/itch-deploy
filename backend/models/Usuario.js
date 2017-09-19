@@ -31,5 +31,6 @@ module.exports = (sequelize, DataTypes) => {
   Usuario.beforeCreate((usuario, options) => {
         usuario.contrasenia = generateHash(usuario.contrasenia);
   });
+  // Usuario.belongs
   return Usuario;
 };

@@ -17,7 +17,8 @@ module.exports =  (app, express, passport) => {
 
     // DEPARTAMENTO
     router.route('/departamento')
-        .get(departamentoController.findAll)
+        .get(isAuth, departamentoController.findAll)
+        .post(isAuth, departamentoController.add)
 
 
     app.use('/api',router);
@@ -29,9 +30,9 @@ module.exports =  (app, express, passport) => {
 
     
 
-    function isLoggedIn(req, res, next){
+    function isAuth(req, res, next){
         if(req.isAuthenticated())
             return next()
-        res.status(401).json({error: "Necesita autenticarse"});
+        res.status(203).json({error: "Necesita autenticarse"});
     }
 }

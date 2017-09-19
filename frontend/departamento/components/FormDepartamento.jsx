@@ -5,6 +5,8 @@ const FormItem = Form.Item;
 const InputGroup = Input.Group;
 const Option = Select.Option;
 
+import axios from 'axios';
+
 const CreateFormDepartamento = Form.create()(
     (props => {
         const { visible, onCancel, onCreate, form, remove, add} = props;
@@ -165,6 +167,14 @@ export default class FormDepartamento extends Component{
             console.log('Received values of form: ', values);
             form.resetFields();
             // crear post al servidor
+            axios.post('/api/departamento', {
+                nombre: values.nombre_departamento,
+            }).then((res) => {
+
+            }).catch((err) => {
+                
+            })
+
             this.setState({ visible: false });
         });
     }

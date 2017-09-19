@@ -24,9 +24,9 @@ class FormLogin extends Component{
                 .end((err, res)=>{
                     console.log(res)
                     if(res.status === 200 && res.body.isAuth === true){
-                        // autenticado redirigir
+                        // autenticado redirigir si es admin 
                         this.setState({
-                            successAuth : <Redirect to="/departamento"  />
+                            successAuth : <Redirect to="/admin"  />
                         })
                     }else{
                         // error en la autenticación
