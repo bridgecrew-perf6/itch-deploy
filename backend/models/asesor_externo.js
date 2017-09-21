@@ -26,5 +26,5 @@ module.exports = (sequelize, DataTypes) => {
       as: 'anteproyectos'
     })
   }
-  return asesor_interno;
+  return asesor_externo;
 };

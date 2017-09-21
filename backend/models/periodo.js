@@ -26,7 +26,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         isDate: true,
-        isAfter: fecha_inicio
       }
     },
     fecha_inicio_entrega_anteproyecto: {
@@ -40,8 +39,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATEONLY,
       allowNull: false,
       validate: {
-        isDate: true,
-        isAfter: fecha_inicio_entrega_anteproyecto
+        isDate: true
       }
     }
   });

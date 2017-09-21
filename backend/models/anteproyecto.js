@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'id_periodo',
       onDelete: 'CASCADE'
     });
-    Anteproyecto.belongsTo(models.asesor_interno, {
+    Anteproyecto.belongsTo(models.asesor_externo, {
       foreignKey: 'id_asesor_externo',
       onDelete: 'CASCADE'
     })

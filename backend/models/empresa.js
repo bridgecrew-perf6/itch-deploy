@@ -59,7 +59,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   });
   Empresa.associate = (models) => {
-    Empresa.hasMany(models.asesor_interno, {
+    Empresa.hasMany(models.asesor_externo, {
       foreignKey: 'id_empresa',
       as: 'asesores_externos'
     })
