@@ -9,18 +9,18 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       correo:{ 
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(60),
         allowNull: false,
         unique: true
       },
       contrasenia: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(15),
         allowNull: false
       },
-      isAdmin: {
-        type: Sequelize.BOOLEAN, 
+      rol: {
+        type: Sequelize.ENUM, 
         allowNull: false, 
-        defaultValue: false
+        values: ['candidato_residente','residente','docente','admin','jefe_departamento','jefe_proyecto','presidente_academia']
       },
       createdAt: {
         allowNull: false,

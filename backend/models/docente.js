@@ -29,12 +29,17 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: {msg: 'El campo no debe estar vacio'}
       }
     }
-  }, {
-    classMethods: {
-      associate: function(models) {
-        // associations can be defined here
-      }
-    }
-  });
+  }
+  );
+  Docente.associate = (models) => {
+    Docente.hasOne(models.Usuario, {
+      foreignKey: 'id_usuario',
+      onDelete: 'CASCADE'
+    });
+    Docente.belongsTo(models.Departamento, {
+      foreignKey: 'id_departamento',
+      onDelete: 'CASCADE'
+    })
+  }
   return Docente;
 };

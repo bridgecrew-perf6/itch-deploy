@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Docentes', {
+    return queryInterface.createTable('Anteproyectos', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -9,54 +9,56 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       nombre: {
-        type: Sequelize.STRING(40),
+        type: Sequelize.STRING,
         allowNull: false,
         validate: {
-          notEmpty: {msg: 'El campo no debe estar vacio'}
+          notEmpty: {msg: 'El anteproyecto debe tener un nombre'}
         }
       },
-      ap_paterno: {
-        type: Sequelize.STRING(30),
+      objetivo_general: {
+        type: Sequelize.STRING,
         allowNull: false,
         validate: {
-          notEmpty: {msg: 'El campo no debe estar vacio'}
+          notEmpty: {msg: 'El antrpoyecto debe tener un nombre'}
         }
       },
-      ap_materno: {
-        type: Sequelize.STRING(30),
+      dictamen:{
+        type: Sequelize.ENUM,
+        values: ['aprobado','no aprobado'],
         allowNull: false,
-        validate: {
-          notEmpty: {msg: 'El campo no debe estar vacio'}
-        }
+        defaultValue: 'no aprobado'
       },
-      titulo:  {
-        type: Sequelize.STRING(10),
-        allowNull: false,
-        validate: {
-          notEmpty: {msg: 'El campo no debe estar vacio'}
-        }
-      },
-      id_usuario: {
-        type: Sequelize.INTEGER,
-        onDelete: 'CASCADE',
-        allowNull: false,
-        unique: true,
-        references: {
-          model: 'Usuarios',
-          key: 'id',
-          as: 'id_usuario'
-        }
-      },
-      id_departamento: {
+      id_alumno: {
         type: Sequelize.INTEGER,
         onDelete: 'CASCADE',
         allowNull: false,
         references: {
-          model: 'Departamentos',
+          model: 'alumnos',
           key: 'id',
-          as: 'id_departamento'
+          as: 'id_alumno'
         }
       },
+      id_periodo: {
+        type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        allowNull: false,
+        references: {
+          model: 'periodos',
+          key: 'id',
+          as: 'id_periodo'
+        }
+      },
+      id_asesor_externo: {
+        type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        allowNull: false,
+        references: {
+          model: 'asesores_externos',
+          key: 'id',
+          as: 'id_asesor_externo'
+        }
+      }
+      ,
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -68,6 +70,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Docentes');
+    return queryInterface.dropTable('Anteproyectos');
   }
 };

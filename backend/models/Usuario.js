@@ -12,25 +12,27 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
       validate: {
           isEmail: {msg: 'Debe tener un formato de email.'},
-          notEmpty: {msg: 'El campo no debe estar vacio'}
+          notEmpty: {msg: 'El campo debe tener un valor'}
       }
     },
     contrasenia: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-          notEmpty: {msg: 'El campo no debe estar vacio'}
+          notEmpty: {msg: 'El campo debe tener un valor'}
       }
     },
-    isAdmin: {
-      type: DataTypes.BOOLEAN, 
+    rol: {
+      type: DataTypes.ENUM, 
       allowNull: false, 
-      defaultValue: false
+      values: ['candidato_residente','residente','docente','admin','jefe_departamento','jefe_proyecto','presidente_academia'],
+      validate: {
+        notEmpty: {msg: 'El campo debe tener un valor'}
+      }
     }
   });
   Usuario.beforeCreate((usuario, options) => {
         usuario.contrasenia = generateHash(usuario.contrasenia);
   });
-  // Usuario.belongs
   return Usuario;
 };

@@ -13,8 +13,12 @@ module.exports = (sequelize, DataTypes) => {
   // relaciones
   Departamento.associate = (models) => {
     Departamento.hasMany(models.Carrera, {
-      foreignKey: 'departamentoId',
+      foreignKey: 'id_departamento',
       as: 'carreras'
+    })
+    Departamento.hasMany(models.Docente, {
+      foreignKey: 'id_departamento',
+      as: 'docentes'
     })
   }
   return Departamento;
