@@ -19,7 +19,7 @@ export default class Login extends Component{
                             <Row type="flex" justify="center" align="middle">
                                 <Col lg={12} xs={22} style={{paddingLeft: 20, paddingRight: 20}}>
                                     <Row className="custom-image" type="flex" justify="center">
-                                        <img src="/img/tec_logo.png" alt="logo_tec" width="30%" />
+                                        <img src="/img/tec_logo.png" alt="logo_tec" className="logo-login" />
                                     </Row>
                                     <h2 style={{marginTop: 20, marginBottom: 20,textAlign: 'center', color: "#505962"}} className="color-font"> SSRITCH v1 </h2>
                                     <p style={{textAlign: 'center'}}>Sistema de seguimiento de residencias del Instituto Tecnológico de Chilpancingo</p>

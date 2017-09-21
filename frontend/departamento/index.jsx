@@ -4,6 +4,7 @@ import {render} from 'react-dom';
 import {Row, Col, Card, Layout, Button, Table, Modal} from 'antd';
 const {Content, Header} = Layout;
 const { Column, ColumnGroup } = Table;
+import axios from 'axios';
 
 
 // Components
@@ -26,6 +27,22 @@ class Departamento extends Component{
             visible: false
        }
        
+   }
+   componentDidMount() {
+       axios.get('/api/departamento')
+        .then(res => {
+            if(res.status === 200){
+                var departamentos = res.data.map((departamento, index) => {
+                    return {key: index, id: departamento.id, nombre:departamento.nombre, jefe_departamento: 'unasigned', acciones: 'falta' }
+                })
+                this.setState({
+                    data: departamentos
+                })
+            }
+            console.log(res.data);
+            
+        });
+    
    }
    showModal = () => {
        this.setState({

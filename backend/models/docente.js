@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   );
   Docente.associate = (models) => {
-    Docente.hasOne(models.Usuario, {
+    Docente.belongsTo(models.Usuario, {
       foreignKey: 'id_usuario',
       onDelete: 'CASCADE'
     });

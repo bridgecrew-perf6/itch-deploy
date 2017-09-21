@@ -14,7 +14,7 @@ module.exports = {
         unique: true
       },
       contrasenia: {
-        type: Sequelize.STRING(15),
+        type: Sequelize.STRING(100),
         allowNull: false
       },
       rol: {

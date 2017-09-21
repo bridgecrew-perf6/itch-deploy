@@ -11,7 +11,7 @@ module.exports = {
     */
       return queryInterface.bulkInsert('Usuarios', [{
         correo: '00fblanco@gmail.com',
-        isAdmin: true,
+        rol: 'admin',
         contrasenia: generateHash('123456'),
         createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
         updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
