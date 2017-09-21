@@ -12,6 +12,8 @@ import {getIsAuth} from '../api.jsx';
 
 // components
 import Departamento from '../departamento/index.jsx';
+import Docente from '../docente/index.jsx';
+import Empresa from '../empresa/index.jsx';
 
 class LayoutAdmin extends Component{
     
@@ -26,9 +28,9 @@ class LayoutAdmin extends Component{
                             title: 'Gestión de departamentos',
                             render: <Departamento/>
                         },
-                        2 :{
+                        2: {
                             title: 'Gestión de empresas',
-                            render: <h1>empresa</h1>
+                            render: <Empresa/>
                         }
                     }
                         
@@ -76,10 +78,6 @@ class LayoutAdmin extends Component{
                             <Menu.Item key="2" >
                                 <Icon type="contacts"/>
                                 <span>Dependencias</span>
-                            </Menu.Item>
-                            <Menu.Item key="3">
-                                <Icon type="user"/>
-                                <span>Docentes</span>
                             </Menu.Item>
                         </Menu>
                     </Sider>

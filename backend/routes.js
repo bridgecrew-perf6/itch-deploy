@@ -20,6 +20,9 @@ module.exports =  (app, express, passport) => {
         .get(isAuth, departamentoController.findAll)
         .post(isAuth, departamentoController.add)
 
+    router.route('/departamento/:id')
+        .get(departamentoController.findById) // isAuth
+
 
     app.use('/api',router);
 

@@ -9,48 +9,63 @@ import axios from 'axios';
 
 // Components
 import FormDepartamento from './components/FormDepartamento.jsx';
+import FormEditDepartamento from './components/FormEditDepartamento.jsx';
 
 class Departamento extends Component{
    constructor(){
        super();
        this.state = {
-            data: [
-                {
-                    key: '1',
-                    id: 1,
-                    nombre: 'Sistemas y computación',
-                    jefe_departamento: 'Jose Angel Nava',
-                    acciones: 'alv'
-                },
-                
-            ],
-            visible: false
+            data: [],
+            visible_form_departamento: false,
+            visible_form_edit_departamento: false,
+            departamento: null
        }
        
    }
-   componentDidMount() {
-       axios.get('/api/departamento')
-        .then(res => {
-            if(res.status === 200){
-                var departamentos = res.data.map((departamento, index) => {
-                    return {key: index, id: departamento.id, nombre:departamento.nombre, jefe_departamento: 'unasigned', acciones: 'falta' }
-                })
-                this.setState({
-                    data: departamentos
-                })
-            }
-            console.log(res.data);
-            
-        });
-    
+   fetchDepartamento(){
+        axios.get('/api/departamento')
+            .then(res => {
+                if(res.status === 200){
+                    var departamentos = res.data.map((departamento, index) => {
+                        // falta el request del jefe de departamento jejeje
+                        return {key: index, id: departamento.id, nombre:departamento.nombre, jefe_departamento: 'no asignado', acciones: 'Editar departamento' }
+                    })
+                    this.setState({
+                        data: departamentos
+                    })
+                }
+                // console.log(res.data);
+            });
    }
-   showModal = () => {
+   handleAddDepartamento(){
+       this.fetchDepartamento();
        this.setState({
-           visible: true
+        visible_form_departamento: false,
+        visible_form_edit_departamento: false
+   })
+   }
+   componentDidMount() {
+       this.fetchDepartamento();
+   }
+   showModalFormDepartamento = () => {
+       this.setState({
+            visible_form_departamento: true,
+            visible_form_edit_departamento: false
        })
    }
+   showModalFormEditDepartamento = (id_departamento) => {
+    axios.get(`/api/departamento/${id_departamento}`)
+        .then(res => {
+            // console.log(res.data)
+            this.setState({
+                visible_form_departamento: false,
+                visible_form_edit_departamento: true,
+                departamento: res.data
+            })
+        })
+}
     render(){
-        const { visible, data } = this.state;
+        const { visible_form_edit_departamento,visible_form_departamento, data, departamento} = this.state;
         return(
             <div>
                 <Row type="flex" justify="left" align="middle">
@@ -58,11 +73,11 @@ class Departamento extends Component{
                         <h1> Departamento </h1>
                     </Col>
                     <Col>
-                        <Button type="primary" icon="plus" onClick={this.showModal}>Agregar</Button>
+                        <Button type="primary" icon="plus" onClick={this.showModalFormDepartamento}>Agregar</Button>
                     </Col>
                 </Row>
                 <Row type="flex" justify="center" align="middle" style={{marginTop: 30}}>
-                    <Table dataSource={data} className="full-width">
+                    <Table dataSource={data} className="full-width" pagination={{ pageSize: 5 }} >
                         <Column 
                             title="ID"
                             dataIndex="id"
@@ -87,15 +102,15 @@ class Departamento extends Component{
                             render={(text, record) => (
                                 <span>
                                     {/* {record.id} */}
-                                    <Button icon="edit" > Cambiar jefe de departamento </Button>
+                                    <Button icon="edit" onClick={() => this.showModalFormEditDepartamento(record.id)}> {record.acciones} </Button>
                                 </span>
                             )}
                             className="center-text"
                         />
                     </Table>
                 </Row>
-                <FormDepartamento visible={visible}/>
-                                
+                <FormDepartamento visible={visible_form_departamento} onAddDepartamento={this.handleAddDepartamento.bind(this)}/>
+                <FormEditDepartamento visible={visible_form_edit_departamento} departamento={departamento}/>              
             </div>
             
         )

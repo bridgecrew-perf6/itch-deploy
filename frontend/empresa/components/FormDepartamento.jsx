@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {render} from 'react-dom';
-import { Button, Modal, Form, Input, Radio,Select, Icon, message} from 'antd';
+import { Button, Modal, Form, Input, Radio,Select, Icon, message } from 'antd';
 const FormItem = Form.Item;
 const InputGroup = Input.Group;
 const Option = Select.Option;
@@ -70,15 +70,10 @@ export default class FormDepartamento extends Component{
                 if(res.status === 200){
                     message.success("Departamento agregado satisfactoriamente")
                     this.setState({ visible: false });
-                    this.props.onAddDepartamento()
                 }else{
-                    Modal.error({
-                        title: 'Error al guardar el departamento. Revisar los siguientes campos',
-                        content:(
-                            <div>
-                                {res.data.errores}
-                            </div>
-                        ), onOk(){}, 
+                    message.info('Revisar los siguientes campos')
+                    res.data.errores.map((err) => {
+                        message.error(res.data.errores, 10);                    
                     })
                 }
             }).catch((err) => {

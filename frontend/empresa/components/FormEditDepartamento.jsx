@@ -9,8 +9,7 @@ import axios from 'axios';
 
 const CreateFormDepartamento = Form.create()(
     (props => {
-        const { visible, onCancel, onCreate, form, remove, add, departamento} = props;
-        console.log('===>', departamento)
+        const { visible, onCancel, onCreate, form, remove, add} = props;
         const { getFieldDecorator, getFieldValue} = form;
         const prefixSelectorTitulo = getFieldDecorator('titulo', {
             initialValue: 'ING.',
@@ -77,11 +76,10 @@ const CreateFormDepartamento = Form.create()(
                 onOk={onCreate}
             >
                 <Form layout="vertical">
-                    <FormItem label="Nombre del departamento" initialValue="asds">
+                    <FormItem label="Nombre del departamento">
                         {getFieldDecorator('nombre_departamento', {
-                            rules: [{required: true, message: 'El departamento debe tener un nombre.'}],
-                            initialValue: departamento ? departamento.nombre : ''
-                        })(<Input placeholder="Nombre del departamento" />)}
+                            rules: [{required: true, message: 'El departamento debe tener un nombre.'}]
+                        })(<Input placeholder="Nombre del departamento"/>)}
                     </FormItem>
                     <FormItem label="Nombre del jefe departamento">
                         {getFieldDecorator('nombre_jefe_departamento', {
@@ -118,14 +116,12 @@ export default class FormDepartamento extends Component{
         super(props);
         this.state = {
             visible: props.visible,
-            departamento: props.departamento
         }
     }
     componentWillReceiveProps(nextProps) {
-        const {visible, departamento} = nextProps;
+        const {visible} = nextProps;
         this.setState({
-            visible,
-            departamento
+            visible: visible
         })
     }
     remove = (k) => {
@@ -186,18 +182,15 @@ export default class FormDepartamento extends Component{
         this.form = form;
     }
     render(){
-        const {departamento} = this.state
-        // console.log('=>', departamento)
         return(
             <div>
                 <CreateFormDepartamento
-                    departamento={departamento}
-                    ref={this.saveFormRef}
-                    visible={this.state.visible}
-                    onCancel={this.handleCancel}
-                    onCreate={this.handleCreate}
-                    remove={this.remove}
-                    add={this.add}
+                ref={this.saveFormRef}
+                visible={this.state.visible}
+                onCancel={this.handleCancel}
+                onCreate={this.handleCreate}
+                remove={this.remove}
+                add={this.add}
                 />
             </div>
         )

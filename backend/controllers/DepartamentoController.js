@@ -1,5 +1,19 @@
 const Departamento = require('../models').Departamento;
+const Carrera = require('../models').Carrera;
+const Docente = require('../models').Docente;
 const Sequelize = require('sequelize')
+
+module.exports.findById = (req, res) => {
+    Departamento.findOne({
+        where: {id: req.param('id')},
+        include: [{model: Carrera, as: 'carreras'}, {model: Docente, as: 'docentes'}]})
+        .then((departamento) => {
+            res.status(200).json(departamento);
+        }).catch(err => {
+            res.status(406).json({error: err})
+        })
+
+}
 module.exports.findAll = (req, res) => {
     Departamento.findAll()
         .then(departamentos => {
