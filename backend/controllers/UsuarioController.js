@@ -7,3 +7,8 @@ module.exports.isAuth = (req, res) => {
                 res.status(203).json({isAuth: false});
         }
 }
+
+module.exports.logout = (req, res) => {
+        req.logout();
+    	res.redirect('/usuario/auth');
+}

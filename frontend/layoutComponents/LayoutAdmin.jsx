@@ -6,7 +6,7 @@ import { Layout, Menu, Breadcrumb, Icon } from 'antd';
 const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
 
-import {Redirect} from 'react-router-dom';
+import {Redirect, Link} from 'react-router-dom';
 
 import {getIsAuth} from '../api.jsx';
 
@@ -80,6 +80,14 @@ class LayoutAdmin extends Component{
                                 <Icon type="contacts"/>
                                 <span>Dependencias</span>
                             </Menu.Item>
+                            <Menu.Divider/>
+                            <SubMenu
+                                key="sub1"
+                                title={<span><Icon type="user" /><span>Usuario</span></span>}
+                                >
+                                <Menu.Item key="3">Cambiar contraseña</Menu.Item>
+                                <Menu.Item ><a href="/api/usuario/logout"> <strong>Cerrar sesión</strong> </a> </Menu.Item>
+                            </SubMenu>
                         </Menu>
                     </Sider>
                     <Layout>

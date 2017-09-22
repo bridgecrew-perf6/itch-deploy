@@ -15,6 +15,7 @@ module.exports =  (app, express, passport) => {
     ))
 
     router.get('/usuario/isAuth', usuarioController.isAuth);
+    router.get('/usuario/logout', usuarioController.logout);
 
     // DEPARTAMENTO
     router.route('/departamento')
