@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     no_control: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
       validate: {
         isNumeric: {msg: 'El numero de control debe ser numerico'},
         notEmpty: {msg: 'El campo no debe estar vacio'},

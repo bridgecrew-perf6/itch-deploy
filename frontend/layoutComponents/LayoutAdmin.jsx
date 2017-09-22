@@ -62,10 +62,11 @@ class LayoutAdmin extends Component{
             isAuth ? (
                 <Layout style={{minHeight:'100vh'}}>
                     <Sider
+                        breakpoint="lg"
                         trigger={null}
                         collapsible
                         collapsed={this.state.collapsed}
-                        breakpoint='md'
+                        
                     >
                         <div className="logo" style={{textAlign: 'center'}}>
                             <img src="/img/tec_logo.png" alt="logo_tec" height="100%"/>
@@ -90,7 +91,7 @@ class LayoutAdmin extends Component{
                             />
                             {component.title}
                         </Header>
-                        <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
+                        <Content style={{ margin: '24px 16px', padding: 24, background: '#fff' }}>
                         {component.render}
                         </Content>
                         <Footer style={{ textAlign: 'center' }}>

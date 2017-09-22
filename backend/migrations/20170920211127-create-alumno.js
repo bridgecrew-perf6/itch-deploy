@@ -11,6 +11,7 @@ module.exports = {
       no_control: {
         type: Sequelize.STRING(8),
         allowNull: false,
+        unique: true
       },
       nombre: {
         type: Sequelize.STRING(40),

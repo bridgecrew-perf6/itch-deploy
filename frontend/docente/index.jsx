@@ -8,7 +8,6 @@ import axios from 'axios';
 
 
 // Components
-import FormDepartamento from './components/FormDepartamento.jsx';
 
 class Departamento extends Component{
    constructor(){
@@ -29,7 +28,7 @@ class Departamento extends Component{
        
    }
    componentDidMount() {
-       axios.get('/api/departamento')
+       axios.get('/api/docente')
         .then(res => {
             if(res.status === 200){
                 var departamentos = res.data.map((departamento, index) => {
@@ -54,7 +53,7 @@ class Departamento extends Component{
             <div>
                 <Row type="flex" justify="left" align="middle">
                     <Col style={{marginRight: 20}}>
-                        <h1> Departamento </h1>
+                        <h1> Docente </h1>
                     </Col>
                     <Col>
                         <Button type="primary" icon="plus" onClick={this.showModal}>Agregar</Button>
@@ -93,7 +92,7 @@ class Departamento extends Component{
                         />
                     </Table>
                 </Row>
-                <FormDepartamento visible={visible}/>
+                {/* <FormDepartamento visible={visible}/> */}
                                 
             </div>
             

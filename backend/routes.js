@@ -2,6 +2,7 @@
 // Controllers
 const usuarioController = require('./controllers/UsuarioController');
 const departamentoController = require('./controllers/DepartamentoController');
+const docenteController = require('./controllers/DocenteController');
 module.exports =  (app, express, passport) => {
    
     const router = express.Router();
@@ -22,6 +23,10 @@ module.exports =  (app, express, passport) => {
 
     router.route('/departamento/:id')
         .get(departamentoController.findById) // isAuth
+
+    // DOCENTE
+    router.route('/docente')
+        .post(isAuth, docenteController.add)
 
 
     app.use('/api',router);

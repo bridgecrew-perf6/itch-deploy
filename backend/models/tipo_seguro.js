@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     nombre: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
       validate: {
           notEmpty: {msg: 'El campo no debe estar vacio'}
       }

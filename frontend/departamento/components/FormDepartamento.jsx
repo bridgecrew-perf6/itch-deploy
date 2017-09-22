@@ -61,13 +61,14 @@ export default class FormDepartamento extends Component{
                 return;
             }
             // console.log('Received values of form: ', values);
-            form.resetFields();
+            
             // crear post al servidor
             axios.post('/api/departamento', {
                 nombre: values.nombre_departamento,
             }).then((res) => {
                 console.log(res)
                 if(res.status === 200){
+                    form.resetFields();
                     message.success("Departamento agregado satisfactoriamente")
                     this.setState({ visible: false });
                     this.props.onAddDepartamento()

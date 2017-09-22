@@ -15,7 +15,7 @@ module.exports.findById = (req, res) => {
 
 }
 module.exports.findAll = (req, res) => {
-    Departamento.findAll()
+    Departamento.findAll({include: [{model: Carrera, as: 'carreras'}, {model: Docente, as: 'docentes'}]})
         .then(departamentos => {
             res.status(200).json(departamentos);
         }).catch(err => {
@@ -27,13 +27,13 @@ module.exports.add = (req, res) => {
     Departamento.create({
         nombre: req.param('nombre')
     }).then(departamento => {
-        console.log('=>',departamento)
+        // console.log('=>',departamento)
         res.status(200).json(departamento)
     }).catch(Sequelize.ValidationError, (err) => {
         var errores = err.errors.map((element) => {
             return `${element.path}: ${element.message}`
         })
-        console.log('==>', errores)
+        // console.log('==>', errores)
         res.status(202).json({errores})
     }).catch((err) => {
         res.status(406).json({err: err})

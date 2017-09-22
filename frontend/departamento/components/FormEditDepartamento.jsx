@@ -71,30 +71,37 @@ const CreateFormDepartamento = Form.create()(
         return(
             <Modal
                 visible={visible}
-                title="Agregar nuevo departamento"
-                okText="Guardar"
+                title="Editar departamento"
+                okText="Actualizar"
                 onCancel={onCancel}
                 onOk={onCreate}
+                width={600}
+                className="full-width"
             >
                 <Form layout="vertical">
-                    <FormItem label="Nombre del departamento" initialValue="asds">
+                    <FormItem label="Nombre del departamento" initialValue="" hasFeedback>
                         {getFieldDecorator('nombre_departamento', {
                             rules: [{required: true, message: 'El departamento debe tener un nombre.'}],
                             initialValue: departamento ? departamento.nombre : ''
                         })(<Input placeholder="Nombre del departamento" />)}
                     </FormItem>
-                    <FormItem label="Nombre del jefe departamento">
-                        {getFieldDecorator('nombre_jefe_departamento', {
-                            rules: [{required: true, message: 'El departamento debe tener un jefe de partamento.'}]
-                        })(<Input addonBefore={prefixSelectorTitulo} style={{ width: '100%' }} placeholder="Nombre completo del jefe de departamento"/>)}
-                    </FormItem>
                     <FormItem
-                        label="Correo del jefe de departamento"
-                    >
-                        {getFieldDecorator('correo_jefe_departamento', {
-                            rules: [{type: 'email',message: 'El correo no es correcto'},{required: true, message: 'Necesita su correo para autentificarse en el sistema.'}]
+                        label="Seleccione al jefe de departamento"
+                        hasFeedback
+                        >
+                        {getFieldDecorator('id_jefe_departamento', {
+                            rules: [
+                            { required: true, message: 'El departamento debe tener un jefe.' },
+                            ],
                         })(
-                            <Input prefix={<Icon type="user" style={{fontSize: 13}} />} type="email" placeholder="Ingrese el correo electronico del jefe de departamento" />
+                            <Select placeholder="Seleccione un docente">
+                                {   departamento ?
+                                        departamento.docentes.map((docente, index) => {
+                                        return <Option key={index} value={`${docente.id}`}>{`${docente.titulo} ${docente.nombre} ${docente.ap_paterno} ${docente.ap_materno}`}</Option>
+                                        }): ''
+                                }
+
+                            </Select>
                         )}
                     </FormItem>
                     {/* CARRERAS */}
@@ -161,6 +168,9 @@ export default class FormDepartamento extends Component{
     }
     handleCancel = () => {
         this.setState({ visible: false });
+        const form = this.form;
+        form.resetFields();
+
     }
     handleCreate = () => {
         const form = this.form;
@@ -170,14 +180,14 @@ export default class FormDepartamento extends Component{
             }
             console.log('Received values of form: ', values);
             form.resetFields();
-            // crear post al servidor
-            axios.post('/api/departamento', {
-                nombre: values.nombre_departamento,
-            }).then((res) => {
+            // crear put al servidor
+            // axios.post('/api/departamento', {
+            //     nombre: values.nombre_departamento,
+            // }).then((res) => {
 
-            }).catch((err) => {
+            // }).catch((err) => {
                 
-            })
+            // })
 
             this.setState({ visible: false });
         });

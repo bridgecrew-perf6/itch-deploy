@@ -10,7 +10,8 @@ module.exports = {
       },
       nombre: {
         type: Sequelize.STRING(40),
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
       createdAt: {
         allowNull: false,
