@@ -78,7 +78,7 @@ class LayoutAdmin extends Component{
                             </Menu.Item>
                             <Menu.Item key="2" >
                                 <Icon type="contacts"/>
-                                <span>Dependencias</span>
+                                <span>Empresas</span>
                             </Menu.Item>
                             <Menu.Divider/>
                             <SubMenu

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {render} from 'react-dom';
-import { Button, Modal, Form, Input, Radio,Select, Icon } from 'antd';
+import { Button, Modal, Form, Input, Radio,Select, Icon, message} from 'antd';
 const FormItem = Form.Item;
 const InputGroup = Input.Group;
 const Option = Select.Option;
@@ -97,7 +97,7 @@ const CreateFormDepartamento = Form.create()(
                             <Select placeholder="Seleccione un docente">
                                 {   departamento ?
                                         departamento.docentes.map((docente, index) => {
-                                        return <Option key={index} value={`${docente.id}`}>{`${docente.titulo} ${docente.nombre} ${docente.ap_paterno} ${docente.ap_materno}`}</Option>
+                                        return <Option key={index} value={`${docente.id_usuario}`}>{`${docente.titulo} ${docente.nombre} ${docente.ap_paterno} ${docente.ap_materno}`}</Option>
                                         }): ''
                                 }
 
@@ -174,22 +174,35 @@ export default class FormDepartamento extends Component{
     }
     handleCreate = () => {
         const form = this.form;
+        const {departamento} = this.state
         form.validateFields((err, values) => {
             if (err) {
                 return;
             }
             console.log('Received values of form: ', values);
-            form.resetFields();
-            // crear put al servidor
-            // axios.post('/api/departamento', {
-            //     nombre: values.nombre_departamento,
-            // }).then((res) => {
-
-            // }).catch((err) => {
-                
-            // })
-
-            this.setState({ visible: false });
+            // actualizar el departamento
+            axios.put(`/api/departamento/${departamento.id}`, {
+                nombre_departamento: values.nombre_departamento,
+                id_jefe_departamento: values.id_jefe_departamento,
+            }).then((res) => {
+                console.log(res)
+                if(res.status === 200){
+                    form.resetFields();
+                    message.success("Departamento actualizado satisfactoriamente")
+                    this.setState({ visible: false });
+                }else{
+                    Modal.error({
+                        title: 'Error al actualizar el departamento. Revisar los siguientes campos',
+                        content:(
+                            <div>
+                                {res.data.errores}
+                            </div>
+                        ), onOk(){}, 
+                    })
+                }
+            }).catch((err) => {
+                message.error(err);                                    
+            })
         });
     }
     saveFormRef = (form) => {

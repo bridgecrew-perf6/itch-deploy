@@ -3,6 +3,7 @@
 const usuarioController = require('./controllers/UsuarioController');
 const departamentoController = require('./controllers/DepartamentoController');
 const docenteController = require('./controllers/DocenteController');
+const EmpresaController = require('./controllers/EmpresaController');
 module.exports =  (app, express, passport) => {
    
     const router = express.Router();
@@ -23,7 +24,13 @@ module.exports =  (app, express, passport) => {
         .post(isAuth, departamentoController.add)
 
     router.route('/departamento/:id')
-        .get(departamentoController.findById) // isAuth
+        .get(isAuth, departamentoController.findById) // isAuth
+        .put(isAuth, departamentoController.update)
+
+    // EMPRESAS
+    router.route('/empresa')
+        .get(EmpresaController.findAll)
+        .post(isAuth, EmpresaController.add)
 
     // DOCENTE
     router.route('/docente')

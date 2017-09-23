@@ -91,7 +91,7 @@ class Departamento extends Component{
             <div>
                 <Row type="flex" justify="left" align="middle">
                     <Col style={{marginRight: 20}}>
-                        <h1> Departamento </h1>
+                        <h1> Departamentos </h1>
                     </Col>
                     <Col>
                         <Button type="primary" icon="plus" onClick={this.showModalFormDepartamento}>Agregar</Button>

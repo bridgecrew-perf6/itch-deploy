@@ -7,7 +7,7 @@ const Option = Select.Option;
 
 import axios from 'axios';
 
-const CreateFormDepartamento = Form.create()(
+const CreateFormEmpresa = Form.create()(
     (props => {
         const { visible, onCancel, onCreate, form, remove, add} = props;
         const { getFieldDecorator, getFieldValue} = form;
@@ -70,7 +70,7 @@ const CreateFormDepartamento = Form.create()(
         return(
             <Modal
                 visible={visible}
-                title="Agregar nuevo departamento"
+                title="Agregar nueva empresa"
                 okText="Guardar"
                 onCancel={onCancel}
                 onOk={onCreate}
@@ -110,7 +110,7 @@ const CreateFormDepartamento = Form.create()(
 )
 
 let uuid = 0;
-export default class FormDepartamento extends Component{
+export default class FormEmpresa extends Component{
    
     constructor(props){
         super(props);
@@ -184,7 +184,7 @@ export default class FormDepartamento extends Component{
     render(){
         return(
             <div>
-                <CreateFormDepartamento
+                <CreateFormEmpresa
                 ref={this.saveFormRef}
                 visible={this.state.visible}
                 onCancel={this.handleCancel}
