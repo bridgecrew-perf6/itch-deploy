@@ -92,14 +92,14 @@ const CreateFormEditEmpresa = Form.create()(
                         <FormItem label="Codigo postal" hasFeedback>
                             {getFieldDecorator('codigo_postal', {
                                 rules: [{len: 5, message: 'El codigo postal solo debe tener 5 caracteres'}]
-                            })(<Input placeholder="Domicilio de la empresa"/>)}
+                            })(<Input placeholder="Codigo postal de la empresa"/>)}
                         </FormItem>
                         </Col>
                         <Col lg={12} xs={24} >
                         <FormItem label="Fax" hasFeedback>
                             {getFieldDecorator('fax', {
                                 rules: [{max: 15, message: 'El fax debe tener como maximo 15 caracteres'}]
-                            })(<Input placeholder="Domicilio de la empresa"/>)}
+                            })(<Input placeholder="Fax de la empresa"/>)}
                         </FormItem>
                         </Col>
                     </Row>

@@ -5,7 +5,7 @@ const asesor_externo = require('../models').asesor_externo
 
 module.exports.findAll = (req, res) => {
     // {include: [{model: asesor_externo, as: 'asesores_externos'}]}
-    Empresa.findAll()
+    Empresa.findAll({include: [{model: asesor_externo, as: 'asesor_externos'}]})
         .then(empresas => {
             res.status(200).json({empresas})
         }).catch(err => {

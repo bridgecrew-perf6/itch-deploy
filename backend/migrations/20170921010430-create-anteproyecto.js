@@ -53,7 +53,7 @@ module.exports = {
         onDelete: 'CASCADE',
         allowNull: false,
         references: {
-          model: 'asesores_externos',
+          model: 'asesor_externos',
           key: 'id',
           as: 'id_asesor_externo'
         }

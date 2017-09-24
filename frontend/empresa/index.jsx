@@ -9,7 +9,7 @@ import axios from 'axios';
 
 // Components
 import FormEmpresa from './components/FormEmpresa.jsx';
-
+import FormAddAsesorExterno from '../asesor_externo/components/FormAddAsesorExterno.jsx'
 class Empresa extends Component{
    constructor(){
        super();
@@ -20,7 +20,13 @@ class Empresa extends Component{
             filterDropdownVisible: false,
             searchText: '',
             filtered: false,
-            loadTable: true
+            loadTable: true,
+            visibleFormAddAsesorExterno: false,
+            visibleFormEditEmpresa: false,
+            props_add_asesor: {
+                id_empresa: null,
+                nombre_empresa: null
+            }
        }
        
    }
@@ -66,15 +72,25 @@ class Empresa extends Component{
                             nombre: empresa.nombre, 
                             clasificacion: empresa.clasificacion,
                             detalles: {
-                                nombre: empresa.nombre_titular
-                            }
-                            
+                                rfc: empresa.rfc,
+                                domicilio: `${empresa.domicilio} colonia ${empresa.colonia}`,
+                                codigo_postal: empresa.codigo_postal,
+                                fax: empresa.fax,
+                                puesto_titular: empresa.puesto_titular,
+                                nombre_titular: empresa.nombre_titular,
+                                puesto_firma_acuerdo: empresa.puesto_firma_acuerdo,
+                                nombre_firma_acuerdo: empresa.nombre_firma_acuerdo,
+                                asesores_externos: empresa.asesor_externos
+                            },
+                            acciones: 'acctions'
                         }
                     })
                     this.setState({
                         loadTable: false,
                         empresas,
-                        filterEmpresas: empresas
+                        filterEmpresas: empresas,
+                        visibleFormAddAsesorExterno: false,
+                        visibleFormEditEmpresa: false
                     })
                 }
                 // console.log(res.data);
@@ -90,17 +106,64 @@ class Empresa extends Component{
    }
    showModal = () => {
        this.setState({
-           visible: true
+           visible: true,
+           visibleFormEditEmpresa: false,
+           visibleFormAddAsesorExterno: false,
        })
    }
-   handleAddDepartamento(){
+   handleAddEmpresa(){
        this.fetchEmpresas();
        this.setState({
            visible: false
        })
    }
+    showModalFormEditEmpresa = (id_empresa) => {
+        this.setState({
+            visible: false,
+            visibleFormEditEmpresa: true,
+            visibleFormAddAsesorExterno: false
+        })
+    }
+    showAddAsesorExterno = (id_empresa, nombre_empresa) => {
+        this.setState({
+            visible: false,
+            visibleFormEditEmpresa: false,
+            visibleFormAddAsesorExterno: true,
+            props_add_asesor: {
+                id_empresa: id_empresa,
+                nombre_empresa: nombre_empresa
+            }
+        })
+
+    }
+    expandedRowRender = (record) => {
+        const columns = [
+            {
+                title: 'Nombre',
+                dataIndex: 'nombre'
+            },
+            {
+                title: 'Puesto',
+                dataIndex: 'puesto'
+            }
+        ]
+        return(
+            <div>
+                <span>
+                    <strong>RFC</strong><p>{record.detalles.rfc}</p>
+                    <strong>Domicilio</strong><p>{record.detalles.domicilio}</p>
+                    <strong>Codigo postal</strong><p>{record.detalles.codigo_postal}</p>
+                </span>
+                <span>
+                    <strong>Nombre y puesto del titular de la empresa</strong><p>{`${record.detalles.nombre_titular} ${record.detalles.puesto_titular}`}</p>
+                    <strong>Nombre y puesto de quien firma el acuerdo con el ITCH</strong><p>{`${record.detalles.nombre_firma_acuerdo} ${record.detalles.puesto_firma_acuerdo}`}</p>
+                </span>
+                <Table style={{marginTop: 10}} title={() => 'Asesores externos de la empresa'} columns={columns} size="small" dataSource={record.detalles.asesores_externos.map((asesor, index) => {return {key: index, nombre: asesor.nombre,puesto: asesor.puesto}})}/>
+            </div>
+        )
+    }
     render(){
-        const { visible, filterEmpresas, loadTable } = this.state;
+        const { visible, filterEmpresas, loadTable, visibleFormAddAsesorExterno, visibleFormEditEmpresa, props_add_asesor} = this.state;
         const columns = [
             {
                 title: 'Nombre',
@@ -151,6 +214,17 @@ class Empresa extends Component{
                 ], filterMultiple: false,
                 onFilter: (value, record) => record.clasificacion.indexOf(value) === 0,
 
+            },
+            {
+                title: 'Acciones',
+                key: 'acciones',
+                render: (text, record) => (
+                    <span>
+                        <Button style={{marginRight: 5}} icon="edit" onClick={() => this.showModalFormEditEmpresa(record.id)}>Empresa</Button>
+                        <Button style={{marginLeft: 5}} icon="team" onClick={() => this.showAddAsesorExterno(record.id, record.nombre)} >Agregar asesor externo</Button>
+                    </span>
+                ),
+                className: 'center-text'
             }
         ]
         return(
@@ -165,10 +239,10 @@ class Empresa extends Component{
                     </Col>
                 </Row>
                 <Row type="flex" justify="center" align="middle" style={{marginTop: 30}}>
-                    <Table dataSource={filterEmpresas} className="full-width" columns={columns} pagination={{ pageSize: 5 }} loading={loadTable} scroll={{ x: 800 }} expandedRowRender={record => <p>{record.detalles.nombre}</p>} />
+                    <Table dataSource={filterEmpresas} className="full-width" columns={columns} pagination={{ pageSize: 5 }} loading={loadTable} scroll={{ x: 800 }} expandedRowRender={this.expandedRowRender} />
                 </Row>
-                <FormEmpresa visible={visible} onAddEmpresa={this.handleAddDepartamento.bind(this)}/>
-                                
+                <FormEmpresa visible={visible} onAddEmpresa={this.handleAddEmpresa.bind(this)}/>
+                <FormAddAsesorExterno visible={visibleFormAddAsesorExterno} empresa={props_add_asesor} onReloadFetch={this.fetchEmpresas.bind(this)}/>
             </div>
             
         )
