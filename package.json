@@ -33,6 +33,7 @@
     "method-override": "^2.3.9",
     "morgan": "^1.8.2",
     "mysql2": "^1.4.2",
+    "nodemailer": "^4.1.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "path": "^0.12.7",
