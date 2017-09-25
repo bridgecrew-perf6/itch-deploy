@@ -9,6 +9,7 @@ import axios from 'axios';
 
 // Components
 import FormEmpresa from './components/FormEmpresa.jsx';
+import FormEditEmpresa from './components/FormEditEmpresa.jsx';
 import FormAddAsesorExterno from '../asesor_externo/components/FormAddAsesorExterno.jsx'
 class Empresa extends Component{
    constructor(){
@@ -26,6 +27,9 @@ class Empresa extends Component{
             props_add_asesor: {
                 id_empresa: null,
                 nombre_empresa: null
+            },
+            props_edit_empresa: {
+                detalles: null
             }
        }
        
@@ -74,6 +78,8 @@ class Empresa extends Component{
                             detalles: {
                                 rfc: empresa.rfc,
                                 domicilio: `${empresa.domicilio} colonia ${empresa.colonia}`,
+                                domicilio_only: empresa.domicilio,
+                                colonia: empresa.colonia,
                                 codigo_postal: empresa.codigo_postal,
                                 fax: empresa.fax,
                                 puesto_titular: empresa.puesto_titular,
@@ -118,10 +124,13 @@ class Empresa extends Component{
        })
    }
     showModalFormEditEmpresa = (id_empresa) => {
+        const {empresas} = this.state;
+        const empresa = empresas.find((empresa) => {return empresa.id === id_empresa});
         this.setState({
             visible: false,
             visibleFormEditEmpresa: true,
-            visibleFormAddAsesorExterno: false
+            visibleFormAddAsesorExterno: false,
+            props_edit_empresa: empresa
         })
     }
     showAddAsesorExterno = (id_empresa, nombre_empresa) => {
@@ -163,7 +172,7 @@ class Empresa extends Component{
         )
     }
     render(){
-        const { visible, filterEmpresas, loadTable, visibleFormAddAsesorExterno, visibleFormEditEmpresa, props_add_asesor} = this.state;
+        const { visible, filterEmpresas, loadTable, visibleFormAddAsesorExterno, props_add_asesor, visibleFormEditEmpresa, props_edit_empresa } = this.state;
         const columns = [
             {
                 title: 'Nombre',
@@ -242,6 +251,7 @@ class Empresa extends Component{
                     <Table dataSource={filterEmpresas} className="full-width" columns={columns} pagination={{ pageSize: 5 }} loading={loadTable} scroll={{ x: 800 }} expandedRowRender={this.expandedRowRender} />
                 </Row>
                 <FormEmpresa visible={visible} onAddEmpresa={this.handleAddEmpresa.bind(this)}/>
+                <FormEditEmpresa visible={visibleFormEditEmpresa} empresa={props_edit_empresa} onReloadFetch={this.fetchEmpresas.bind(this)}/>
                 <FormAddAsesorExterno visible={visibleFormAddAsesorExterno} empresa={props_add_asesor} onReloadFetch={this.fetchEmpresas.bind(this)}/>
             </div>
             

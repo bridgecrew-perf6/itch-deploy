@@ -13,6 +13,7 @@ class FormLogin extends Component{
             successAuth: <div/>
         }
     }
+    
     handleSubmit = (e) => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
@@ -25,9 +26,13 @@ class FormLogin extends Component{
                     console.log(res)
                     if(res.status === 200 && res.body.isAuth === true){
                         // autenticado redirigir si es admin 
-                        this.setState({
-                            successAuth : <Redirect to="/admin"  />
-                        })
+                        const rol = res.body.rol;
+                        if(rol === 'admin'){
+                            this.setState({
+                                successAuth : <Redirect to="/admin"  />
+                            })
+                        }
+                        // redirigir a otros paths si es otro tipo de rol
                     }else{
                         // error en la autenticación
                         this.setState({

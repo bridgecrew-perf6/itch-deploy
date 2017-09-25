@@ -10,7 +10,7 @@ module.exports = {
       Return a promise to correctly handle asynchronicity.
     */
       return queryInterface.bulkInsert('Usuarios', [{
-        correo: '00fblanco@gmail.com',
+        correo: 'seguimientoresidenciasitch@gmail.com',
         rol: 'admin',
         contrasenia: generateHash('123456'),
         createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),

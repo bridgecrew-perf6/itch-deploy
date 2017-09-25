@@ -35,6 +35,9 @@ module.exports =  (app, express, passport) => {
     router.route('/empresa')
         .get(EmpresaController.findAll) // isAuth
         .post(isAuth, EmpresaController.add)
+    
+    router.route('/empresa/:id')
+        .put(isAuth, EmpresaController.update);
 
     // DOCENTE
     router.route('/docente')
