@@ -19,6 +19,9 @@ module.exports =  (app, express, passport) => {
     router.get('/usuario/isAuth', usuarioController.isAuth);
     router.get('/usuario/logout', usuarioController.logout);
 
+    router.put('/usuario/cambiar_contrasenia', isAuth, usuarioController.updateContrasenia);
+    router.put('/usuario/cambiar_contrasenia/email', usuarioController.updateContraseniaEmail); // isAuth
+   
     // DEPARTAMENTO
     router.route('/departamento')
         .get(isAuth, departamentoController.findAll)

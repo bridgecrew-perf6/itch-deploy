@@ -14,6 +14,15 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
           notEmpty: {msg: 'El campo no debe estar vacio'}
       }
+    },
+    correo:{ 
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      validate: {
+          isEmail: {msg: 'Debe tener un formato de correo electronico.'},
+          notEmpty: {msg: 'El campo debe tener un valor'}
+      }
     }
   });
   asesor_externo.associate = (models) => {

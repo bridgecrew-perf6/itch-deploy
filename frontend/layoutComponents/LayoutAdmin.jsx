@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {render} from 'react-dom';
 import PropTypes from 'prop-types';
 
-import { Layout, Menu, Breadcrumb, Icon } from 'antd';
+import { Layout, Menu, Breadcrumb, Icon, Avatar, Modal, Input, Form} from 'antd';
 const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
 
@@ -14,6 +14,7 @@ import {getIsAuth} from '../api.jsx';
 import Departamento from '../departamento/index.jsx';
 import Docente from '../docente/index.jsx';
 import Empresa from '../empresa/index.jsx';
+import CambiarContrasenia from '../layoutComponents/CambiarContrasenia.jsx';
 
 class LayoutAdmin extends Component{
     
@@ -32,7 +33,8 @@ class LayoutAdmin extends Component{
                             title: 'Gestión de empresas',
                             render: <Empresa/>
                         }
-                    }
+                    },
+            visibleCambiarContrasenia: false
                         
         }
     }
@@ -47,15 +49,24 @@ class LayoutAdmin extends Component{
     toggle = () => {
         this.setState({
             collapsed: !this.state.collapsed,
+            visibleCambiarContrasenia: false
         });
     }
+    
     handleMenu = ({item, key, selectedKeys}) => {
-        this.setState({
-            componentSelected: key
-        })
+        if(key == 3){
+            this.setState({
+                visibleCambiarContrasenia: true
+            })
+        }else{
+            this.setState({
+                componentSelected: key,
+                visibleCambiarContrasenia: false
+            })
+        }
     }
     render(){
-        const {isAuth, componentSelected, components} = this.state
+        const {isAuth, componentSelected, components, visibleCambiarContrasenia} = this.state
         // console.log(isAuth)
         const component = components[componentSelected];
         return(
@@ -106,6 +117,7 @@ class LayoutAdmin extends Component{
                             Sistema de Seguimiento de residencias del ITCH ©2017 Francisco Blanco 00fblanco@gmail.com
                         </Footer>
                     </Layout>
+                    <CambiarContrasenia visible={visibleCambiarContrasenia}/>
                 </Layout>
             ):
             (<Redirect to="/usuario/auth"/>)

@@ -38,6 +38,13 @@ const CreateFormAddAsesorExterno = Form.create()(
                             rules: [{required: true, message: 'El docente debe tener un puesto dentro de la empresa.'}]
                         })(<Input  style={{ width: '100%' }} placeholder="Puesto del asesor externo"/>)}
                     </FormItem>
+                    <FormItem label="Correo del asesor externo">
+                        {getFieldDecorator('correo', {
+                            rules: [{type: 'email',message: 'El email no es correcto'},{required: true, message: 'El correo es obligatorio.'}]
+                        })(
+                            <Input prefix={<Icon type="user" style={{fontSize: 13}} />} type="email" placeholder="Ingrese su correo electronico" />
+                        )}
+                    </FormItem>
                 </Form>
             </Modal>
         );
@@ -79,6 +86,7 @@ export default class FormAddAsesorExterno extends Component{
             axios.post('/api/asesor_externo', {
                 nombre: `${values.titulo} ${values.nombre}`,
                 puesto: values.puesto,
+                correo: values.correo,
                 id_empresa: this.state.empresa.id_empresa,
             }).then((res) => {
                 console.log(res)

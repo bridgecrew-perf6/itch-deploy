@@ -16,6 +16,11 @@ module.exports = {
         type: Sequelize.STRING(40),
         allowNull: false
       },
+      correo:{ 
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true
+      },
       id_empresa: {
         type: Sequelize.INTEGER,
         allowNull: false,
