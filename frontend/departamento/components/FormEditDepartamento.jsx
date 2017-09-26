@@ -83,6 +83,9 @@ const CreateFormDepartamento = Form.create()(
                 </FormItem>
             );
         });
+        var jefe_departamento = null
+        if(departamento)
+            jefe_departamento = departamento.docentes.find(docente => docente.Usuario.rol === 'jefe_departamento') || null;
         return(
             <Modal
                 visible={visible}
@@ -107,12 +110,12 @@ const CreateFormDepartamento = Form.create()(
                         {getFieldDecorator('id_jefe_departamento', {
                             rules: [
                             { required: true, message: 'El departamento debe tener un jefe.' },
-                            ],
+                            ], initialValue: jefe_departamento ? `${jefe_departamento.titulo} ${jefe_departamento.nombre} ${jefe_departamento.ap_paterno} ${jefe_departamento.ap_materno}` : ''
                         })(
                             <Select placeholder="Seleccione un docente">
                                 {   departamento ?
                                         departamento.docentes.map((docente, index) => {
-                                        return <Option key={index} value={`${docente.id_usuario}`}>{`${docente.titulo} ${docente.nombre} ${docente.ap_paterno} ${docente.ap_materno}`}</Option>
+                                            return <Option key={index} value={`${docente.id_usuario}`}>{`${docente.titulo} ${docente.nombre} ${docente.ap_paterno} ${docente.ap_materno}`}</Option>
                                         }): ''
                                 }
 
@@ -202,6 +205,7 @@ export default class FormDepartamento extends Component{
             axios.put(`/api/departamento/${departamento.id}`, {
                 nombre_departamento: values.nombre_departamento,
                 id_jefe_departamento: values.id_jefe_departamento,
+                carreras
             }).then((res) => {
                 console.log(res)
                 if(res.status === 200){

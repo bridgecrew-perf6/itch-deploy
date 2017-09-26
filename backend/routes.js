@@ -15,6 +15,9 @@ module.exports =  (app, express, passport) => {
             failureRedirect: '/api/usuario/isAuth'
         }
     ))
+    // TESTS
+    // router.get('/test', departamentoController.test);
+
 
     router.get('/usuario/isAuth', usuarioController.isAuth);
     router.get('/usuario/logout', usuarioController.logout);
@@ -28,7 +31,7 @@ module.exports =  (app, express, passport) => {
         .post(isAuth, departamentoController.add)
 
     router.route('/departamento/:id')
-        .get(isAuth, departamentoController.findById) 
+        .get(departamentoController.findById) 
         .put(isAuth, departamentoController.update)
 
     // EMPRESAS
