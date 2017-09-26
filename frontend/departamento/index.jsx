@@ -63,16 +63,16 @@ class Departamento extends Component{
        })
    }
    showModalFormEditDepartamento = (id_departamento) => {
-    axios.get(`/api/departamento/${id_departamento}`)
-        .then(res => {
-            // console.log(res.data)
-            this.setState({
-                visible_add_docente: false,
-                visible_form_departamento: false,
-                visible_form_edit_departamento: true,
-                departamento: res.data
+        axios.get(`/api/departamento/${id_departamento}`)
+            .then(res => {
+                // console.log(res.data)
+                this.setState({
+                    visible_add_docente: false,
+                    visible_form_departamento: false,
+                    visible_form_edit_departamento: true,
+                    departamento: res.data
+                })
             })
-        })
     }
     showAddDocente = (id_departamento, nombre_departamento) => {
         this.setState({

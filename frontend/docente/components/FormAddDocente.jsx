@@ -15,8 +15,21 @@ const CreateFormAddDocente = Form.create()(
             initialValue: 'ING.',
           })(
             <Select style={{ width: 60 }}>
-              <Option value="ING.">ING</Option>
-              <Option value="DR.">DR</Option>
+              <Option value="ING.">ING.</Option>
+              <Option value="DR.">DR.</Option>
+              <Option value="DRA">DRA.</Option>
+              <Option value="MTRO.">MTRO.</Option>
+              <Option value="DIR.">DIR.</Option>
+              <Option value="DIRA.">DIRA.</Option>
+              <Option value="LIC.">LIC.</Option>
+              <Option value="ISC.">ISC.</Option>
+              <Option value="ISI.">ISI.</Option>
+              <Option value="MAI.">MAI.</Option>
+              <Option value="MBT.">MTB.</Option>
+              <Option value="MCT.">MCT.</Option>
+              <Option value="MTI.">MTI.</Option>
+              <Option value="M.A.T.I.">M.A.T.I.</Option>
+              <Option value="M.C.">M.C.</Option>
             </Select>
           );
         return(

@@ -50,30 +50,29 @@ module.exports.add = (req, res) => {
 }
 module.exports.update = (req, res) => {
     console.log(req.body);
-    console.log(req.params)
-    const id_departamento = req.params.id,  
-        nombre = req.body.nombre_departamento,
-        id_usuario = req.body.id_jefe_departamento
+    // const id_departamento = req.params.id,  
+    //     nombre = req.body.nombre_departamento,
+    //     id_usuario = req.body.id_jefe_departamento
 
-    sequelize.transaction(t => {
-        return Departamento.update({nombre}, {where: {id: id_departamento}},  {transaction: t})
-            .then(departamento => {
-                return Usuario.update({rol: roles.DOCENTE}, {where: {rol: roles.JEFE_DEPARTAMENTO}}, {transaction: t})
-                    .then(usuario => {
-                        return Usuario.update({rol: roles.JEFE_DEPARTAMENTO}, {where: {id: id_usuario}}, {transaction: t});
-                    })
-            })
-    }).then((departamento)=>{
-        // console.log('success=======>    ', result)
-        res.status(200).json(departamento)
-    }).catch(Sequelize.ValidationError, (err) => {
-        var errores = err.errors.map((element) => {
-            return `${element.path}: ${element.message}`
-        })
-        // console.log('==>', errores)
-        res.status(202).json({errores})
-    }).catch((err) => {
-        res.status(406).json({err: err})
-    })        
+    // sequelize.transaction(t => {
+    //     return Departamento.update({nombre}, {where: {id: id_departamento}},  {transaction: t})
+    //         .then(departamento => {
+    //             return Usuario.update({rol: roles.DOCENTE}, {where: {rol: roles.JEFE_DEPARTAMENTO}}, {transaction: t})
+    //                 .then(usuario => {
+    //                     return Usuario.update({rol: roles.JEFE_DEPARTAMENTO}, {where: {id: id_usuario}}, {transaction: t});
+    //                 })
+    //         })
+    // }).then((departamento)=>{
+    //     // console.log('success=======>    ', result)
+    //     res.status(200).json(departamento)
+    // }).catch(Sequelize.ValidationError, (err) => {
+    //     var errores = err.errors.map((element) => {
+    //         return `${element.path}: ${element.message}`
+    //     })
+    //     // console.log('==>', errores)
+    //     res.status(202).json({errores})
+    // }).catch((err) => {
+    //     res.status(406).json({err: err})
+    // })        
 }
 

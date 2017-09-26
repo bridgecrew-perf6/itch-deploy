@@ -6,18 +6,32 @@ const InputGroup = Input.Group;
 const Option = Select.Option;
 
 import axios from 'axios';
-
+let uuid = 0;
 const CreateFormDepartamento = Form.create()(
     (props => {
         const { visible, onCancel, onCreate, form, remove, add, departamento} = props;
-        console.log('===>', departamento)
+        // console.log('===>', departamento)
         const { getFieldDecorator, getFieldValue} = form;
+
         const prefixSelectorTitulo = getFieldDecorator('titulo', {
             initialValue: 'ING.',
           })(
             <Select style={{ width: 60 }}>
-              <Option value="ING.">ING</Option>
-              <Option value="DR.">DR</Option>
+              <Option value="ING.">ING.</Option>
+              <Option value="DR.">DR.</Option>
+              <Option value="DRA">DRA.</Option>
+              <Option value="MTRO.">MTRO.</Option>
+              <Option value="DIR.">DIR.</Option>
+              <Option value="DIRA.">DIRA.</Option>
+              <Option value="LIC.">LIC.</Option>
+              <Option value="ISC.">ISC.</Option>
+              <Option value="ISI.">ISI.</Option>
+              <Option value="MAI.">MAI.</Option>
+              <Option value="MBT.">MTB.</Option>
+              <Option value="MCT.">MCT.</Option>
+              <Option value="MTI.">MTI.</Option>
+              <Option value="M.A.T.I.">M.A.T.I.</Option>
+              <Option value="M.C.">M.C.</Option>
             </Select>
           );
 
@@ -38,6 +52,7 @@ const CreateFormDepartamento = Form.create()(
             },
         };
         getFieldDecorator('keys', { initialValue: []});
+
         const keys = getFieldValue('keys');
         const formItems = keys.map((k, index) => {
             return (
@@ -118,7 +133,6 @@ const CreateFormDepartamento = Form.create()(
     })
 )
 
-let uuid = 0;
 export default class FormDepartamento extends Component{
    
     constructor(props){
@@ -181,6 +195,10 @@ export default class FormDepartamento extends Component{
             }
             console.log('Received values of form: ', values);
             // actualizar el departamento
+            const carreras = values.keys.map((key) => {
+                return values[`carrera-${key}`]
+            })
+            console.log(carreras)
             axios.put(`/api/departamento/${departamento.id}`, {
                 nombre_departamento: values.nombre_departamento,
                 id_jefe_departamento: values.id_jefe_departamento,
