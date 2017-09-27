@@ -34,6 +34,7 @@ export default class Departamento extends Component{
             <div>
                 <Row>
                     <Col xs={24} lg={6}>
+                        <p>Carrera: </p>
                         <Select
                             placeholder="Seleccione una carrera"                           
                             style={{width: '100%'}}
