@@ -18,9 +18,6 @@ module.exports =  (app, express, passport) => {
             failureRedirect: '/api/usuario/isAuth'
         }
     ))
-    // TESTS
-    // router.get('/test', departamentoController.test);
-
 
     router.get('/usuario/isAuth', usuarioController.isAuth);
     router.get('/usuario/logout', usuarioController.logout);

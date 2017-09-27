@@ -5,6 +5,9 @@ const Sequelize = require('../models').Sequelize;
 const generator = require('generate-password');
 const transporter = require('../../config/email');
 
+
+
+
 module.exports.add = (req, res) => {
     // console.log(req.body)
     const contrasenia = generator.generate({length: 8});

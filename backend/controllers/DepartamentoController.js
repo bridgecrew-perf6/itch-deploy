@@ -12,6 +12,7 @@ const rol = {
 }
 
 
+
 module.exports.findById = (req, res) => {
     Departamento.findOne({
         where: {id: req.param('id')},

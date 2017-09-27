@@ -31,6 +31,10 @@ class FormLogin extends Component{
                             this.setState({
                                 successAuth : <Redirect to="/admin"  />
                             })
+                        }else if(rol === 'jefe_departamento'){
+                            this.setState({
+                                successAuth : <Redirect to="/jefe_departamento"  />
+                            })
                         }
                         // redirigir a otros paths si es otro tipo de rol
                     }else{

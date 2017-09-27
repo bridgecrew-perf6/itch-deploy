@@ -1,10 +1,31 @@
 const Usuario = require('../models/index').Usuario;
+const Docente = require('../models').Docente
 const Sequelize = require('../models/index').Sequelize;
 const bCrypt = require('bcrypt-nodejs');
 const generator = require('generate-password');
 
+const rol = {
+    JEFE_PROYECTO: 'jefe_proyecto',
+    DOCENTE: 'docente',
+    JEFE_DEPARTAMENTO: 'jefe_departamento',
+	PRESIDENTE_ACADEMIA: 'presidente_academia',
+	CANDIDATO_RESIDENTE: 'candidato_residente',
+	RESIDENTE: 'residente',
+	ADMIN: 'admin'
+}
+
 const generateHash = (contrasenia) => {
   return bCrypt.hashSync(contrasenia, bCrypt.genSaltSync(8), null);
+}
+
+module.exports.findJefeDepartamento = (req, res) => {
+    const id_usuario = req.user.id;
+    Docente.findOne({where: {id_usuario}})
+		.then((docente) => {
+			res.status(200).json(docente);
+		}).catch(err => {
+			res.status(406).json({err: err})
+		})
 }
 module.exports.updateContrasenia = (req, res) => {
 	const contrasenia = req.body.nueva_contrasenia;
@@ -48,9 +69,23 @@ module.exports.updateContraseniaEmail = (req, res) => {
 module.exports.isAuth = (req, res) => {
 	if(req.isAuthenticated()){
 		console.warn('auth: ', req.user)
-		res.status(200).json({isAuth: true, rol: req.user.rol});
-	}
-	else{
+		if(req.user.rol === rol.JEFE_DEPARTAMENTO || req.user.rol === rol.DOCENTE || req.user.rol === rol.JEFE_PROYECTO || req.user.rol === rol.PRESIDENTE_ACADEMIA ){
+			// Buscar el docente
+			const id_usuario = req.user.id;
+			Docente.findOne({where: {id_usuario}})
+				.then((docente) => {
+					res.status(200).json({isAuth: true, rol: req.user.rol, id_docente: docente.id, id_departamento: docente.id_departamento});
+				}).catch(err => {
+					res.status(406).json({err: err})
+				})
+		}else if(req.user.rol === rol.CANDIDATO_RESIDENTE || req.user.rol === rol.RESIDENTE){
+			// Buscar el alumno jejeje
+		}else if(req.user.rol === 'admin'){
+			res.status(200).json({isAuth: true, rol: req.user.rol});
+		}else{
+			res.status(203).json({isAuth: false});
+		}
+	}else{
 		res.status(203).json({isAuth: false});
 	}
 }
