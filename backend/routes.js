@@ -5,6 +5,9 @@ const departamentoController = require('./controllers/DepartamentoController');
 const docenteController = require('./controllers/DocenteController');
 const EmpresaController = require('./controllers/EmpresaController');
 const AsesorController = require('./controllers/AsesorExternoController');
+const carreraController = require('./controllers/CarreraController');
+
+
 module.exports =  (app, express, passport) => {
    
     const router = express.Router();
@@ -31,12 +34,15 @@ module.exports =  (app, express, passport) => {
         .post(isAuth, departamentoController.add)
 
     router.route('/departamento/:id')
-        .get(departamentoController.findById) 
+        .get(isAuth, departamentoController.findById) 
         .put(isAuth, departamentoController.update)
 
+    // CARRERA
+    router.route('/carrera')
+        .post(isAuth, carreraController.add)
     // EMPRESAS
     router.route('/empresa')
-        .get(EmpresaController.findAll) // isAuth
+        .get(isAuth, EmpresaController.findAll)
         .post(isAuth, EmpresaController.add)
     
     router.route('/empresa/:id')

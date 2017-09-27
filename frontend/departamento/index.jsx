@@ -11,6 +11,7 @@ import axios from 'axios';
 import FormDepartamento from './components/FormDepartamento.jsx';
 import FormEditDepartamento from './components/FormEditDepartamento.jsx';
 import FormAddDocente from '../docente/components/FormAddDocente.jsx'
+import FormAddCarrera from './components/FormAddCarrera.jsx';
 
 class Departamento extends Component{
    constructor(){
@@ -24,6 +25,11 @@ class Departamento extends Component{
                 id_departamento: null,
                 nombre_departamento: null
             },
+            visible_add_carrera: false,
+            props_add_carrera: {
+                id_departamento: null,
+                nombre_departamento: null
+            },
             departamento: null,
             loadTable: true
        }
@@ -34,12 +40,15 @@ class Departamento extends Component{
             .then(res => {
                 if(res.status === 200){
                     var departamentos = res.data.map((departamento, index) => {
-                        // falta el request del jefe de departamento jejeje
-                        return {key: index, id: departamento.id, nombre:departamento.nombre, jefe_departamento: 'no asignado', acciones: 'Editar departamento' }
+                        console.log(departamento.docentes)
+                        
+                        const jefe_departamento = departamento.docentes.find(docente => { return docente.Usuario.rol === 'jefe_departamento'});
+                        return {key: index, id: departamento.id, nombre:departamento.nombre, jefe_departamento: `${jefe_departamento.titulo} ${jefe_departamento.nombre} ${jefe_departamento.ap_paterno} ${jefe_departamento.ap_materno}` || 'no asignado', acciones: 'Editar departamento' }
                     })
                     this.setState({
                         data: departamentos,
-                        loadTable: false
+                        loadTable: false,
+                        visible_form_edit_departamento: false
                     })
                 }
                 // console.log(res.data);
@@ -48,8 +57,8 @@ class Departamento extends Component{
    handleAddDepartamento(){
        this.fetchDepartamento();
        this.setState({
-        visible_form_departamento: false,
-        visible_form_edit_departamento: false
+            visible_form_departamento: false,
+            visible_form_edit_departamento: false
    })
    }
    componentDidMount() {
@@ -59,7 +68,8 @@ class Departamento extends Component{
        this.setState({
             visible_form_departamento: true,
             visible_form_edit_departamento: false,
-            visible_add_docente: false
+            visible_add_docente: false,
+            visible_add_carrera: false
        })
    }
    showModalFormEditDepartamento = (id_departamento) => {
@@ -68,6 +78,7 @@ class Departamento extends Component{
                 // console.log(res.data)
                 this.setState({
                     visible_add_docente: false,
+                    visible_add_carrera: false,
                     visible_form_departamento: false,
                     visible_form_edit_departamento: true,
                     departamento: res.data
@@ -78,6 +89,7 @@ class Departamento extends Component{
         this.setState({
             visible_form_departamento: false,
             visible_form_edit_departamento: false,
+            visible_add_carrera: false,
             visible_add_docente: true,
             props_add_docente: {
                 id_departamento: id_departamento,
@@ -85,8 +97,20 @@ class Departamento extends Component{
             }
         })
     }
+    showAddCarrera = (id_departamento, nombre_departamento) => {
+        this.setState({
+            visible_form_departamento: false,
+            visible_form_edit_departamento: false,
+            visible_add_docente: false,
+            visible_add_carrera: true,
+            props_add_carrera: {
+                id_departamento: id_departamento,
+                nombre_departamento: nombre_departamento
+            }
+        })
+    }
     render(){
-        const { visible_form_edit_departamento,visible_form_departamento, data, departamento, loadTable, visible_add_docente, props_add_docente} = this.state;
+        const { visible_form_edit_departamento,visible_form_departamento, data, departamento, loadTable, visible_add_docente, props_add_docente, visible_add_carrera, props_add_carrera} = this.state;
         return(
             <div>
                 <Row type="flex" justify="left" align="middle">
@@ -124,7 +148,8 @@ class Departamento extends Component{
                                 <span>
                                     {/* {record.id} */}
                                     <Button style={{marginRight: 5}} icon="edit" onClick={() => this.showModalFormEditDepartamento(record.id)}>Departamento</Button>
-                                    <Button style={{marginLeft: 5}} icon="team" onClick={() => this.showAddDocente(record.id, record.nombre)} >Agregar docente</Button>
+                                    <Button style={{marginLeft: 5}} icon="plus" onClick={() => this.showAddDocente(record.id, record.nombre)} >docente</Button>
+                                    <Button style={{marginLeft: 5}} icon="plus" onClick={() => this.showAddCarrera(record.id, record.nombre)} >carrera</Button>
                                 </span>
                             )}
                             className="center-text"
@@ -132,8 +157,9 @@ class Departamento extends Component{
                     </Table>
                 </Row>
                 <FormDepartamento visible={visible_form_departamento} onAddDepartamento={this.handleAddDepartamento.bind(this)}/>
-                <FormEditDepartamento visible={visible_form_edit_departamento} departamento={departamento}/>
+                <FormEditDepartamento visible={visible_form_edit_departamento} onReloadDepartamentos={this.fetchDepartamento.bind(this)} departamento={departamento}/>
                 <FormAddDocente visible={visible_add_docente} departamento={props_add_docente}/>              
+                <FormAddCarrera visible={visible_add_carrera} departamento={props_add_carrera} />
             </div>
             
         )

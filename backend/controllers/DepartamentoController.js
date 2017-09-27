@@ -24,7 +24,7 @@ module.exports.findById = (req, res) => {
 
 }
 module.exports.findAll = (req, res) => {
-    Departamento.findAll({include: [{model: Carrera, as: 'carreras'}, {model: Docente, as: 'docentes'}]})
+    Departamento.findAll({include: [{model: Carrera, as: 'carreras'}, {model: Docente, as: 'docentes', include: [{model: Usuario, attributes: ['rol']}]}]})
         .then(departamentos => {
             res.status(200).json(departamentos);
         }).catch(err => {
@@ -66,15 +66,14 @@ module.exports.update = (req, res) => {
     // console.log(req.body);
     const id_departamento = req.params.id,  
         nombre = req.body.nombre_departamento,
-        id_usuario = req.body.id_jefe_departamento,
-        carreras = req.body.carreras
+        id_usuario = req.body.id_jefe_departamento
     sequelize.transaction(t => {
         return Departamento.update({nombre}, {where: {id: id_departamento}}, {transaction: t})
             .then(departamento => {
                 console.log(id_departamento)
                 return sequelize.query(`update usuarios, docentes set usuarios.rol='docente' where usuarios.id=docentes.id_usuario and usuarios.rol='jefe_departamento' and docentes.id_departamento = ${id_departamento};`,{type: sequelize.QueryTypes.UPDATE},{transaction: t})
                     .then(usuarios => {
-                        return Usuario.update({rol: rol.JEFE_DEPARTAMENTO}, {where: {id: id_usuario}}, {transaction: t});
+                        return Usuario.update({rol: rol.JEFE_DEPARTAMENTO}, {where: {id: id_usuario}}, {transaction: t})
                     })
             })
     }).then((departamento)=>{
