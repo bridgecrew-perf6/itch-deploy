@@ -17,6 +17,8 @@ import Empresa from '../empresa/index.jsx';
 import Departamento from '../departamento/departamento.jsx';
 import CambiarContrasenia from '../layoutComponents/CambiarContrasenia.jsx';
 import FormAddDocente from '../docente/components/FormAddDocente.jsx';
+import GestionPeriodoDeResidencia from '../periodo_residencia/gestion.jsx';
+import FormAperturaPeriodoDeResidencia from '../periodo_residencia/add.jsx'
 
 class LayoutJefeDepartamento extends Component{
     constructor(){
@@ -111,6 +113,26 @@ class LayoutJefeDepartamento extends Component{
                     nombre_departamento: departamento.nombre
                 }
             })
+        }else if(key == 5){
+            const {departamento} = this.state
+            this.setState({
+                visible_add_docente: false,
+                visibleCambiarContrasenia: false,
+                componentRender: {
+                    title: 'Gestión de periodos de residencia',
+                    render: <GestionPeriodoDeResidencia departamento={departamento} />
+                }
+            })
+        }else if(key == 6){
+            const {departamento} = this.state
+            this.setState({
+                visible_add_docente: false,
+                visibleCambiarContrasenia: false,
+                componentRender: {
+                    title: 'Apertura de periodo de residencia',
+                    render: <FormAperturaPeriodoDeResidencia departamento={departamento} />
+                }
+            })
         }
     }
     render(){
@@ -143,6 +165,20 @@ class LayoutJefeDepartamento extends Component{
                                     <span>Agregar docente</span>
                                     <FormAddDocente visible={visible_add_docente} departamento={props_add_docente}/>              
                                 </Menu.Item>
+                            </SubMenu>
+                            <SubMenu
+                                key="sub2"
+                                title={<span><Icon type="calendar" /><span>Periodos de residencia</span></span>}
+                            >
+                                <Menu.Item key="5" >
+                                    <Icon type="schedule" />
+                                    <span>Gestión</span>
+                                </Menu.Item>
+                                <Menu.Item key="6" >
+                                    <Icon type="plus"/>
+                                    <span>Agregar periodo</span>
+                                </Menu.Item>
+
                             </SubMenu>
                             <Menu.Item key="2" >
                                 <Icon type="contacts"/>
