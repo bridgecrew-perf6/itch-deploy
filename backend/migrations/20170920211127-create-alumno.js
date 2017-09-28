@@ -43,14 +43,14 @@ module.exports = {
       },
       no_seguro: {
         type: Sequelize.STRING(20), 
-        allowNull: false
+        allowNull: true
       },
       numero_celular: {
         type: Sequelize.STRING(20)
       },
       id_tipo_seguro: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
         onDelete: 'CASCADE',
         references: {
           model: 'tipo_seguros',

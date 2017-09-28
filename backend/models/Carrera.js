@@ -18,10 +18,10 @@ module.exports = (sequelize, DataTypes) => {
     Carrera.hasMany(models.Periodo, {
       foreignKey: 'id_carrera',
       as: 'periodos'
-    })
+    });
     Carrera.hasMany(models.docente_carreras, {
       foreignKey: 'id_carrera',
-      onDelete: 'CASCADE'
+      as: 'docentes_carreras'
     });
   }
   return Carrera;

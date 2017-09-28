@@ -1,36 +1,46 @@
-const Docente = require('../models').Docente;
+const Alumno = require('../models').Alumno;
 const Usuario = require('../models').Usuario;
-const sequelize = require('../models').sequelize;
-const Sequelize = require('../models').Sequelize;
+const Anteproyecto = require('../models').Anteproyecto;
+const Sequelize = require('../models').Sequelize
+const sequelize = require('../models').sequelize
 const generator = require('generate-password');
 const transporter = require('../../config/email');
 
 
-
-
 module.exports.add = (req, res) => {
-    // console.log(req.body)
+    const no_control = req.body.no_control,
+        nombre = req.body.nombre,
+        ap_paterno = req.body.ap_paterno,
+        ap_materno = req.body.ap_materno,
+        id_carrera = req.body.id_carrera,
+        correo = req.body.correo,
+        id_periodo = req.body.id_periodo;
+
     const contrasenia = generator.generate({length: 8});
-    const correo = req.body.correo
+
     sequelize.transaction((t) => {
-        console.log('contrasenia', contrasenia);
         return Usuario.create({
             correo,
             contrasenia: contrasenia,
-            rol: 'docente'
+            rol: 'candidato_residente'
         }, {transaction: t}).then((usuario) => {
-            return Docente.create({
-                titulo: req.body.titulo,
-                nombre: req.body.nombre,
-                ap_paterno: req.body.ap_paterno,
-                ap_materno: req.body.ap_materno,
-                id_departamento: req.body.id_departamento,
+            return Alumno.create({
+                no_control,
+                nombre,
+                ap_paterno,
+                ap_materno,
+                id_carrera,
                 id_usuario: usuario.id
-            }, {transaction: t});
+            }, {transaction: t}).then(alumno => {
+                return Anteproyecto.create({
+                    id_alumno: alumno.id,
+                    id_periodo: id_periodo
+                },{transaction: t});
+            })
         });
-    }).then((docente)=>{
-        // console.log('success=======>    ', result)
-        // enviar email con contraseña al docente
+    }).then((alumno)=>{
+        // console.log('success=======>    ', alumno)
+        // enviar email con contraseña al alumno
         const mailOptions = {
             from: 'seguimientoresidenciasitch@gmail.com',
             to: correo,
@@ -44,7 +54,7 @@ module.exports.add = (req, res) => {
                 console.log('EMAIL', 'contraseña enviada!');
             }
         })
-        res.status(200).json(docente)
+        res.status(200).json(alumno)
     }).catch(Sequelize.ValidationError, (err) => {
         var errores = err.errors.map((element) => {
             return `${element.path}: ${element.message}`
@@ -52,6 +62,7 @@ module.exports.add = (req, res) => {
         // console.log('==>', errores)
         res.status(202).json({errores})
     }).catch((err) => {
+        console.log(err)
         res.status(406).json({err: err})
-    })    
+    }) 
 }

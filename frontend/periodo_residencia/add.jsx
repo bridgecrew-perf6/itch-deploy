@@ -1,16 +1,21 @@
 import React, {Component} from 'react';
-import {Form, Input, Select, Row, Col, DatePicker, Button} from 'antd';
+import {Form, Input, Select, Row, Col, DatePicker, Button, message, Modal} from 'antd';
 const FormItem = Form.Item;
 const Option = Select.Option;
 const RangePicker = DatePicker.RangePicker;
+import axios from 'axios';
 
 
 const CreateFormAperturaPeriodoDeResidencia = Form.create()(
     (props => {
-        const { onCreate, form, departamento} = props;
+        const { onCreate, form, departamento, checkPeriodoEntregaAnteproyecto} = props;
         const { getFieldDecorator} = form;
         var yearIterator = 2016;
-        const rangeConfig = {
+        const rangeConfigPeriodoResidencia = {
+            rules: [{ type: 'array', required: true, message: 'Seleccione la fecha de inicio y fin del periodo' }],
+        };    
+        // {validator: checkPeriodoEntregaAnteproyecto},
+        const rangeConfigPeriodoEntregaAnteproyecto = {
             rules: [{ type: 'array', required: true, message: 'Seleccione la fecha de inicio y fin del periodo' }],
         };    
         return (
@@ -24,7 +29,7 @@ const CreateFormAperturaPeriodoDeResidencia = Form.create()(
                                 })(
                                     <Select placeholder="Seleccione una carrera">
                                         {departamento.carreras.map((carrera, index) => {
-                                            return (<Option key={index} value={carrera.nombre}>{carrera.nombre}</Option>)
+                                            return (<Option key={index} value={`${carrera.id}`}>{carrera.nombre}</Option>)
                                         })}
                                     </Select>
                                 )}
@@ -65,8 +70,8 @@ const CreateFormAperturaPeriodoDeResidencia = Form.create()(
                             label="Seleccione la fecha de inicio y fin del periodo"
                             style={{width: '100%'}}
                             >
-                            {getFieldDecorator('fechas_periodo', rangeConfig)(
-                                <RangePicker />
+                            {getFieldDecorator('fechas_periodo', rangeConfigPeriodoResidencia)(
+                                <RangePicker format="ll" disabledDate={current => current.valueOf() < Date.now()} />
                             )}
                         </FormItem>
                         </Col>
@@ -76,8 +81,8 @@ const CreateFormAperturaPeriodoDeResidencia = Form.create()(
                         <FormItem
                             label="Seleccione la fecha de inicio y fin de la entrega de anteproyectos"
                             >
-                            {getFieldDecorator('fechas_entrega_anteproyecto', rangeConfig)(
-                                <RangePicker />
+                            {getFieldDecorator('fechas_entrega_anteproyecto', rangeConfigPeriodoEntregaAnteproyecto)(
+                                <RangePicker  format="ll" disabledDate={current => current.valueOf() < Date.now()} />
                             )}
                         </FormItem>
                         </Col>
@@ -97,6 +102,26 @@ export default class FormAperturaPeriodoDeResidencia extends Component{
             departamento: props.departamento
         }
     }
+    checkPeriodoEntregaAnteproyecto = (rule, value, callback) => {
+        // const form = this.form;
+        // const fechas_periodo = form.getFieldValue('fechas_periodo');
+        // console.log(value)
+        // console.log(fechas_periodo)
+        // if(fechas_periodo){
+        //     console.log(value[0].format('YYYY-MM-DD') < fechas_periodo[0].format('YYYY-MM-DD'));
+        //     console.log(value[0].valueOf() < fechas_periodo[0].valueOf());
+        //     if((value[0].valueOf() > fechas_periodo[0].valueOf()) === true){
+        //         callback(`La fecha inicial de entrega de proyectos debe ser mayor que: ${fechas_periodo[0].format('ll')}`);
+        //     // }else if(value[1].isBefore(fechas_periodo[1])){
+        //     //     callback(`La fecha final de entrega de proyectos debe ser menor que: ${fechas_periodo[1].format('ll')}`);                
+        //     }else{
+        //         callback();
+        //     }
+        // }else{
+        //     callback('Primero seleccione la fecha del periodo.')
+        // }
+        
+    }
     handleCreate = (e) => {
         e.preventDefault();
         const form = this.form;
@@ -105,30 +130,39 @@ export default class FormAperturaPeriodoDeResidencia extends Component{
                 return;
             }
             console.log('Received values of form: ', values);
+            const  
+                id_carrera = values.id_carrera,
+                periodo_residencia = values.periodo,
+                ciclo = values.ciclo,
+                fechas_periodo = [values.fechas_periodo[0].format('YYYY-MM-DD'), values.fechas_periodo[1].format('YYYY-MM-DD')],
+                fechas_entrega_anteproyecto = [values.fechas_entrega_anteproyecto[0].format('YYYY-MM-DD'), values.fechas_entrega_anteproyecto[1].format('YYYY-MM-DD')]
             
+            console.log(fechas_periodo);
             // crear post al servidor
-            // axios.post('/api/departamento', {
-            //     nombre: values.nombre_departamento,
-            // }).then((res) => {
-            //     console.log(res)
-            //     if(res.status === 200){
-            //         form.resetFields();
-            //         message.success("Departamento agregado satisfactoriamente")
-            //         this.setState({ visible: false });
-            //         this.props.onAddDepartamento()
-            //     }else{
-            //         Modal.error({
-            //             title: 'Error al guardar el departamento. Revisar los siguientes campos',
-            //             content:(
-            //                 <div>
-            //                     {res.data.errores}
-            //                 </div>
-            //             ), onOk(){}, 
-            //         })
-            //     }
-            // }).catch((err) => {
-            //     message.error(err);                                    
-            // })
+            axios.post('/api/carrera/periodo', {
+                id_carrera,
+                periodo_residencia,
+                ciclo,
+                fechas_periodo,
+                fechas_entrega_anteproyecto
+            }).then((res) => {
+                console.log(res)
+                if(res.status === 200){
+                    form.resetFields();
+                    message.success("Periodo agregado satisfactoriamente!")
+                }else{
+                    Modal.error({
+                        title: 'Error al guardar el el periodo. Revisar los siguientes campos',
+                        content:(
+                            <div>
+                                {res.data.errores}
+                            </div>
+                        ), onOk(){}, 
+                    })
+                }
+            }).catch((err) => {
+                message.error(err);                                    
+            })
         });
     }
 
@@ -144,6 +178,7 @@ export default class FormAperturaPeriodoDeResidencia extends Component{
                     ref={this.saveFormRef}
                     onCreate={this.handleCreate}
                     departamento={departamento}
+                    checkPeriodoEntregaAnteproyecto={this.checkPeriodoEntregaAnteproyecto}
                 />
             </div>
         )

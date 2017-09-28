@@ -42,12 +42,13 @@ module.exports = (sequelize, DataTypes) => {
         isDate: true
       }
     }
-  });
+  }, {indexes: [{unique: true, fields: ['periodo', 'ciclo']}]});
+  
   Periodo.associate = (models) => {
-    Periodo.belongsTo(models.Carrera, {
-      foreignKey: 'id_carrera',
-      onDelete: 'CASCADE'
-    })
+      Periodo.belongsTo(models.Carrera, {
+        foreignKey: 'id_carrera',
+        onDelete: 'CASCADE'
+      })
   }
   return Periodo;
 };

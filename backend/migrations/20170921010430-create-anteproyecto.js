@@ -10,17 +10,11 @@ module.exports = {
       },
       nombre: {
         type: Sequelize.STRING,
-        allowNull: false,
-        validate: {
-          notEmpty: {msg: 'El anteproyecto debe tener un nombre'}
-        }
+        allowNull: true,
       },
       objetivo_general: {
         type: Sequelize.STRING,
-        allowNull: false,
-        validate: {
-          notEmpty: {msg: 'El antrpoyecto debe tener un nombre'}
-        }
+        allowNull: true,
       },
       dictamen:{
         type: Sequelize.ENUM,
@@ -51,7 +45,7 @@ module.exports = {
       id_asesor_externo: {
         type: Sequelize.INTEGER,
         onDelete: 'CASCADE',
-        allowNull: false,
+        allowNull: true,
         references: {
           model: 'asesor_externos',
           key: 'id',

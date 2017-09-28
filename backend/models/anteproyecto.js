@@ -3,14 +3,16 @@ module.exports = (sequelize, DataTypes) => {
   var Anteproyecto = sequelize.define('Anteproyecto', {
     nombre: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
+      defaultValue: null,
       validate: {
         notEmpty: {msg: 'El anteproyecto debe tener un nombre'}
       }
     },
     objetivo_general: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
+      defaultValue: null,
       validate: {
         notEmpty: {msg: 'El antrpoyecto debe tener un nombre'}
       }
@@ -22,12 +24,13 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 'no aprobado'
     }
   });
+
   Anteproyecto.associate = (models) => {
-    Anteproyecto.hasOne(models.Alumno, {
+    Anteproyecto.belongsTo(models.Alumno, {
       foreignKey: 'id_alumno',
       onDelete: 'CASCADE'
     });
-    Anteproyecto.hasOne(models.Periodo, {
+    Anteproyecto.belongsTo(models.Periodo, {
       foreignKey: 'id_periodo',
       onDelete: 'CASCADE'
     });

@@ -24,7 +24,7 @@ class LayoutJefeDepartamento extends Component{
     constructor(){
         super();
         this.state = {
-            collapsed: false,
+            collapsed: true,
             isAuth: true,
             usuario: null,
             departamento: null,

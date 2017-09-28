@@ -54,10 +54,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     no_seguro: {
       type: DataTypes.STRING, 
-      allowNull: false,
+      allowNull: true,
       validate: {
-        isNumeric: {msg: 'Deben ser solo letras '},
-        notEmpty: {msg: 'El número de seguro es obligatorio'}
+        isNumeric: {msg: 'Deben ser solo letras '}
       }
     },
     numero_celular: {

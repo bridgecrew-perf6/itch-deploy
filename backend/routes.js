@@ -6,7 +6,7 @@ const docenteController = require('./controllers/DocenteController');
 const EmpresaController = require('./controllers/EmpresaController');
 const AsesorController = require('./controllers/AsesorExternoController');
 const carreraController = require('./controllers/CarreraController');
-
+const alumnoController = require('./controllers/AlumnoController');
 
 module.exports =  (app, express, passport) => {
    
@@ -47,6 +47,11 @@ module.exports =  (app, express, passport) => {
     router.route('/carrera/:id_carrera/docentes_asignados')
         .get(isAuth, carreraController.docentesAsignados);
 
+    router.route('/carrera/periodo')
+        .post(isAuth, carreraController.addPeriodo)
+
+    router.route('/carrera/:id/periodos')
+        .get(carreraController.findById)
     // EMPRESAS
     router.route('/empresa')
         .get(isAuth, EmpresaController.findAll)
@@ -61,9 +66,11 @@ module.exports =  (app, express, passport) => {
 
     // ASESOR EXTERNO
     router.route('/asesor_externo')
-        .post(isAuth, AsesorController.add);
+        .post(isAuth, AsesorController.add)
 
-
+    // ALUMNOS
+    router.route('/alumno')
+        .post(isAuth, alumnoController.add)
     app.use('/api',router);
 
      // Redirect trafict to react app
