@@ -41,8 +41,8 @@ module.exports =  (app, express, passport) => {
     router.route('/carrera/asignar_encargados')
         .post(isAuth, carreraController.asignarEncargados)
     
-    router.post('/carrera/asignar_docente')
-        .post(isAuth, carreraController.asignarDocente)
+    router.route('/carrera/asignar_docentes')
+        .post(isAuth, carreraController.asignarDocentes)
     
     router.route('/carrera/:id_carrera/docentes_asignados')
         .get(isAuth, carreraController.docentesAsignados);

@@ -30,7 +30,7 @@ module.exports = {
       },
       rol: {
         type: Sequelize.ENUM,
-        values: ['docente','jefe_proyecto','presidente_academia'],
+        values: ['docente','jefe_proyecto','presidente_academia', 'deshabilitado'],
         allowNull: false
       },
       

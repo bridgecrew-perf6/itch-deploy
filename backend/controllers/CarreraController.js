@@ -30,7 +30,7 @@ module.exports.asignarEncargados = (req, res) => {
     }
     // insertamos o actualizamos al presidente de academia
     sequelize.transaction((t) => {
-        return docente_carreras.update({rol: 'docente'}, {where: filterUpdate}, {transaction: t})
+        return docente_carreras.update({rol: 'deshabilitado'}, {where: filterUpdate}, {transaction: t})
             .then(presidente_updated => {
                 return docente_carreras.upsert({
                     id_docente: id_presidente_academia,
@@ -64,8 +64,52 @@ module.exports.asignarEncargados = (req, res) => {
     }) 
 
 }
-module.exports.asignarDocente = (req, res) => {
-    console.log(req.body);
+module.exports.asignarDocentes = (req, res) => {
+    const id_carrera = req.body.id_carrera,
+        array_docentes = req.body.array_docentes;
+        console.log(array_docentes)
+        console.log(id_carrera)
+    sequelize.transaction((t) => {
+        return docente_carreras.update({rol: 'deshabilitado'}, {where: {id_carrera, rol:'docente'}}, {transaction: t})
+            .then(updated_docentes => {
+                return sequelize.Promise.map(array_docentes, (docente) => {
+                    return docente_carreras.upsert({
+                        id_docente: docente.id,
+                        id_carrera: id_carrera,
+                        rol: 'docente'
+                    },  {transaction: t});        
+                })
+            })
+    }).then((docentes)=>{
+        res.status(200).json(docentes);
+    }).catch(Sequelize.ValidationError, (err) => {
+        var errores = err.errors.map((element) => {
+            return `${element.path}: ${element.message}`
+        })
+        // console.log('==>', errores)
+        res.status(202).json({errores})
+    }).catch((err) => {
+        console.log(err)
+        res.status(406).json({err: err})
+    }) 
+        
+    
+        // docente_carreras.upsert({
+        //     id_docente,
+        //     id_carrera,
+        //     rol: 'docente'
+        // }).then((docente_asignado)=>{
+        //     res.status(200).json(docente_asignado);
+        // }).catch(Sequelize.ValidationError, (err) => {
+        //     var errores = err.errors.map((element) => {
+        //         return `${element.path}: ${element.message}`
+        //     })
+        //     // console.log('==>', errores)
+        //     res.status(202).json({errores})
+        // }).catch((err) => {
+        //     console.log(err)
+        //     res.status(406).json({err: err})
+        // }) 
 }
 module.exports.add = (req, res) => {
     const nombre = req.body.nombre,

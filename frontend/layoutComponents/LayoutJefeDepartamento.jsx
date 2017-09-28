@@ -16,6 +16,7 @@ import Docente from '../docente/index.jsx';
 import Empresa from '../empresa/index.jsx';
 import Departamento from '../departamento/departamento.jsx';
 import CambiarContrasenia from '../layoutComponents/CambiarContrasenia.jsx';
+import FormAddDocente from '../docente/components/FormAddDocente.jsx';
 
 class LayoutJefeDepartamento extends Component{
     constructor(){
@@ -29,29 +30,34 @@ class LayoutJefeDepartamento extends Component{
                        title: null,
                        render: null
             },
-            visibleCambiarContrasenia: false
+            visibleCambiarContrasenia: false,
+            visible_add_docente: false,
+            props_add_docente: {
+                id_departamento: null,
+                nombre_departamento: null
+            }
         }
     }
     getIsAuth(){
         getIsAuth().then((usuario) => {
             if(usuario.rol === 'jefe_departamento'){
                 axios.get(`/api/departamento/${usuario.id_departamento}`)
-                .then(res => {
-                    if(res.status === 200){
-                        this.setState({
-                            departamento: res.data,
-                            isAuth: usuario.isAuth,
-                            usuario: usuario,
-                            componentRender: {
-                                title: 'Gestión de departamento '+res.data.nombre,
-                                render: <Departamento departamento={res.data}/>
+                    .then(res => {
+                        if(res.status === 200){
+                            this.setState({
+                                departamento: res.data,
+                                isAuth: usuario.isAuth,
+                                usuario: usuario,
+                                componentRender: {
+                                    title: 'Gestión de departamento '+res.data.nombre,
+                                    render: <Departamento departamento={res.data}/>
 
-                            }
-                        })
-                    }else{
-                        this.setState({isAuth: false})
-                    }
-                })
+                                }
+                            })
+                        }else{
+                            this.setState({isAuth: false})
+                        }
+                    })
             }
             else{
                 this.setState({isAuth: false})
@@ -74,8 +80,9 @@ class LayoutJefeDepartamento extends Component{
             this.setState({
                 componentSelected: key,
                 visibleCambiarContrasenia: false,
+                visible_add_docente: false,
                 componentRender: {
-                    title: 'Gestión de deparamento <strong>' + departamento.nombre +'<strong>',
+                    title: 'Gestión de deparamento ' + departamento.nombre,
                     render: <Departamento departamento={departamento} />
                 }
             })
@@ -83,6 +90,7 @@ class LayoutJefeDepartamento extends Component{
             this.setState({
                 componentSelected: key,
                 visibleCambiarContrasenia: false,
+                visible_add_docente: false,
                 componentRender: {
                     title: 'Gestión de empresas',
                     render: <Empresa />
@@ -90,12 +98,23 @@ class LayoutJefeDepartamento extends Component{
             })
         }else if(key == 3){
             this.setState({
-                visibleCambiarContrasenia: true
+                visibleCambiarContrasenia: true,
+                visible_add_docente: false
+            })
+        }else if(key == 4){
+            const {departamento} = this.state;
+            this.setState({
+                visibleCambiarContrasenia: false,
+                visible_add_docente: true,
+                props_add_docente: {
+                    id_departamento: departamento.id,
+                    nombre_departamento: departamento.nombre
+                }
             })
         }
     }
     render(){
-        const {isAuth, componentSelected, componentRender, visibleCambiarContrasenia, usuario, departamento} = this.state
+        const {isAuth, componentSelected, componentRender, visibleCambiarContrasenia, usuario, departamento, visible_add_docente, props_add_docente} = this.state
         // console.log(isAuth)
         return(
             isAuth ? (
@@ -111,10 +130,20 @@ class LayoutJefeDepartamento extends Component{
                             <img src="/img/tec_logo.png" alt="logo_tec" height="100%"/>
                         </div>
                         <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']} onSelect={this.handleMenu}>
-                            <Menu.Item key="1" >
-                                <Icon type="team"/>
-                                <span>Departamento</span>
-                            </Menu.Item>
+                            <SubMenu
+                                key="sub0"
+                                title={<span><Icon type="appstore" /><span>Departamento</span></span>}
+                                >
+                                <Menu.Item key="1" >
+                                    <Icon type="team"/>
+                                    <span>Gestionar</span>
+                                </Menu.Item>
+                                <Menu.Item key="4">
+                                    <Icon type="user-add"/>
+                                    <span>Agregar docente</span>
+                                    <FormAddDocente visible={visible_add_docente} departamento={props_add_docente}/>              
+                                </Menu.Item>
+                            </SubMenu>
                             <Menu.Item key="2" >
                                 <Icon type="contacts"/>
                                 <span>Empresas</span>

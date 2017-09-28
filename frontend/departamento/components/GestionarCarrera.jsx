@@ -13,9 +13,9 @@ const CreateFormAsignacion = Form.create()(
         // console.log('as', docentesAsignados)
 
         const default_presidente_academia = docentesAsignados.find(docente => docente.rol === 'presidente_academia') || null
-        console.log('presidente:',default_presidente_academia);
+        // console.log('presidente:',default_presidente_academia);
         const default_jefe_proyecto = docentesAsignados.find(docente => docente.rol === 'jefe_proyecto') || null
-        console.log('jefe_proyecto:',default_jefe_proyecto);
+        // console.log('jefe_proyecto:',default_jefe_proyecto);
 
         return (
             <Form layout="horizontal" 
@@ -72,7 +72,7 @@ export default class GestionarCarrera extends Component{
                 acciones: 'assign'
             }
         });
-        console.log('aquiaaa',docentes)
+        console.log('constructor', props.docentesAsignados)
 
         this.state = {
             carrera: props.carrera,
@@ -94,7 +94,7 @@ export default class GestionarCarrera extends Component{
                 asignacion: 'assign'
             }
         });
-        console.log('aquiaaa',docentes)
+        console.log('update', nextProps.docentesAsignados)
 
         this.setState({
             carrera: nextProps.carrera,
@@ -186,7 +186,8 @@ export default class GestionarCarrera extends Component{
     }
     render(){
         const {carrera, docentes, filterDocentes, docentesAsignados} = this.state;
-        // console.log(')>', docentesAsignados);
+        // console.log('docentes_asignados: ', docentesAsignados)
+
         const columns = [
             {
                 className: 'center-text',
@@ -215,15 +216,43 @@ export default class GestionarCarrera extends Component{
                 }               
             }
         ]
+        const presidente_academia = docentesAsignados.find((docente) => docente.rol==='presidente_academia') || null
+        const jefe_proyecto =  docentesAsignados.find((docente) => docente.rol==='jefe_proyecto') || null
+        const isSelectedRow = (record) => {
+            // console.log('porq?', docentesAsignados);
+            return docentesAsignados.find((docente) => (docente.id_docente === record.id && docente.rol==='docente')) ? true : false
+            // return true;
+        }
         const rowSelection = {
             onChange: (selectedRowKeys, selectedRows) => {
               console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+              axios.post('/api/carrera/asignar_docentes', {
+                  id_carrera: carrera.id, 
+                  array_docentes: selectedRows
+                }).then(res => {
+                        if(res.status === 200 ){
+                            message.success('Docentes asignados :)!')
+                        }else{
+                            Modal.error({
+                                title: 'Error al actualizar docentes. Revisar los siguientes campos',
+                                content:(
+                                    <div>
+                                        {res.data.errores}
+                                    </div>
+                                ), onOk(){}, 
+                            })
+                        }
+                    }).catch(err => {
+                            message.error('Error en el servidor verificar con el encargado.');   
+                    })
             },
-            getCheckboxProps: record => ({
-              disabled: record.name === 'Disabled User',    // Column configuration not to be checked
-            }),
-        };
-
+            getCheckboxProps: record => (
+                {
+                    disabled: (presidente_academia ? record.id === presidente_academia.id_docente : null) || (jefe_proyecto ? record.id === jefe_proyecto.id_docente : null),
+                    defaultChecked: isSelectedRow(record)
+                }
+            ),
+        }
 
         return (
             <div>
@@ -240,7 +269,7 @@ export default class GestionarCarrera extends Component{
                 </Row>
 
                 <Row type="flex" justify="center" align="middle" style={{marginTop: 20}}>
-                    <Table rowSelection={rowSelection} dataSource={filterDocentes} className="full-width" columns={columns} pagination={{ pageSize: 8 }}  scroll={{ x: 800 }} />
+                    <Table bordered title={() => 'Docentes que participan en la carrera'} rowSelection={rowSelection} dataSource={filterDocentes} className="full-width" columns={columns} pagination={{ pageSize: 8 }}  scroll={{ x: 800 }} />
                 </Row>
             </div>
         )

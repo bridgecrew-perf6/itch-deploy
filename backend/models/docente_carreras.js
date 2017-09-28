@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
   const docente_carreras = sequelize.define('docente_carreras', {
     rol: {
       type: DataTypes.ENUM,
-      values: ['docente','jefe_proyecto','presidente_academia'],
+      values: ['docente','jefe_proyecto','presidente_academia', 'deshabilitado'],
       allowNull: false
     }
   }, {indexes: [{unique: true, fields: ['id_docente', 'id_carrera']}]});
