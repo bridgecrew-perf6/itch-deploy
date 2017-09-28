@@ -43,7 +43,8 @@ class Departamento extends Component{
                         console.log(departamento.docentes)
                         
                         const jefe_departamento = departamento.docentes.find(docente => { return docente.Usuario.rol === 'jefe_departamento'});
-                        return {key: index, id: departamento.id, nombre:departamento.nombre, jefe_departamento: `${jefe_departamento.titulo} ${jefe_departamento.nombre} ${jefe_departamento.ap_paterno} ${jefe_departamento.ap_materno}` || 'no asignado', acciones: 'Editar departamento' }
+                        return {key: index, id: departamento.id, nombre:departamento.nombre, jefe_departamento: jefe_departamento ? `${jefe_departamento.titulo} ${jefe_departamento.nombre} ${jefe_departamento.ap_paterno} ${jefe_departamento.ap_materno}`:  'no asignado', acciones: 'Editar departamento' }
+                   
                     })
                     this.setState({
                         data: departamentos,

@@ -37,6 +37,16 @@ module.exports =  (app, express, passport) => {
     // CARRERA
     router.route('/carrera')
         .post(isAuth, carreraController.add)
+    
+    router.route('/carrera/asignar_encargados')
+        .post(isAuth, carreraController.asignarEncargados)
+    
+    router.post('/carrera/asignar_docente')
+        .post(isAuth, carreraController.asignarDocente)
+    
+    router.route('/carrera/:id_carrera/docentes_asignados')
+        .get(isAuth, carreraController.docentesAsignados);
+
     // EMPRESAS
     router.route('/empresa')
         .get(isAuth, EmpresaController.findAll)

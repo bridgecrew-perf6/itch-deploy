@@ -69,7 +69,7 @@ module.exports.updateContraseniaEmail = (req, res) => {
 module.exports.isAuth = (req, res) => {
 	if(req.isAuthenticated()){
 		console.warn('auth: ', req.user)
-		if(req.user.rol === rol.JEFE_DEPARTAMENTO || req.user.rol === rol.DOCENTE || req.user.rol === rol.JEFE_PROYECTO || req.user.rol === rol.PRESIDENTE_ACADEMIA ){
+		if(req.user.rol === rol.JEFE_DEPARTAMENTO || req.user.rol === rol.DOCENTE){
 			// Buscar el docente
 			const id_usuario = req.user.id;
 			Docente.findOne({where: {id_usuario}})

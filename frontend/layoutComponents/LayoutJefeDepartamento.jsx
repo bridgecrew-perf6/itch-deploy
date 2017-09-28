@@ -75,7 +75,7 @@ class LayoutJefeDepartamento extends Component{
                 componentSelected: key,
                 visibleCambiarContrasenia: false,
                 componentRender: {
-                    title: 'Gestión de deparamento ' + departamento.nombre,
+                    title: 'Gestión de deparamento <strong>' + departamento.nombre +'<strong>',
                     render: <Departamento departamento={departamento} />
                 }
             })

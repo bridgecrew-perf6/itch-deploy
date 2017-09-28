@@ -1,13 +1,22 @@
 import React, {Component} from 'react';
 
-import { Select, Row, Col, Form, Input, Button, Icon, Table} from 'antd';
+import { Select, Row, Col, Form, Input, Button, Icon, Table, message, Modal} from 'antd';
 const Option = Select.Option;
 const FormItem = Form.Item;
 
+import axios from 'axios';
+
 const CreateFormAsignacion = Form.create()(
     (props) => {
-        const {form, handleSubmit, docentes} = props;
+        const {form, handleSubmit, docentes, checkDocenteDiferente, docentesAsignados} = props;
         const {getFieldDecorator} = form;
+        // console.log('as', docentesAsignados)
+
+        const default_presidente_academia = docentesAsignados.find(docente => docente.rol === 'presidente_academia') || null
+        console.log('presidente:',default_presidente_academia);
+        const default_jefe_proyecto = docentesAsignados.find(docente => docente.rol === 'jefe_proyecto') || null
+        console.log('jefe_proyecto:',default_jefe_proyecto);
+
         return (
             <Form layout="horizontal" 
                 onSubmit={handleSubmit}
@@ -15,6 +24,7 @@ const CreateFormAsignacion = Form.create()(
                 <FormItem hasFeedback label="Presidente de la academia">
                     {getFieldDecorator('id_presidente_academia', {
                     rules: [{ required: true, message: 'Seleccione al presidente de academia' }],
+                    initialValue: default_presidente_academia ? `${docentes.find(docentes => docentes.id === default_presidente_academia.id_docente).id}` : null
                     })(
                         <Select 
                             showSearch
@@ -22,12 +32,14 @@ const CreateFormAsignacion = Form.create()(
                             optionFilterProp="children"
                             filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                         >
-                            {docentes.map((docente, index) => {return <Option key={index} value={docente.nombre}>{docente.nombre}</Option>})}
+                            {docentes.map((docente, index) => {return <Option key={index} value={`${docente.id}`}>{docente.nombre}</Option>})}
                         </Select>
                     )}
                 </FormItem>
                 <FormItem hasFeedback label="Jefe de proyecto">
                     {getFieldDecorator('id_jefe_proyecto', {
+                        rules: [{validator: checkDocenteDiferente}],
+                        initialValue: default_jefe_proyecto ? `${docentes.find(docentes => docentes.id === default_jefe_proyecto.id_docente).id}` : null
                     })(
                         <Select 
                             showSearch
@@ -35,7 +47,7 @@ const CreateFormAsignacion = Form.create()(
                             optionFilterProp="children"
                             filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                         >
-                            {docentes.map((docente, index) => {return <Option key={index} value={docente.nombre}>{docente.nombre}</Option>})}
+                            {docentes.map((docente, index) => {return <Option key={index} value={`${docente.id}`}>{docente.nombre}</Option>})}
                         </Select>
                     )}
                 </FormItem>
@@ -48,7 +60,7 @@ const CreateFormAsignacion = Form.create()(
 )
 
 
-export default class Departamento extends Component{
+export default class GestionarCarrera extends Component{
     constructor(props){
         super(props);
         const docentes = props.docentes.map((docente, index) => {
@@ -60,6 +72,8 @@ export default class Departamento extends Component{
                 acciones: 'assign'
             }
         });
+        console.log('aquiaaa',docentes)
+
         this.state = {
             carrera: props.carrera,
             docentes: docentes,
@@ -67,10 +81,11 @@ export default class Departamento extends Component{
             filterDropdownVisible: false,
             searchText: '',
             filtered: false,
+            docentesAsignados: props.docentesAsignados
         }
     }
     componentWillReceiveProps(nextProps) {
-        const docentes = props.docentes.map((docente, index) => {
+        const docentes = nextProps.docentes.map((docente, index) => {
             return {
                 id: docente.id,
                 key: index,
@@ -79,6 +94,8 @@ export default class Departamento extends Component{
                 asignacion: 'assign'
             }
         });
+        console.log('aquiaaa',docentes)
+
         this.setState({
             carrera: nextProps.carrera,
             docentes: docentes,
@@ -86,20 +103,52 @@ export default class Departamento extends Component{
             filterDropdownVisible: false,
             searchText: '',
             filtered: false,
+            docentesAsignados: nextProps.docentesAsignados
         })
     }
     // FORM ASIGNAR PRESIDENTE Y JEFE DE PROYECTO
     refForm= (form) => {
         this.form = form;
     }
+    checkDocenteDiferente = (rule, value, callback) => {
+        const form = this.form;
+        if(value === form.getFieldValue('id_presidente_academia')){
+            callback('El jefe de proyecto no puede ser el mismo que el presidente de academia')
+        }else{
+            callback();
+        }
+    }
     handleSubmit = (e) =>{
         e.preventDefault();
+        const {carrera} = this.state
         const form = this.form;
         form.validateFields((err, values) => {
           if (err) {
             return;
           }    
           console.log('Received values of form: ', values);
+
+          axios.post('/api/carrera/asignar_encargados', {
+              id_carrera: carrera.id,
+              id_jefe_proyecto: values.id_jefe_proyecto || null,
+              id_presidente_academia: values.id_presidente_academia
+          }).then(res => {
+                if(res.status === 200 ){
+                    message.success('Carrera actualizada!')
+                }else{
+                    Modal.error({
+                        title: 'Error al actualizar la carrera. Revisar los siguientes campos',
+                        content:(
+                            <div>
+                                {res.data.errores}
+                            </div>
+                        ), onOk(){}, 
+                    })
+                }
+          }).catch(err => {
+                message.error('Error en el servidor verificar con el encargado.');   
+          })
+
         //   form.resetFields();
         });
     }
@@ -136,10 +185,11 @@ export default class Departamento extends Component{
         })
     }
     render(){
-        const {carrera, docentes, filterDocentes } = this.state;
-        console.log(filterDocentes);
+        const {carrera, docentes, filterDocentes, docentesAsignados} = this.state;
+        // console.log(')>', docentesAsignados);
         const columns = [
             {
+                className: 'center-text',
                 title: 'Nombre',
                 dataIndex: 'nombre',
                 key: 'nombre',
@@ -183,6 +233,8 @@ export default class Departamento extends Component{
                             ref={this.refForm}
                             handleSubmit={this.handleSubmit}
                             docentes={docentes}
+                            checkDocenteDiferente={this.checkDocenteDiferente}
+                            docentesAsignados={docentesAsignados}
                         />
                     </Col>
                 </Row>
