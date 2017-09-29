@@ -22,6 +22,11 @@ module.exports = {
         allowNull: false,
         defaultValue: 'no aprobado'
       },
+      path_file_anteproyecto:{
+        type: Sequelize.STRING,
+        allowNull: true,
+        defaultValue: null
+      },
       id_alumno: {
         type: Sequelize.INTEGER,
         onDelete: 'CASCADE',

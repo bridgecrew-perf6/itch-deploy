@@ -1,4 +1,5 @@
 const Usuario = require('../models/index').Usuario;
+const Alumno = require('../models').Alumno;
 const Docente = require('../models').Docente
 const Sequelize = require('../models/index').Sequelize;
 const bCrypt = require('bcrypt-nodejs');
@@ -80,6 +81,13 @@ module.exports.isAuth = (req, res) => {
 				})
 		}else if(req.user.rol === rol.CANDIDATO_RESIDENTE || req.user.rol === rol.RESIDENTE){
 			// Buscar el alumno jejeje
+			const id_usuario = req.user.id;
+			Alumno.findOne({where: {id_usuario}})
+				.then(alumno => {
+					res.status(200).json({isAuth: true, rol: req.user.rol, id_alumno: alumno.id, id_carrera: alumno.id_carrera});
+				}).catch(err => {
+					res.status(406).json({err: err})
+				})
 		}else if(req.user.rol === 'admin'){
 			res.status(200).json({isAuth: true, rol: req.user.rol});
 		}else{

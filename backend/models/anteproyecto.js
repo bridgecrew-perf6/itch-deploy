@@ -22,21 +22,29 @@ module.exports = (sequelize, DataTypes) => {
       values: ['aprobado','no aprobado'],
       allowNull: false,
       defaultValue: 'no aprobado'
+    },
+    path_file_anteproyecto:{
+      type: DataTypes.STRING,
+      allowNull: true,
+      defaultValue: null
     }
   });
 
   Anteproyecto.associate = (models) => {
     Anteproyecto.belongsTo(models.Alumno, {
       foreignKey: 'id_alumno',
-      onDelete: 'CASCADE'
+      onDelete: 'CASCADE',
+      as: 'alumno'
     });
     Anteproyecto.belongsTo(models.Periodo, {
       foreignKey: 'id_periodo',
-      onDelete: 'CASCADE'
+      onDelete: 'CASCADE',
+      as: 'periodo'
     });
     Anteproyecto.belongsTo(models.asesor_externo, {
       foreignKey: 'id_asesor_externo',
-      onDelete: 'CASCADE'
+      onDelete: 'CASCADE',
+      as: 'asesor_externo'
     })
   }
   return Anteproyecto;

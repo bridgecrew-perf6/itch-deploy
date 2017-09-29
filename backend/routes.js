@@ -73,6 +73,16 @@ module.exports =  (app, express, passport) => {
     // ALUMNOS
     router.route('/alumno')
         .post(isAuth, alumnoController.add)
+
+    router.route('/alumno/:id/anteproyecto')
+        .get(isAuth, alumnoController.getAnteproyecto)
+        .put(isAuth, alumnoController.updateDatosAnteproyecto);
+    
+    router.route('/alumno/file_anteproyecto/:id_anteproyecto')
+        .post(isAuth,alumnoController.addFileAnteproyecto);
+
+
+
     app.use('/api',router);
 
      // Redirect trafict to react app
