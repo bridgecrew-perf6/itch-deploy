@@ -4,7 +4,7 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.addIndex('Periodos', {
         name: 'index_uq_periodo_ciclo',
-        fields: ['periodo', 'ciclo'],
+        fields: ['periodo', 'ciclo', 'id_carrera'],
         unique: true,
         type: 'UNIQUE',
       })

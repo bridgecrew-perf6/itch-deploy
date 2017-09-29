@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
         isDate: true
       }
     }
-  }, {indexes: [{unique: true, fields: ['periodo', 'ciclo']}]});
+  }, {indexes: [{unique: true, fields: ['periodo', 'ciclo', 'id_carrera']}]});
   
   Periodo.associate = (models) => {
       Periodo.belongsTo(models.Carrera, {

@@ -3,6 +3,7 @@ import {message, Modal, Row, Col, Select, Table, Button} from 'antd';
 const Option = Select.Option;
 
 import axios from 'axios';
+import moment from 'moment';
 
 // components
 import FormAddAlumno from '../alumno/components/FormAddAlumno.jsx';
@@ -49,7 +50,7 @@ export default class GestionPeriodoDeResidencia extends Component{
                     ciclo: periodo.ciclo,
                     fecha_periodo: `${periodo.fecha_inicio} - ${periodo.fecha_fin}`,
                     fecha_entrega_anteproyecto: `${periodo.fecha_inicio_entrega_anteproyecto} - ${periodo.fecha_fin_entrega_anteproyecto}`,
-                    acciones: 'acciones'
+                    acciones: (moment().format('YYYY-MM-DD') >= periodo.fecha_inicio_entrega_anteproyecto && moment().format('YYYY-MM-DD') <= periodo.fecha_fin_entrega_anteproyecto) ? true : false
                 }
         }): null;
         const columns = [
@@ -78,7 +79,9 @@ export default class GestionPeriodoDeResidencia extends Component{
                 dataIndex: 'Acciones',
                 render: (text, record) => (
                     <span>
-                        <Button style={{marginRight: 5}} icon="user-add" onClick={() => this.showAddAlumno(record.id)}>Candidato a residente</Button>
+                        {console.log(record.acciones)}
+                        {console.log(moment().format('YYYY-MM-DD'))}
+                        {(record.acciones === true) ? <Button style={{marginRight: 5}} icon="user-add" onClick={() => this.showAddAlumno(record.id)}>Candidato a residente</Button> : <p style={{color:'#ff5757' }}>Deshabilitado, revisar fechas.</p>}
                     </span>
                 )
             }

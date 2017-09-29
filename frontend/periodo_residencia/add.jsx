@@ -4,7 +4,7 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 const RangePicker = DatePicker.RangePicker;
 import axios from 'axios';
-
+import moment from 'moment';
 
 const CreateFormAperturaPeriodoDeResidencia = Form.create()(
     (props => {
@@ -16,7 +16,7 @@ const CreateFormAperturaPeriodoDeResidencia = Form.create()(
         };    
         // {validator: checkPeriodoEntregaAnteproyecto},
         const rangeConfigPeriodoEntregaAnteproyecto = {
-            rules: [{ type: 'array', required: true, message: 'Seleccione la fecha de inicio y fin del periodo' }],
+            rules: [{validator: checkPeriodoEntregaAnteproyecto},{ type: 'array', required: true, message: 'Seleccione la fecha de inicio y fin del periodo' }],
         };    
         return (
             <div>
@@ -71,7 +71,7 @@ const CreateFormAperturaPeriodoDeResidencia = Form.create()(
                             style={{width: '100%'}}
                             >
                             {getFieldDecorator('fechas_periodo', rangeConfigPeriodoResidencia)(
-                                <RangePicker format="ll" disabledDate={current => current.valueOf() < Date.now()} />
+                                <RangePicker format="ll" disabledDate={current => current.format('YYYY-MM-DD') < moment().format('YYYY-MM-DD')} />
                             )}
                         </FormItem>
                         </Col>
@@ -82,7 +82,7 @@ const CreateFormAperturaPeriodoDeResidencia = Form.create()(
                             label="Seleccione la fecha de inicio y fin de la entrega de anteproyectos"
                             >
                             {getFieldDecorator('fechas_entrega_anteproyecto', rangeConfigPeriodoEntregaAnteproyecto)(
-                                <RangePicker  format="ll" disabledDate={current => current.valueOf() < Date.now()} />
+                                <RangePicker  format="ll" disabledDate={current => current.format('YYYY-MM-DD') < moment().format('YYYY-MM-DD')} />
                             )}
                         </FormItem>
                         </Col>
@@ -103,23 +103,25 @@ export default class FormAperturaPeriodoDeResidencia extends Component{
         }
     }
     checkPeriodoEntregaAnteproyecto = (rule, value, callback) => {
-        // const form = this.form;
-        // const fechas_periodo = form.getFieldValue('fechas_periodo');
-        // console.log(value)
-        // console.log(fechas_periodo)
-        // if(fechas_periodo){
-        //     console.log(value[0].format('YYYY-MM-DD') < fechas_periodo[0].format('YYYY-MM-DD'));
-        //     console.log(value[0].valueOf() < fechas_periodo[0].valueOf());
-        //     if((value[0].valueOf() > fechas_periodo[0].valueOf()) === true){
-        //         callback(`La fecha inicial de entrega de proyectos debe ser mayor que: ${fechas_periodo[0].format('ll')}`);
-        //     // }else if(value[1].isBefore(fechas_periodo[1])){
-        //     //     callback(`La fecha final de entrega de proyectos debe ser menor que: ${fechas_periodo[1].format('ll')}`);                
-        //     }else{
-        //         callback();
-        //     }
-        // }else{
-        //     callback('Primero seleccione la fecha del periodo.')
-        // }
+        const form = this.form;
+        const fechas_periodo = form.getFieldValue('fechas_periodo');
+        console.log(value)
+        console.log(fechas_periodo)
+        if(fechas_periodo){
+            // console.log(value[0].format('YYYY-MM-DD') < fechas_periodo[0].format('YYYY-MM-DD'));
+            // console.log(value[0].valueOf() < fechas_periodo[0].valueOf());
+            // console.log('aqui',value[0].format('YYYY-MM-DD') < fechas_periodo[0].format('YYYY-MM-DD'))
+            if(value[0].format('YYYY-MM-DD') < fechas_periodo[0].format('YYYY-MM-DD')){
+                callback(`La fecha de inicio de entrega de anteproyecto debe ser despues de: ${fechas_periodo[0].format('ll')}`);
+            }else if(value[1].format('YYYY-MM-DD') > fechas_periodo[1].format('YYYY-MM-DD')){
+                callback(`La fecha de fin de entrega de anteproyecto debe ser antes que: ${fechas_periodo[1].format('ll')}`);
+                
+            }else{
+                callback();
+            }
+        }else{
+            callback('Primero seleccione la fecha del periodo.')
+        }
         
     }
     handleCreate = (e) => {
