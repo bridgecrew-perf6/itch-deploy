@@ -18,6 +18,25 @@ export default class GestionPeriodoDeResidencia extends Component{
             id_periodo: null
         }
     }
+    showListaCandidatosResidente = (id_periodo) => {
+        axios.get(`/api/periodo/${id_periodo}/anteproyectos`)
+            .then(res => {
+                if(res.status === 200){
+                    const candidatos = res.data.map((candidato, index) => {
+                        return (
+                            <p>{candidato.nombre}</p>
+                        )
+                    })
+                    Modal.info({
+                        width: 600,
+                        title: 'Lista de candidatos a residente del periodo: '+id_periodo,
+                        content: candidatos,
+                        onOk(){}
+                    })
+                }
+            })
+        
+    }
     showAddAlumno = (id_periodo) => {
         this.setState({
             visible_add_alumno: true,
@@ -33,7 +52,7 @@ export default class GestionPeriodoDeResidencia extends Component{
                     // console.log('alv',res.data)
                     this.setState({
                         carreraSeleccionada: res.data,
-                        visible_add_alumno: false
+                        visible_add_alumno: false,
                     })
                 }else{
                     message.warning('Verificar los docentes asignados.')
@@ -41,7 +60,7 @@ export default class GestionPeriodoDeResidencia extends Component{
             })   
     }
     render(){
-        const {departamento, carreraSeleccionada, visible_add_alumno, id_periodo} = this.state
+        const {departamento, carreraSeleccionada, visible_add_alumno, id_periodo, visible_lista_candidatos_residente} = this.state
         const periodos = carreraSeleccionada ? carreraSeleccionada.periodos.map((periodo, index) => {
                 return { 
                     id: periodo.id, 
@@ -50,7 +69,8 @@ export default class GestionPeriodoDeResidencia extends Component{
                     ciclo: periodo.ciclo,
                     fecha_periodo: `${periodo.fecha_inicio} - ${periodo.fecha_fin}`,
                     fecha_entrega_anteproyecto: `${periodo.fecha_inicio_entrega_anteproyecto} - ${periodo.fecha_fin_entrega_anteproyecto}`,
-                    acciones: (moment().format('YYYY-MM-DD') >= periodo.fecha_inicio_entrega_anteproyecto && moment().format('YYYY-MM-DD') <= periodo.fecha_fin_entrega_anteproyecto) ? true : false
+                    acciones: (moment().format('YYYY-MM-DD') >= periodo.fecha_inicio_entrega_anteproyecto && moment().format('YYYY-MM-DD') <= periodo.fecha_fin_entrega_anteproyecto) ? true : false,
+                    lista_candidatos: 'sisisi'
                 }
         }): null;
         const columns = [
@@ -79,16 +99,24 @@ export default class GestionPeriodoDeResidencia extends Component{
                 dataIndex: 'Acciones',
                 render: (text, record) => (
                     <span>
-                        {console.log(record.acciones)}
-                        {console.log(moment().format('YYYY-MM-DD'))}
                         {(record.acciones === true) ? <Button style={{marginRight: 5}} icon="user-add" onClick={() => this.showAddAlumno(record.id)}>Candidato a residente</Button> : <p style={{color:'#ff5757' }}>Deshabilitado, revisar fechas.</p>}
+                    </span>
+                )
+            }, {
+                className: 'center-text',
+                title: 'Lista de candidatos',
+                key: 'lista_candidatos',
+                dataIndex: 'lista_candidatos',
+                render: (text, record) => (
+                    <span>
+                        <Button icon="solution" onClick={() => this.showListaCandidatosResidente(record.id)}></Button>
                     </span>
                 )
             }
         ]
         return (
             <Row gutter={16}>
-                <Col xs={24} lg={6}>
+                <Col xs={24} lg={4}>
                         <p>Seleccione la carrera: </p>
                         <Select
                             placeholder="Seleccione una carrera"                           
@@ -98,8 +126,8 @@ export default class GestionPeriodoDeResidencia extends Component{
                             {departamento.carreras.map((carrera, index) => {return <Option key={index} value={`${carrera.id}`} >{carrera.nombre}</Option>})}
                         </Select>
                 </Col>
-                <Col xs={24} lg={18}>
-                    <Table bordered title={() => 'Gestión de periodos'} dataSource={periodos} className="full-width" columns={columns} pagination={{ pageSize: 8 }}  scroll={{ x: 800 }} />
+                <Col xs={24} lg={20}>
+                    <Table bordered title={() => 'Gestión de periodos'} dataSource={periodos} className="full-width" columns={columns} pagination={{ pageSize: 8 }}  scroll={{ x: 1000 }} />
                 </Col>
                 
                 <FormAddAlumno visible={visible_add_alumno} carrera={carreraSeleccionada} id_periodo={id_periodo}/>

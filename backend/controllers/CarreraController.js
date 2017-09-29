@@ -2,8 +2,22 @@ const Carrera = require('../models').Carrera;
 const Sequelize = require('../models').Sequelize;
 const sequelize = require('../models').sequelize;
 const docente_carreras = require('../models').docente_carreras;
-const Periodo = require('../models').Periodo
+const Periodo = require('../models').Periodo;
+const Anteproyecto = require('../models').Anteproyecto;
+const Alumno = require('../models').Alumno;
 
+
+module.exports.findAnteproyectosByPeriodo = (req, res) => {
+    const id_periodo = req.params.id_periodo;
+
+    sequelize.query(`select * from anteproyectos join alumnos on anteproyectos.id_alumno=alumnos.id where anteproyectos.id_periodo=${id_periodo};`, {model: Anteproyecto})
+        .then((anteproyectos) => {
+            res.status(200).json(anteproyectos);
+        }).catch(err => {
+            console.log(err)
+            res.status(406).json({err: err})
+        })
+}
 module.exports.findById = (req, res) => {
     Carrera.findOne({
         where: {id: req.params.id},

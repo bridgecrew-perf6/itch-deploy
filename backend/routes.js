@@ -67,7 +67,9 @@ module.exports =  (app, express, passport) => {
     // ASESOR EXTERNO
     router.route('/asesor_externo')
         .post(isAuth, AsesorController.add)
-
+    //Anteproyectos por periodo
+    router.route('/periodo/:id_periodo/anteproyectos')
+        .get(carreraController.findAnteproyectosByPeriodo);
     // ALUMNOS
     router.route('/alumno')
         .post(isAuth, alumnoController.add)
