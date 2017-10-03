@@ -7,6 +7,21 @@ const Anteproyecto = require('../models').Anteproyecto;
 const Alumno = require('../models').Alumno;
 
 
+// buscar periodos(id_carrera) e incluir anteproyectos y carreras(docentes_carrera) 
+module.exports.findPeriodos = (req, res) => {
+    const id_carrera = req.params.id_carrera
+    Periodo.findAll({
+        where: {id_carrera},
+        include: [{model: Carrera, as: 'carrera', include: [{model: docente_carreras, as: 'docentes_carreras'}]}]
+    }).then((periodos) => {
+        res.status(200).json(periodos);
+    }).catch(err => {
+        console.log(err)
+        res.status(406).json({err: err})
+    })
+}
+
+
 module.exports.findAnteproyectosByPeriodo = (req, res) => {
     const id_periodo = req.params.id_periodo;
 
@@ -20,7 +35,7 @@ module.exports.findAnteproyectosByPeriodo = (req, res) => {
 }
 module.exports.findById = (req, res) => {
     Carrera.findOne({
-        where: {id: req.params.id},
+        where: {id: req.params.id_carrera},
         include: [{model: Periodo, as: 'periodos', attributes: ['id', 'periodo', 'ciclo', 'fecha_inicio', 'fecha_fin', 'fecha_inicio_entrega_anteproyecto', 'fecha_fin_entrega_anteproyecto', 'id_carrera'] } ] })
         .then((carrera) => {
             res.status(200).json(carrera);

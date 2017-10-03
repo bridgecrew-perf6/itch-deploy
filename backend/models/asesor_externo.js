@@ -28,7 +28,8 @@ module.exports = (sequelize, DataTypes) => {
   asesor_externo.associate = (models) => {
     asesor_externo.belongsTo(models.Empresa, {
       foreignKey: 'id_empresa',
-      onDelete: 'CASCADE'
+      onDelete: 'CASCADE',
+      as: 'empresa'
     });
     asesor_externo.hasMany(models.Anteproyecto, {
       foreignKey: 'id_asesor_externo',

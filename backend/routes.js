@@ -7,6 +7,8 @@ const EmpresaController = require('./controllers/EmpresaController');
 const AsesorController = require('./controllers/AsesorExternoController');
 const carreraController = require('./controllers/CarreraController');
 const alumnoController = require('./controllers/AlumnoController');
+const periodoController = require('./controllers/PeriodoController');
+const anteproyectoController = require('./controllers/AnteproyectoController')
 
 module.exports =  (app, express, passport) => {
    
@@ -31,7 +33,7 @@ module.exports =  (app, express, passport) => {
         .post(isAuth, departamentoController.add)
 
     router.route('/departamento/:id')
-        .get(isAuth, departamentoController.findById) 
+        .get(departamentoController.findById) 
         .put(isAuth, departamentoController.update)
 
     // CARRERA
@@ -49,6 +51,9 @@ module.exports =  (app, express, passport) => {
 
     router.route('/carrera/periodo')
         .post(isAuth, carreraController.addPeriodo)
+    
+    router.route('/carrera/:id_carrera/periodos')
+        .get(carreraController.findById)
 
     router.route('/carrera/:id/periodos')
         .get(carreraController.findById)
@@ -81,7 +86,14 @@ module.exports =  (app, express, passport) => {
     router.route('/alumno/file_anteproyecto/:id_anteproyecto')
         .post(isAuth,alumnoController.addFileAnteproyecto);
 
+    // ANTEPROYECTO
+    router.route('/anteproyectos/:id_periodo')
+        .get(isAuth, anteproyectoController.findByPeriodo)
 
+    router.route('/anteproyecto/pdf/:filename')
+        .get(anteproyectoController.getAnteproyectoPDF)
+    router.route('/anteproyecto/factibilidad')
+        .put(isAuth, anteproyectoController.addFactibilidad)
 
     app.use('/api',router);
 

@@ -10,6 +10,7 @@ import Departamento from './departamento/index.jsx';
 import LayoutAdmin from './layoutComponents/LayoutAdmin.jsx';
 import LayoutJefeDepartamento from './layoutComponents/LayoutJefeDepartamento.jsx';
 import LayoutCandidatoAResidente from './layoutComponents/LayoutCandidatoAResidente.jsx';
+import LayoutDocente from './layoutComponents/LayoutDocente.jsx';
 import Page404 from './layoutComponents/Page404.jsx';
 
 
@@ -20,6 +21,7 @@ const AppRoutes = () =>
                 <LayoutAdmin path="/admin" />
                 <LayoutJefeDepartamento path="/jefe_departamento"/>
                 <LayoutCandidatoAResidente path="/candidato_residente"/>
+                <LayoutDocente path="/docente"/>
                 <Route component={Page404} />
             </Switch>;
 

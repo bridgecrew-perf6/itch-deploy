@@ -39,6 +39,10 @@ class FormLogin extends Component{
                             this.setState({
                                 successAuth: <Redirect to="/candidato_residente"/>
                             })
+                        }else if(rol === 'docente'){
+                            this.setState({
+                                successAuth: <Redirect to="/docente"/>
+                            })
                         }
                         // console.log('asas', rol);
                         // redirigir a otros paths si es otro tipo de rol

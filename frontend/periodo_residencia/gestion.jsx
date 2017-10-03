@@ -43,13 +43,14 @@ export default class GestionPeriodoDeResidencia extends Component{
             id_periodo
         })
     }
+    
     handleChageCarrera = (value) => {
         const {departamento} = this.state;
         const carrera = departamento.carreras.find((carrera) => `${carrera.id}` === value);
         axios.get(`/api/carrera/${carrera.id}/periodos`)
             .then(res => {
                 if(res.status === 200){
-                    // console.log('alv',res.data)
+                    console.log('alv',res.data)
                     this.setState({
                         carreraSeleccionada: res.data,
                         visible_add_alumno: false,

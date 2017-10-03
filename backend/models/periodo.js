@@ -45,9 +45,14 @@ module.exports = (sequelize, DataTypes) => {
   }, {indexes: [{unique: true, fields: ['periodo', 'ciclo', 'id_carrera']}]});
   
   Periodo.associate = (models) => {
+    Periodo.hasMany(models.Anteproyecto, {
+      foreignKey: 'id_periodo',
+      as: 'anteproyectos'
+    })
       Periodo.belongsTo(models.Carrera, {
         foreignKey: 'id_carrera',
-        onDelete: 'CASCADE'
+        onDelete: 'CASCADE',
+        as: 'carrera'
       })
   }
   return Periodo;

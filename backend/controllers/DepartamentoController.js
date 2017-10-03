@@ -2,6 +2,7 @@ const Departamento = require('../models').Departamento;
 const Carrera = require('../models').Carrera;
 const Docente = require('../models').Docente;
 const Usuario = require('../models').Usuario;
+const Periodo = require('../models').Periodo;
 const sequelize = require('../models').sequelize;
 const Sequelize = require('../models').Sequelize;
 const rol = {
@@ -15,8 +16,8 @@ const rol = {
 
 module.exports.findById = (req, res) => {
     Departamento.findOne({
-        where: {id: req.param('id')},
-        include: [{model: Carrera, as: 'carreras'}, {model: Docente, as: 'docentes', include: [{model: Usuario, attributes: ['rol']}] } ]})
+        where: {id: req.params.id},
+        include: [{model: Carrera, as: 'carreras', include: [{model: Periodo, as: 'periodos'}]}, {model: Docente, as: 'docentes', include: [{model: Usuario, attributes: ['rol']}] } ]})
         .then((departamento) => {
             res.status(200).json(departamento);
         }).catch(err => {

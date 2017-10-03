@@ -39,14 +39,18 @@
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "path": "^0.12.7",
+    "pdfobject": "^2.0.201604172",
     "prop-types": "^15.5.10",
     "pug": "^2.0.0-rc.4",
     "rc-queue-anim": "^1.2.3",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
+    "react-pdf-js": "^2.0.5",
+    "react-pdf-js-infinite": "^1.2.0",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "sequelize": "^4.8.3",
+    "simple-react-pdf": "^1.0.9",
     "superagent": "^3.6.0"
   },
   "scripts": {
