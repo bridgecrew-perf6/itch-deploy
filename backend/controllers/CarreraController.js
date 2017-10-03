@@ -7,7 +7,31 @@ const Anteproyecto = require('../models').Anteproyecto;
 const Alumno = require('../models').Alumno;
 
 
-// buscar periodos(id_carrera) e incluir anteproyectos y carreras(docentes_carrera) 
+
+module.exports.docenteHabilitado = (req, res) => {
+    const id_docente = req.body.id_docente,
+        id_periodo = req.body.id_periodo;
+    // console.log('====>',req.body)
+    Periodo.findOne({where: {id: id_periodo}})
+        .then(periodo => {
+            docente_carreras.findOne({where: {id_docente, id_carrera: periodo.id_carrera}})
+                .then((_docente_carreras) => {
+                    console.log(_docente_carreras)
+                    if(_docente_carreras.rol !== 'deshabilitado'){
+                        res.status(200).json({habilitado: true})
+                    }else{
+                        res.status(200).json({habilitado: false});
+                    }
+                }).catch(err => {
+                    console.log(err)
+                    res.status(406).json({err: err})
+                })
+        }).catch(err => {
+            console.log(err)
+            res.status(406).json({err: err})
+        })
+    
+}
 module.exports.findPeriodos = (req, res) => {
     const id_carrera = req.params.id_carrera
     Periodo.findAll({

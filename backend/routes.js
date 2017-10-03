@@ -57,6 +57,8 @@ module.exports =  (app, express, passport) => {
 
     router.route('/carrera/:id/periodos')
         .get(carreraController.findById)
+    router.route('/carrera/docente_habilitado')
+        .put(isAuth, carreraController.docenteHabilitado)
     // EMPRESAS
     router.route('/empresa')
         .get(isAuth, EmpresaController.findAll)

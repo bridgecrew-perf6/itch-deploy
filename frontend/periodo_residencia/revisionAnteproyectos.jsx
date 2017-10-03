@@ -52,33 +52,41 @@ export default class revisionAnteproyectos extends Component{
         })
     }
     handleChangePeriodo = (value) => {
-        axios.get(`/api/anteproyectos/${value}`)
-            .then(res =>{
-                if(res.status === 200){
-                    console.log(res)
-                    const anteproyectos = res.data.map((anteproyecto, index) => {
-                        return {
-                            key: index,
-                            id: anteproyecto.id,
-                            id_alumno: anteproyecto.id_alumno,
-                            dictamen: anteproyecto.dictamen,
-                            id_asesor_externo: anteproyecto.id_asesor_externo,
-                            id_periodo: anteproyecto.id_periodo,
-                            nombre: anteproyecto.nombre,
-                            objetivo_general: anteproyecto.objetivo_general,
-                            detalles_alumno: anteproyecto.alumno,
-                            detalles_asesor_externo: anteproyecto.asesor_externo,
-                            anteproyecto: anteproyecto.path_file_anteproyecto,
-                        }
-                    })
-                    this.setState({
-                        anteproyectos,
-                        filterAnteproyectos: anteproyectos
-                    })
+        axios.put('/api/carrera/docente_habilitado', {id_docente: this.state.usuario.id_docente, id_periodo: value})
+            .then(_res => {
+                if(_res.status === 200 && _res.data.habilitado === true){
+                    axios.get(`/api/anteproyectos/${value}`)
+                        .then(res =>{
+                            if(res.status === 200){
+                                console.log(res)
+                                const anteproyectos = res.data.map((anteproyecto, index) => {
+                                    return {
+                                        key: index,
+                                        id: anteproyecto.id,
+                                        id_alumno: anteproyecto.id_alumno,
+                                        dictamen: anteproyecto.dictamen,
+                                        id_asesor_externo: anteproyecto.id_asesor_externo,
+                                        id_periodo: anteproyecto.id_periodo,
+                                        nombre: anteproyecto.nombre,
+                                        objetivo_general: anteproyecto.objetivo_general,
+                                        detalles_alumno: anteproyecto.alumno,
+                                        detalles_asesor_externo: anteproyecto.asesor_externo,
+                                        anteproyecto: anteproyecto.path_file_anteproyecto,
+                                    }
+                                })
+                                this.setState({
+                                    anteproyectos,
+                                    filterAnteproyectos: anteproyectos
+                                })
+                            }
+                        })
+                }else{
+                    message.warning('Permiso denegado, solicite permisos al jefe de departamento.')
                 }
             })
+        
     }
-    
+
     showAsesorExterno = (detalles_asesor_externo) => {
         Modal.info({
             width: 600,
