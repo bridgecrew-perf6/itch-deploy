@@ -31,6 +31,10 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Anteproyecto.associate = (models) => {
+    Anteproyecto.hasMany(models.revision_anteproyecto, {
+      foreignKey: 'id_anteproyecto',
+      as: 'revisiones'
+    });
     Anteproyecto.belongsTo(models.Alumno, {
       foreignKey: 'id_alumno',
       onDelete: 'CASCADE',

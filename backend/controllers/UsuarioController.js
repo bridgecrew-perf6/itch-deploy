@@ -1,5 +1,6 @@
 const Usuario = require('../models/index').Usuario;
 const Alumno = require('../models').Alumno;
+const docente_carreras = require('../models').docente_carreras;
 const Docente = require('../models').Docente
 const Sequelize = require('../models/index').Sequelize;
 const bCrypt = require('bcrypt-nodejs');
@@ -75,7 +76,7 @@ module.exports.isAuth = (req, res) => {
 			const id_usuario = req.user.id;
 			Docente.findOne({where: {id_usuario}})
 				.then((docente) => {
-					res.status(200).json({isAuth: true, rol: req.user.rol, id_docente: docente.id, id_departamento: docente.id_departamento});
+					res.status(200).json({isAuth: true, rol: req.user.rol, id_docente: docente.id, id_departamento: docente.id_departamento});				
 				}).catch(err => {
 					res.status(406).json({err: err})
 				})

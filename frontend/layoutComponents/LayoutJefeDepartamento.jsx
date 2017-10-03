@@ -84,7 +84,7 @@ class LayoutJefeDepartamento extends Component{
                 visibleCambiarContrasenia: false,
                 visible_add_docente: false,
                 componentRender: {
-                    title: 'Gestión de deparamento ' + departamento.nombre,
+                    title: 'Gestión de departamento ' + departamento.nombre,
                     render: <Departamento departamento={departamento} />
                 }
             })
@@ -119,7 +119,7 @@ class LayoutJefeDepartamento extends Component{
                 visible_add_docente: false,
                 visibleCambiarContrasenia: false,
                 componentRender: {
-                    title: 'Gestión de periodos de residencia',
+                    title: 'Registro de candidato a residente',
                     render: <GestionPeriodoDeResidencia departamento={departamento} />
                 }
             })
@@ -171,8 +171,8 @@ class LayoutJefeDepartamento extends Component{
                                 title={<span><Icon type="calendar" /><span>Periodos de residencia</span></span>}
                             >
                                 <Menu.Item key="5" >
-                                    <Icon type="schedule" />
-                                    <span>Gestión</span>
+                                    <Icon type="plus" />
+                                    <span>Agregar candidato</span>
                                 </Menu.Item>
                                 <Menu.Item key="6" >
                                     <Icon type="plus"/>

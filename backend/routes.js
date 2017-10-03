@@ -90,13 +90,15 @@ module.exports =  (app, express, passport) => {
 
     // ANTEPROYECTO
     router.route('/anteproyectos/:id_periodo')
-        .get(isAuth, anteproyectoController.findByPeriodo)
+        .get(anteproyectoController.findByPeriodo)
 
     router.route('/anteproyecto/pdf/:filename')
         .get(anteproyectoController.getAnteproyectoPDF)
     router.route('/anteproyecto/factibilidad')
         .put(isAuth, anteproyectoController.addFactibilidad)
 
+    router.route('/anteproyecto/set_dictamen')
+        .put(isAuth, anteproyectoController.setDictamen);
     app.use('/api',router);
 
      // Redirect trafict to react app

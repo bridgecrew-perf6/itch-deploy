@@ -14,11 +14,16 @@ module.exports.docenteHabilitado = (req, res) => {
     // console.log('====>',req.body)
     Periodo.findOne({where: {id: id_periodo}})
         .then(periodo => {
+            // console.log('=>', periodo)
             docente_carreras.findOne({where: {id_docente, id_carrera: periodo.id_carrera}})
                 .then((_docente_carreras) => {
-                    console.log(_docente_carreras)
-                    if(_docente_carreras.rol !== 'deshabilitado'){
-                        res.status(200).json({habilitado: true})
+                    // console.log(_docente_carreras)
+                    if(_docente_carreras){
+                        if(_docente_carreras.rol !== 'deshabilitado'){
+                            res.status(200).json({habilitado: true, rol: _docente_carreras.rol})
+                        }else{
+                            res.status(200).json({habilitado: false});
+                        }
                     }else{
                         res.status(200).json({habilitado: false});
                     }
