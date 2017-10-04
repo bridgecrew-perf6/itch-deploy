@@ -37,7 +37,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     sexo: {
       type: DataTypes.ENUM,
-      values: ['H', 'M']
+      values: ['H', 'M'],
+      allowNull: false
     },
     domicilio: {
       type: DataTypes.STRING

@@ -103,6 +103,7 @@ module.exports.add = (req, res) => {
         ap_materno = req.body.ap_materno,
         id_carrera = req.body.id_carrera,
         correo = req.body.correo,
+        sexo = req.body.sexo,
         id_periodo = req.body.id_periodo;
 
     const contrasenia = generator.generate({length: 8});
@@ -119,6 +120,7 @@ module.exports.add = (req, res) => {
                 ap_paterno,
                 ap_materno,
                 id_carrera,
+                sexo,
                 id_usuario: usuario.id
             }, {transaction: t}).then(alumno => {
                 return Anteproyecto.create({

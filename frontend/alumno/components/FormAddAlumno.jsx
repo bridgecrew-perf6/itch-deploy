@@ -41,6 +41,14 @@ const CreateFormAddAlumno = Form.create()(
                             rules: [{required: true, message: 'El alumno debe tener un apellido materno'}]
                         })(<Input placeholder="Ingrese el apellido materno del alumno"/>)}
                     </FormItem>
+                    <FormItem label="Sexo">
+                        {getFieldDecorator('sexo', {
+                            rules: [{required: true, message: 'El alumno debe indicar su sexo.'}]
+                        })(<Select placeholder="Seleccione una opción">
+                                <Option key="H" value="H">Hombre</Option>
+                                <Option key="M" value="M">Mujer</Option>
+                            </Select>)}
+                    </FormItem>
                     <FormItem label="Correo electronico">
                         {getFieldDecorator('correo', {
                             rules: [{type: 'email',message: 'El correo no es correcto'},{required: true, message: 'Necesita su correo para autentificarse en el sistema.'}]
@@ -96,6 +104,7 @@ export default class FormAddAlumno extends Component{
                 ap_paterno: values.ap_paterno,
                 ap_materno: values.ap_materno,
                 id_carrera: this.state.carrera.id,
+                sexo: values.sexo,
                 correo: values.correo,
                 id_periodo: this.state.id_periodo
             }).then((res) => {

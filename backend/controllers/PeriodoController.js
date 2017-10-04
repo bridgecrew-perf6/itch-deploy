@@ -13,6 +13,22 @@ const Sequelize = require('../models').Sequelize
 const sequelize = require('../models').sequelize
 
 
+module.exports.findDictamen = (req, res) => {
+    const id_periodo = req.params.id;
+    Periodo.findOne({
+        where: {id: id_periodo},
+        include: [
+            {model: Carrera, as: 'carrera', include: [{model: Departamento, as: 'departamento'}]},
+            {model: Anteproyecto, as: 'anteproyectos', include: [{model: Alumno, as: 'alumno'}, {model: asesor_externo, as: 'asesor_externo', include: [{model: Empresa, as: 'empresa'}]}, {model: Docente, as: 'asesor_interno'}], where: {dictamen: 'aprobado'}, required: false}
+        ]
+    }).then(_periodo => {
+        // console.log('======', _periodo)
+        res.status(200).json(_periodo);
+    }).catch(err => {
+        res.status(406).json({err: err});
+    });
+}
+
 module.exports.findById = (req, res) => {
     const id = req.params.id;
     Periodo.findOne({

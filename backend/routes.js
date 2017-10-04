@@ -103,7 +103,10 @@ module.exports =  (app, express, passport) => {
         .put(isAuth, anteproyectoController.setAsesorInterno);
     // PERIODO
     router.route('/periodo/:id/')
-        .get(periodoController.findById);
+        .get(isAuth, periodoController.findById);
+    
+    router.route('/periodo/:id/dictamen')
+        .get(periodoController.findDictamen);
 
 
 

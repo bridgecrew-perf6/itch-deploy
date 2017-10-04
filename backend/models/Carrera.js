@@ -13,7 +13,8 @@ module.exports = (sequelize, DataTypes) => {
   Carrera.associate = (models) => {
     Carrera.belongsTo(models.Departamento, {
       foreignKey: 'id_departamento',
-      onDelete: 'CASCADE'
+      onDelete: 'CASCADE',
+      as: 'departamento'
     });
     Carrera.hasMany(models.Periodo, {
       foreignKey: 'id_carrera',
