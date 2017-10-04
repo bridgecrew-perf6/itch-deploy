@@ -11,14 +11,16 @@ export default class RevisionPresidenteAcademia extends Component{
         this.state = {
             anteproyectos: props.anteproyectos,
             filterAnteproyectos: props.anteproyectos,
-            usuario: props.usuario
+            usuario: props.usuario,
+            periodo: props.periodo,
         }
     }
     componentWillReceiveProps(nextProps){
         this.state = {
             anteproyectos: nextProps.anteproyectos,
             filterAnteproyectos: nextProps.anteproyectos,
-            usuario: nextProps.usuario
+            usuario: nextProps.usuario,
+            periodo: nextProps.periodo
         }
     }
     
@@ -120,10 +122,33 @@ export default class RevisionPresidenteAcademia extends Component{
                     message.error('Error en el servidor verificar con el encargado.');   
             })
     }
+    handleAsesorInterno = (id_asesor_interno, id_anteproyecto) => {
+        axios.put('/api/anteproyecto/set_asesor_interno', {
+            id_asesor_interno, id_anteproyecto
+        }).then(res => {
+            if(res.status === 200 ){
+                message.success('Anteproyecto actualizado!')
+            }else{
+                Modal.error({
+                    title: 'Error al actualizar anteproyecto. Revisar los siguientes campos',
+                    content:(
+                        <div>
+                            {res.data.errores}
+                        </div>
+                    ), onOk(){}, 
+                })
+            }
+        }).catch(err => {
+                message.error('Error en el servidor verificar con el encargado.');   
+        })
+    }
     render(){
-        const {anteproyectos, filterAnteproyectos} = this.state
-        const columns = [
+        const {anteproyectos, filterAnteproyectos, periodo} = this.state
+        console.warn(periodo.anteproyectos)
+        var columns = [
             {
+                width: 200,
+                fixed: 'left',
                 className: 'center-text',
                 title: 'Nombre',
                 dataIndex: 'nombre',
@@ -156,7 +181,7 @@ export default class RevisionPresidenteAcademia extends Component{
                 key: 'objetivo_general'
             },{
                 className: 'center-text',
-                title: 'Detalles asesor externo',
+                title: 'Asesor externo',
                 dataIndex: 'detalles_asesor_externo',
                 key: 'detalles_asesor_externo',
                 render: (text, record) => (
@@ -166,7 +191,7 @@ export default class RevisionPresidenteAcademia extends Component{
                 )
             },{
                 className: 'center-text',
-                title: 'Detalles del alumno',
+                title: 'Alumno',
                 dataIndex: 'detalles_alumno',
                 key: 'detalles_alumno',
                 render: (text, record) => (
@@ -188,19 +213,20 @@ export default class RevisionPresidenteAcademia extends Component{
             },
             {
                 className: 'center-text',
-                title: '% de factiblidad según docentes',
+                title: '% de factiblidad',
                 dataIndex: 'porcentaje_factibilidad',
                 key: 'porcentaje_factibilidad',
                 render: (text, record) => (
                     <span>
                         <Popover content={record.revisiones} title="Revisión de docentes">
-                            <p style={{color: '#4da1ff'}}>{record.porcentaje_factibilidad}</p>
+                            <p style={{color: '#4da1ff'}}>{`${record.porcentaje_factibilidad} %`}</p>
                         </Popover>
                         
                     </span>
                 )
             },
             {
+                width: 150,
                 className: 'center-text',
                 title: 'Dictamen',
                 dataIndex: 'dictamen',
@@ -210,11 +236,34 @@ export default class RevisionPresidenteAcademia extends Component{
                         <Switch checkedChildren="Aprobado" defaultChecked={(record.dictamen === 'aprobado') ? true : false} unCheckedChildren="No aprobado" onChange={(checked) => this.handleDictamen(record.id, checked)} />
                     </span>
                 )
+            },
+            {
+                width: 300,
+                className: 'center-text',
+                title: 'Asesor interno',
+                dataIndex: 'asesor_interno',
+                key: 'asesor_inteno',
+                render: (text, record) => (
+                    <span>
+                        <Select 
+                            placeholder="Seleccionde al asesor interno"
+                            style={{ width: '80%' }}
+                            onChange={(id_asesor_interno) => this.handleAsesorInterno(id_asesor_interno, record.id)}
+                            defaultValue={record.asesor_interno ? `${record.asesor_interno.id}` : null}
+                        >
+                            {periodo.carrera.docentes_carreras.map((_docente, index) => {
+                                return <Option key={index} value={`${_docente.docente.id}`}>{`${_docente.docente.titulo} ${_docente.docente.nombre} ${_docente.docente.ap_paterno} ${_docente.docente.ap_materno}`}</Option>
+                            })}
+                        </Select>
+                    </span>
+                )
             }
         ]
         return (
             <Row type="flex" justify="center" align="middle" style={{marginTop: 20}}>
-                <Table bordered title={() => 'Anteproyectos registrados'} dataSource={filterAnteproyectos} className="full-width" columns={columns} pagination={{ pageSize: 8 }}  scroll={{ x: 500 }} />
+                <Col xs={24} lg={24}>
+                    <Table bordered title={() => 'Anteproyectos registrados'} dataSource={filterAnteproyectos} className="full-width" columns={columns} pagination={{ pageSize: 8 }}  scroll={{ x: 1500 }} />
+                </Col>
             </Row> 
         )
     }

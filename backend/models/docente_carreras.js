@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
   docente_carreras.associate = (models) => {
     docente_carreras.belongsTo(models.Docente, {
       foreignKey: 'id_docente',
-      onDelete: 'CASCADE'
+      onDelete: 'CASCADE',
+      as: 'docente'
     })
     docente_carreras.belongsTo(models.Carrera, {
       foreignKey: 'id_carrera',

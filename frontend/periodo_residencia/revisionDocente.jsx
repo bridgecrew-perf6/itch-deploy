@@ -3,6 +3,7 @@ import {message, Modal, Row, Col, Select, Table, Button, Input, Icon, Popconfirm
 const {Option, OptGroup}  = Select;
 import PDF2 from 'react-pdf-js-infinite';
 
+import axios from 'axios';
 
 export default class RevisionDocente extends Component{
     constructor(props){
@@ -228,7 +229,9 @@ export default class RevisionDocente extends Component{
         ]
         return (
             <Row type="flex" justify="center" align="middle" style={{marginTop: 20}}>
-                <Table bordered title={() => 'Anteproyectos registrados'} dataSource={filterAnteproyectos} className="full-width" columns={columns} pagination={{ pageSize: 8 }}  scroll={{ x: 500 }} />
+                <Col xs={24} lg={24}>
+                    <Table bordered title={() => 'Anteproyectos registrados'} dataSource={filterAnteproyectos} className="full-width" columns={columns} pagination={{ pageSize: 8 }}  scroll={{ x: 1200 }} />
+                </Col>
             </Row> 
         )
     }

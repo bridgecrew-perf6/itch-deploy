@@ -50,6 +50,11 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       as: 'asesor_externo'
     })
+    Anteproyecto.belongsTo(models.Docente, {
+      foreignKey: 'id_asesor_interno',
+      onDelete: 'CASCADE',
+      as: 'asesor_interno'
+    })
   }
   return Anteproyecto;
 };

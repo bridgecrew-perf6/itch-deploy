@@ -41,6 +41,11 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         isDate: true
       }
+    },
+    filename_dictamen: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      defaultValue: null
     }
   }, {indexes: [{unique: true, fields: ['periodo', 'ciclo', 'id_carrera']}]});
   

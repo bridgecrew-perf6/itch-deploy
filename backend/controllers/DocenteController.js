@@ -1,12 +1,11 @@
 const Docente = require('../models').Docente;
+const docente_carreras = require('../models').docente_carreras;
+
 const Usuario = require('../models').Usuario;
 const sequelize = require('../models').sequelize;
 const Sequelize = require('../models').Sequelize;
 const generator = require('generate-password');
 const transporter = require('../../config/email');
-
-
-
 
 module.exports.add = (req, res) => {
     // console.log(req.body)

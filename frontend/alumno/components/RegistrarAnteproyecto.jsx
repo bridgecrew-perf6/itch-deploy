@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {TreeSelect, Form, Tooltip, Select, Row, Col, Icon, Input, Upload, message, Button, Modal} from 'antd';
+import {TreeSelect, Form, Tooltip, Select, Row, Col, Icon, Input, Upload, message, Button, Modal, Badge} from 'antd';
 const TreeNode = TreeSelect.TreeNode;
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -207,6 +207,9 @@ export default class RegistrarAnteproyecto extends Component{
         return(
             <div>
                 <Row type="flex" justify="center">
+                    <Col xs={24} lg={20} style={{marginBottom: 25}}>
+                        {(anteproyecto.dictamen === 'aprobado') ? <Badge status="success" text="Dictamen: aprobado" /> : <Badge status="error" text="Dictamen: no aprobado" /> }
+                    </Col>
                     <Col xs={24} lg={20}>
                         <CreateRegistrarProyecto 
                             anteproyecto={anteproyecto}

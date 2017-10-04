@@ -19,6 +19,9 @@ import CambiarContrasenia from '../layoutComponents/CambiarContrasenia.jsx';
 import FormAddDocente from '../docente/components/FormAddDocente.jsx';
 import GestionPeriodoDeResidencia from '../periodo_residencia/gestion.jsx';
 import FormAperturaPeriodoDeResidencia from '../periodo_residencia/add.jsx'
+import RevisionAnteproyectos from '../periodo_residencia/revisionAnteproyectos.jsx';
+import Dictamen from '../periodo_residencia/dictamen.jsx';
+
 
 class LayoutJefeDepartamento extends Component{
     constructor(){
@@ -133,6 +136,26 @@ class LayoutJefeDepartamento extends Component{
                     render: <FormAperturaPeriodoDeResidencia departamento={departamento} />
                 }
             })
+        }else if(key == 7){
+            const {departamento, usuario} = this.state
+            this.setState({
+                visibleCambiarContrasenia: false,
+                visible_add_docente: false,
+                componentRender: {
+                    title: 'Revisión de anteproyectos ',
+                    render: <RevisionAnteproyectos usuario={usuario} departamento={departamento}/>
+                }
+            })
+        }else if(key == 8){
+            const {departamento, usuario} = this.state
+            this.setState({
+                visibleCambiarContrasenia: false,
+                visible_add_docente: false,
+                componentRender: {
+                    title: 'Dictamen',
+                    render: <Dictamen usuario={usuario} departamento={departamento}/>
+                }
+            })
         }
     }
     render(){
@@ -171,15 +194,24 @@ class LayoutJefeDepartamento extends Component{
                                 title={<span><Icon type="calendar" /><span>Periodos de residencia</span></span>}
                             >
                                 <Menu.Item key="5" >
-                                    <Icon type="plus" />
+                                    <Icon type="user-add" />
                                     <span>Agregar candidato</span>
                                 </Menu.Item>
                                 <Menu.Item key="6" >
                                     <Icon type="plus"/>
                                     <span>Agregar periodo</span>
                                 </Menu.Item>
+                                <Menu.Item key="7" >
+                                    <Icon type="calendar" />
+                                    <span>Revisión anteproyectos</span>
+                                </Menu.Item>
+                                <Menu.Item key="8" >
+                                    <Icon type="schedule" />
+                                    <span>Dictamen</span>
+                                </Menu.Item>
 
                             </SubMenu>
+                            
                             <Menu.Item key="2" >
                                 <Icon type="contacts"/>
                                 <span>Empresas</span>

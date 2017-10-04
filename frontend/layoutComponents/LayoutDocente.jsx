@@ -65,16 +65,17 @@ class LayoutJefeDepartamento extends Component{
         });
     }
     
+    
     handleMenu = ({item, key, selectedKeys}) => {
         if(key == 1){
-            const {departamento} = this.state
+            const {departamento, usuario} = this.state
             this.setState({
                 componentSelected: key,
                 visibleCambiarContrasenia: false,
                 visible_add_docente: false,
                 componentRender: {
                     title: 'Revisión de anteproyectos ',
-                    render: <RevisionAnteproyectos usuario={usuario} departamento={res.data}/>
+                    render: <RevisionAnteproyectos usuario={usuario} departamento={departamento}/>
                 }
             })
         }else if(key == 3){
@@ -103,7 +104,7 @@ class LayoutJefeDepartamento extends Component{
                         <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']} onSelect={this.handleMenu}>
                             
                             <Menu.Item key="1" >
-                                <Icon type="contacts"/>
+                                <Icon type="calendar" />
                                 <span>Revisión anteproyectos</span>
                             </Menu.Item>
                             <Menu.Divider/>

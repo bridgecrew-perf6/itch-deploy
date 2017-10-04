@@ -50,13 +50,14 @@ export default class revisionAnteproyectos extends Component{
                                 }
                             })
                     }else if(_res.data.rol === 'presidente_academia'){
-                        axios.get(`/api/anteproyectos/${id_periodo}`)
+                        axios.get(`/api/periodo/${id_periodo}`)
                         .then(res =>{
                             if(res.status === 200){
-                                console.log(res)
-                                const anteproyectos = res.data.map((anteproyecto, index) => {
+                                // console.log(res.data.anteproyectos)
+                                const anteproyectos = res.data.anteproyectos.map((anteproyecto, index) => {
                                     const count_factible =  anteproyecto.revisiones.filter((revision) => revision.esFactible === true).length;
-                                    const porcentaje_factibilidad = count_factible * 100 / anteproyecto.revisiones.length;
+                                    const porcentaje_factibilidad = Number((count_factible * 100 / anteproyecto.revisiones.length).toFixed(1))
+
                                     const revisiones = (
                                         <span>
                                             {anteproyecto.revisiones.map((revision, key) => {
@@ -89,6 +90,7 @@ export default class revisionAnteproyectos extends Component{
                                         objetivo_general: anteproyecto.objetivo_general,
                                         detalles_alumno: anteproyecto.alumno,
                                         detalles_asesor_externo: anteproyecto.asesor_externo,
+                                        asesor_interno: anteproyecto.asesor_interno,
                                         anteproyecto: anteproyecto.path_file_anteproyecto,
                                         revisiones,
                                         porcentaje_factibilidad,
@@ -96,7 +98,7 @@ export default class revisionAnteproyectos extends Component{
                                     }
                                 })
                                 this.setState({
-                                    renderRevision: <RevisionPresidenteAcademia usuario={this.state.usuario} anteproyectos={anteproyectos}/>
+                                    renderRevision: <RevisionPresidenteAcademia periodo={res.data} usuario={this.state.usuario} anteproyectos={anteproyectos}/>
                                 })
                             }
                         })

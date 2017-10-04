@@ -56,6 +56,16 @@ module.exports = {
           key: 'id',
           as: 'id_asesor_externo'
         }
+      },
+      id_asesor_interno: {
+        type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        allowNull: true,
+        references: {
+          model: 'docentes',
+          key: 'id',
+          as: 'id_asesor_interno'
+        }
       }
       ,
       createdAt: {

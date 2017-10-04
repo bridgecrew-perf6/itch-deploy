@@ -1,6 +1,9 @@
 const Anteproyecto = require('../models').Anteproyecto;
 const Alumno = require('../models').Alumno;
 const Docente = require('../models').Docente;
+const Periodo = require('../models').Periodo;
+const Carrera = require('../models').Carrera;
+const docentes_carrera = require('../models').docentes_carrera;
 
 const asesor_externo = require('../models').asesor_externo;
 const Empresa = require('../models').Empresa;
@@ -11,7 +14,24 @@ const sequelize = require('../models').sequelize
 const fs = require('fs')
 const path = require('path')
 
-
+module.exports.setAsesorInterno = (req, res) => {
+    const id_anteproyecto = req.body.id_anteproyecto,
+        id_asesor_interno = req.body.id_asesor_interno;
+    Anteproyecto.update({id_asesor_interno}, {where: {id: id_anteproyecto}})
+        .then(anteproyecto => {
+            // console.log('=>',departamento)
+            res.status(200).json(anteproyecto)
+        }).catch(Sequelize.ValidationError, (err) => {
+            var errores = err.errors.map((element) => {
+                return `${element.path}: ${element.message}`
+            })
+            // console.log('==>', errores)
+            res.status(202).json({errores})
+        }).catch((err) => {
+            console.log(err)
+            res.status(406).json({err: err})
+        })
+}
 module.exports.setDictamen = (req, res) => {
     const id_anteproyecto = req.body.id_anteproyecto,
         dictamen = req.body.dictamen;

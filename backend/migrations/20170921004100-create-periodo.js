@@ -33,6 +33,11 @@ module.exports = {
         type: Sequelize.DATEONLY,
         allowNull: false
       },
+      filename_dictamen: {
+        type: Sequelize.STRING,
+        allowNull: true,
+        defaultValue: null
+      },
       id_carrera:{
         type: Sequelize.INTEGER,
         allowNull: false,
