@@ -109,7 +109,10 @@ module.exports =  (app, express, passport) => {
         .get(isAuth, periodoController.findById);
     
     router.route('/periodo/:id/dictamen')
-        .get(periodoController.findDictamen);
+        .get(isAuth, periodoController.findDictamen);
+    
+    router.route('/periodo/fecha_fin_entrega_anteproyecto')
+        .put(isAuth, periodoController.updateFechaFinEntregaAnteproyectos);
 
 
 

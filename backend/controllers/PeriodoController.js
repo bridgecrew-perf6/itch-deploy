@@ -13,6 +13,27 @@ const Sequelize = require('../models').Sequelize
 const sequelize = require('../models').sequelize
 
 
+module.exports.updateFechaFinEntregaAnteproyectos = (req, res) => {
+    const id_periodo = req.body.id_periodo,
+        fecha_fin_entrega_anteproyecto = req.body.fecha_fin_entrega_anteproyecto;
+
+        Periodo.update({fecha_fin_entrega_anteproyecto}, {where: {id: id_periodo}})
+            .then((periodo)=>{
+                // console.log('success=======>    ', result)
+                res.status(200).json(periodo)
+            }).catch(Sequelize.ValidationError, (err) => {
+                console.log(err);
+                var errores = err.errors.map((element) => {
+                    return `${element.path}: ${element.message}`
+                })
+                // console.log('==>', errores)
+                res.status(202).json({errores})
+            }).catch((err) => {
+                res.status(406).json({err: err})
+            })  
+
+}
+
 module.exports.findDictamen = (req, res) => {
     const id_periodo = req.params.id;
     Periodo.findOne({

@@ -53,7 +53,7 @@ export default class GestionPeriodoDeResidencia extends Component{
         axios.get(`/api/carrera/${carrera.id}/periodos`)
             .then(res => {
                 if(res.status === 200){
-                    console.log('alv',res.data)
+                    // console.log('alv',res.data)
                     this.setState({
                         carreraSeleccionada: res.data,
                         visible_add_alumno: false,
@@ -62,6 +62,22 @@ export default class GestionPeriodoDeResidencia extends Component{
                     message.warning('Verificar los docentes asignados.')
                 }
             })   
+    }
+
+    handleChangeFechaFinEntregaAnteproyecto = (fecha_fin_entrega_anteproyecto, id_periodo) => {
+        axios.put('/api/periodo/fecha_fin_entrega_anteproyecto', {
+            fecha_fin_entrega_anteproyecto: fecha_fin_entrega_anteproyecto.format('YYYY-MM-DD'),
+            id_periodo
+        }).then(res => {
+            if(res.status === 200){
+                // console.log('alv',res.data)
+                message.success('Fecha de entrega de anteproyectos actualizada!')
+                window.location.reload();
+            }else{
+                message.warning('Ups, verificar conexión.')
+            }
+        }) 
+        
     }
     render(){
         const {departamento, carreraSeleccionada, visible_add_alumno, id_periodo, visible_lista_candidatos_residente} = this.state
@@ -72,6 +88,7 @@ export default class GestionPeriodoDeResidencia extends Component{
                     periodo: periodo.periodo,
                     ciclo: periodo.ciclo,
                     fecha_periodo: `${periodo.fecha_inicio} - ${periodo.fecha_fin}`,
+                    fecha_fin: periodo.fecha_fin ,
                     fecha_inicio_entrega_anteproyecto: periodo.fecha_inicio_entrega_anteproyecto,
                     fecha_fin_entrega_anteproyecto:  periodo.fecha_fin_entrega_anteproyecto,
                     acciones: (moment().format('YYYY-MM-DD') >= periodo.fecha_inicio_entrega_anteproyecto && moment().format('YYYY-MM-DD') <= periodo.fecha_fin_entrega_anteproyecto) ? true : false,
@@ -99,7 +116,7 @@ export default class GestionPeriodoDeResidencia extends Component{
                 dataIndex: 'fecha_entrega_anteproyecto',
                 render: (text, record) => (
                     <span>
-                        {record.fecha_inicio_entrega_anteproyecto} - <DatePicker onChange={this.handleChangeFechaFin} format="YYYY-MM-DD"  defaultValue={moment(record.fecha_fin_entrega_anteproyecto, "YYYY-MM-DD")}/>
+                        {record.fecha_inicio_entrega_anteproyecto} - <DatePicker onChange={(momentDate, stringDate) => {this.handleChangeFechaFinEntregaAnteproyecto(momentDate, record.id)}} disabledDate={current => (current.format('YYYY-MM-DD') > moment(record.fecha_fin, "YYYY-MM-DD").format('YYYY-MM-DD') || current.format('YYYY-MM-DD') < moment(record.fecha_inicio_entrega_anteproyecto, "YYYY-MM-DD").format('YYYY-MM-DD') ) } format="YYYY-MM-DD"  defaultValue={moment(record.fecha_fin_entrega_anteproyecto, "YYYY-MM-DD")}/>
                     </span>
                 )
             },{
