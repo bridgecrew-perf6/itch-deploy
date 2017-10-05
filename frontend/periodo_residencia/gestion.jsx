@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import {message, Modal, Row, Col, Select, Table, Button, Avatar} from 'antd';
+import {message, Modal, Row, Col, Select, Table, Button, Avatar, DatePicker} from 'antd';
 const Option = Select.Option;
 
 import axios from 'axios';
 import moment from 'moment';
+import uuid from 'uuid';
 
 // components
 import FormAddAlumno from '../alumno/components/FormAddAlumno.jsx';
@@ -67,11 +68,12 @@ export default class GestionPeriodoDeResidencia extends Component{
         const periodos = carreraSeleccionada ? carreraSeleccionada.periodos.map((periodo, index) => {
                 return { 
                     id: periodo.id, 
-                    key: index,
+                    key: uuid.v1(),
                     periodo: periodo.periodo,
                     ciclo: periodo.ciclo,
                     fecha_periodo: `${periodo.fecha_inicio} - ${periodo.fecha_fin}`,
-                    fecha_entrega_anteproyecto: `${periodo.fecha_inicio_entrega_anteproyecto} - ${periodo.fecha_fin_entrega_anteproyecto}`,
+                    fecha_inicio_entrega_anteproyecto: periodo.fecha_inicio_entrega_anteproyecto,
+                    fecha_fin_entrega_anteproyecto:  periodo.fecha_fin_entrega_anteproyecto,
                     acciones: (moment().format('YYYY-MM-DD') >= periodo.fecha_inicio_entrega_anteproyecto && moment().format('YYYY-MM-DD') <= periodo.fecha_fin_entrega_anteproyecto) ? true : false,
                     lista_candidatos: 'sisisi'
                 }
@@ -94,7 +96,12 @@ export default class GestionPeriodoDeResidencia extends Component{
             {
                 title: 'Fecha entrega anteproyectos',
                 key: 'fecha_entrega_anteproyecto',
-                dataIndex: 'fecha_entrega_anteproyecto'
+                dataIndex: 'fecha_entrega_anteproyecto',
+                render: (text, record) => (
+                    <span>
+                        {record.fecha_inicio_entrega_anteproyecto} - <DatePicker onChange={this.handleChangeFechaFin} format="YYYY-MM-DD"  defaultValue={moment(record.fecha_fin_entrega_anteproyecto, "YYYY-MM-DD")}/>
+                    </span>
+                )
             },{
                 className: 'center-text',
                 title: 'Acciones',

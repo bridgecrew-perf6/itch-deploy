@@ -5,6 +5,8 @@ const Option = Select.Option;
 const FormItem = Form.Item;
 
 import axios from 'axios';
+import uuid from 'uuid';
+// console.warn('uuid', uuid.v1())
 
 const CreateFormAsignacion = Form.create()(
     (props) => {
@@ -66,7 +68,7 @@ export default class GestionarCarrera extends Component{
         const docentes = props.docentes.map((docente, index) => {
             return {
                 id: docente.id,
-                key: index,
+                key: uuid.v1(),
                 nombre: `${docente.titulo} ${docente.nombre} ${docente.ap_paterno} ${docente.ap_materno}`,
                 id_usuario: docente.id_usuario,
                 acciones: 'assign'
@@ -88,7 +90,7 @@ export default class GestionarCarrera extends Component{
         const docentes = nextProps.docentes.map((docente, index) => {
             return {
                 id: docente.id,
-                key: index,
+                key: uuid.v1(),
                 nombre: `${docente.titulo} ${docente.nombre} ${docente.ap_paterno} ${docente.ap_materno}`,
                 id_usuario: docente.id_usuario,
                 asignacion: 'assign'

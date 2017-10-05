@@ -5,6 +5,7 @@ const {Option, OptGroup}  = Select;
 import axios from 'axios';
 import moment from 'moment';
 import PDF2 from 'react-pdf-js-infinite';
+import uuid from 'uuid';
 
 // components
 import RevisionDocente from './revisionDocente.jsx';
@@ -32,7 +33,7 @@ export default class revisionAnteproyectos extends Component{
                                     const anteproyectos = res.data.map((anteproyecto, index) => {
                                         // console.warn(anteproyecto)
                                         return {
-                                            key: index,
+                                            key: uuid.v1(),
                                             id: anteproyecto.id,
                                             id_alumno: anteproyecto.id_alumno,
                                             dictamen: anteproyecto.dictamen,
