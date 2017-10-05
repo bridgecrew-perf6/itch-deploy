@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
-import {TreeSelect, Form, Tooltip, Select, Row, Col, Icon, Input, Upload, message, Button, Modal, Badge} from 'antd';
+import {TreeSelect, Form, Tooltip, Select, Row, Col, Icon, Input, Upload, message, Button, Modal, Badge, Collapse} from 'antd';
 const TreeNode = TreeSelect.TreeNode;
 const FormItem = Form.Item;
 const Option = Select.Option;
+const Panel = Collapse.Panel;
 import axios from 'axios';
 
 
@@ -201,14 +202,36 @@ export default class RegistrarAnteproyecto extends Component{
             })
         });
     }
-
+    
     render(){
         const {anteproyecto, empresas} = this.state
+        const customPanelStyle = {
+            background: '#f4f8f9',
+            borderRadius: 10,
+            marginBottom: 24,
+            border: 0,
+            overflow: 'hidden',
+          };
         return(
             <div>
                 <Row type="flex" justify="center">
                     <Col xs={24} lg={20} style={{marginBottom: 25}}>
                         {(anteproyecto.dictamen === 'aprobado') ? <Badge status="success" text="Dictamen: aprobado" /> : <Badge status="error" text="Dictamen: no aprobado" /> }
+                    </Col>
+                    <Col xs={24} lg={20} style={{marginBottom: 25}}>
+                        <h3>Revisores</h3>
+                        <Collapse bordered={false} >
+                            {anteproyecto.revisiones.map((revision, index) => {
+                                return (<Panel header={revision.docente.nombre} key={index} style={customPanelStyle}>
+                                            {(revision.esFactible === 'factible')? <Badge status="success" text="Proyecto factible" /> : ''}
+                                            {(revision.esFactible === 'no_factible')? <Badge status="error" text="Proyecto no factible" /> : ''}
+                                            {(revision.esFactible === 'corrección')? <div>
+                                                        <Badge  status="processing" text="Corregir los siguientes puntos y volver a subir anteproyecto" /> 
+                                                            <p style={{marginLeft: 20, marginTop: 10}}>{revision.comentario }</p>
+                                                        </div>: ''}
+                                        </Panel>)
+                            })}
+                        </Collapse>
                     </Col>
                     <Col xs={24} lg={20}>
                         <CreateRegistrarProyecto 

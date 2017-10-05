@@ -30,6 +30,7 @@ export default class revisionAnteproyectos extends Component{
                                 if(res.status === 200){
                                     // console.log(res)
                                     const anteproyectos = res.data.map((anteproyecto, index) => {
+                                        // console.warn(anteproyecto)
                                         return {
                                             key: index,
                                             id: anteproyecto.id,
@@ -42,6 +43,7 @@ export default class revisionAnteproyectos extends Component{
                                             detalles_alumno: anteproyecto.alumno,
                                             detalles_asesor_externo: anteproyecto.asesor_externo,
                                             anteproyecto: anteproyecto.path_file_anteproyecto,
+                                            revision: anteproyecto.revisiones.find((revision) => revision.id_docente === this.state.usuario.id_docente)
                                         }
                                     })
                                     this.setState({
@@ -55,19 +57,25 @@ export default class revisionAnteproyectos extends Component{
                             if(res.status === 200){
                                 // console.log(res.data.anteproyectos)
                                 const anteproyectos = res.data.anteproyectos.map((anteproyecto, index) => {
-                                    const count_factible =  anteproyecto.revisiones.filter((revision) => revision.esFactible === true).length;
-                                    const porcentaje_factibilidad = Number((count_factible * 100 / anteproyecto.revisiones.length).toFixed(1))
-
+                                    const count_factible =  anteproyecto.revisiones.filter((revision) => revision.esFactible === 'factible').length;
+                                    const porcentaje_factibilidad = Number((count_factible * 100 / anteproyecto.revisiones.length).toFixed(1)) || 0
+                                    console.log('corr', anteproyecto.revisiones)
                                     const revisiones = (
                                         <span>
                                             {anteproyecto.revisiones.map((revision, key) => {
-                                                if(revision.esFactible){
+                                                if(revision.esFactible === 'factible'){
                                                     return (
                                                         <p key={key}>
                                                         <Badge status="success" text={`${revision.docente.titulo} ${revision.docente.nombre} ${revision.docente.ap_paterno} ${revision.docente.ap_materno}`} />
                                                         </p>
                                                     )
-                                                }else{
+                                                }else if(revision.esFactible === 'corrección'){
+                                                    return (
+                                                        <p key={key}>
+                                                        <Badge status="processing" text={`${revision.docente.titulo} ${revision.docente.nombre} ${revision.docente.ap_paterno} ${revision.docente.ap_materno}`} />
+                                                        </p>
+                                                    )
+                                                }else if(revision.esFactible === 'no_factible'){
                                                     return (
                                                         <p key={key}>
                                                         <Badge status="error" text={`${revision.docente.titulo} ${revision.docente.nombre} ${revision.docente.ap_paterno} ${revision.docente.ap_materno}`} />

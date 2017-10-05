@@ -52,6 +52,27 @@ module.exports.setDictamen = (req, res) => {
         })
 }
 
+module.exports.addFactibilidadCorrecciones = (req, res) => {
+    const id_docente = req.body.id_docente,
+        id_anteproyecto = req.body.id_anteproyecto,
+        comentario = req.body.comentario;
+    revision_anteproyecto.upsert(
+        {id_docente, id_anteproyecto, esFactible:'correccion', comentario}
+    ).then(rev_anteproyecto => {
+        // console.log('=>',departamento)
+        res.status(200).json(rev_anteproyecto)
+    }).catch(Sequelize.ValidationError, (err) => {
+        var errores = err.errors.map((element) => {
+            return `${element.path}: ${element.message}`
+        })
+        // console.log('==>', errores)
+        res.status(202).json({errores})
+    }).catch((err) => {
+        console.log(err)
+        res.status(406).json({err: err})
+    })
+}
+
 module.exports.addFactibilidad = (req, res) => {
     const id_docente = req.body.id_docente,
         id_anteproyecto = req.body.id_anteproyecto,

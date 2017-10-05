@@ -9,9 +9,10 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       esFactible: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false, 
-        defaultValue: false
+        type: Sequelize.ENUM,
+        allowNull: false,
+        values: ['factible', 'no_factible', 'corrección'],
+        defaultValue: 'no_factible',
       },
       comentario: {
         type: Sequelize.STRING(500),

@@ -188,7 +188,7 @@ export default class GestionarCarrera extends Component{
         const {carrera, docentes, filterDocentes, docentesAsignados} = this.state;
         // console.log('docentes_asignados: ', docentesAsignados)
 
-        const columns = [
+        var columns = [
             {
                 className: 'center-text',
                 title: 'Nombre',
@@ -218,12 +218,15 @@ export default class GestionarCarrera extends Component{
         ]
         const presidente_academia = docentesAsignados.find((docente) => docente.rol==='presidente_academia') || null
         const jefe_proyecto =  docentesAsignados.find((docente) => docente.rol==='jefe_proyecto') || null
-        const isSelectedRow = (record) => {
-            // console.log('porq?', docentesAsignados);
+        
+        var isSelectedRow = (record) => {
+            // console.warn('asignado => ', docentesAsignados);
+            // console.warn('record =>', record)
+            console.warn(docentesAsignados.find((docente) => (docente.id_docente === record.id && docente.rol==='docente')))
             return docentesAsignados.find((docente) => (docente.id_docente === record.id && docente.rol==='docente')) ? true : false
             // return true;
         }
-        const rowSelection = {
+        var rowSelection = {
             onChange: (selectedRowKeys, selectedRows) => {
               console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
               axios.post('/api/carrera/asignar_docentes', {

@@ -7,6 +7,8 @@ import axios from 'axios';
 // components
 import GestionarCarrera from './components/GestionarCarrera.jsx';
 
+
+
 export default class Departamento extends Component{
     constructor(props){
         super(props);
@@ -23,10 +25,10 @@ export default class Departamento extends Component{
             docentesAsigandos: null
         })
     }
-    handleChageCarrera = (value) => {
+    handleChageCarrera = (id_carrera) => {
         const {departamento} = this.state;
-        const carrera = departamento.carreras.find((carrera) => carrera.nombre === value);
-        axios.get(`/api/carrera/${carrera.id}/docentes_asignados`)
+        const carrera = departamento.carreras.find((carrera) => `${carrera.id}` === id_carrera);
+        axios.get(`/api/carrera/${id_carrera}/docentes_asignados`)
             .then(res => {
                 if(res.status === 200){
                     console.log('alv',res.data)
@@ -50,7 +52,7 @@ export default class Departamento extends Component{
                             style={{width: '100%'}}
                             onChange={this.handleChageCarrera}
                         > 
-                            {departamento.carreras.map((carrera, index) => {return <Option key={index} value={`${carrera.nombre}`} >{carrera.nombre}</Option>})}
+                            {departamento.carreras.map((carrera, index) => {return <Option key={index} value={`${carrera.id}`} >{carrera.nombre}</Option>})}
                         </Select>
                     </Col>
                 </Row>

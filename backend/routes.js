@@ -96,6 +96,9 @@ module.exports =  (app, express, passport) => {
         .get(isAuth, anteproyectoController.getAnteproyectoPDF)
     router.route('/anteproyecto/factibilidad')
         .put(isAuth, anteproyectoController.addFactibilidad)
+        
+    router.route('/anteproyecto/factibilidad/correciones')
+        .put(isAuth, anteproyectoController.addFactibilidadCorrecciones)
 
     router.route('/anteproyecto/set_dictamen')
         .put(isAuth, anteproyectoController.setDictamen);

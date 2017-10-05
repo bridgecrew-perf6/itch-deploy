@@ -2,8 +2,13 @@
 module.exports = (sequelize, DataTypes) => {
   const revision_anteproyecto = sequelize.define('revision_anteproyecto', {
     esFactible: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false
+      type: DataTypes.ENUM,
+      allowNull: false,
+      values: ['factible', 'no_factible', 'corrección'],
+      defaultValue: 'no_factible',
+      validate: {
+        notEmpty: {msg: 'El campo debe tener un valor'}
+      }
     },
     comentario: {
       type: DataTypes.STRING

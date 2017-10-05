@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {message, Modal, Row, Col, Select, Table, Button} from 'antd';
+import {message, Modal, Row, Col, Select, Table, Button, Avatar} from 'antd';
 const Option = Select.Option;
 
 import axios from 'axios';
@@ -24,13 +24,15 @@ export default class GestionPeriodoDeResidencia extends Component{
                 if(res.status === 200){
                     const candidatos = res.data.map((candidato, index) => {
                         return (
-                            <p>{candidato.nombre}</p>
+                                <li key={index}>
+                                    {`${candidato.nombre} ${candidato.ap_paterno} ${candidato.ap_materno}`}
+                                </li>
                         )
                     })
                     Modal.info({
                         width: 600,
-                        title: 'Lista de candidatos a residente del periodo: '+id_periodo,
-                        content: candidatos,
+                        title: 'Lista de candidatos a residente del periodo.',
+                        content: (<div>{candidatos}</div>),
                         onOk(){}
                     })
                 }

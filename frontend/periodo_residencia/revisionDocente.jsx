@@ -1,9 +1,14 @@
 import React, {Component} from 'react';
-import {message, Modal, Row, Col, Select, Table, Button, Input, Icon, Popconfirm} from 'antd';
+import {message, Modal, Row, Col, Select, Table, Button, Input, Icon, Popconfirm, Switch, Form} from 'antd';
 const {Option, OptGroup}  = Select;
+const { TextArea } = Input;
+const FormItem = Form.Item;
 import PDF2 from 'react-pdf-js-infinite';
 
 import axios from 'axios';
+
+// components
+import FormCorreccion from './FormCorreccion.jsx';
 
 export default class RevisionDocente extends Component{
     constructor(props){
@@ -11,14 +16,25 @@ export default class RevisionDocente extends Component{
         this.state = {
             anteproyectos: props.anteproyectos,
             filterAnteproyectos: props.anteproyectos,
-            usuario: props.usuario
+            usuario: props.usuario,
+            visible_correcciones: false,
+            props_correcciones: {
+                id_docente: null,
+                id_anteproyecto: null
+            }
         }
+        // console.wa
     }
     componentWillReceiveProps(nextProps){
         this.state = {
             anteproyectos: nextProps.anteproyectos,
             filterAnteproyectos: nextProps.anteproyectos,
-            usuario: nextProps.usuario
+            usuario: nextProps.usuario,
+            visible_correcciones: false,
+            props_correcciones: {
+                id_docente: null,
+                id_anteproyecto: null
+            }
         }
     }
     
@@ -100,35 +116,20 @@ export default class RevisionDocente extends Component{
             ), onOk(){}
         });
     }
-    esFactible(id_anteproyecto) {
-        axios.put('/api/anteproyecto/factibilidad', {
-            id_docente: this.state.usuario.id_docente,
-            id_anteproyecto: id_anteproyecto,
-            esFactible: true
-        }).then(res => {
-            if(res.status === 200 ){
-                message.success('Anteproyecto marcado como factible :)!')
-            }else{
-                Modal.error({
-                    title: 'Error al actualizar anteproyecto. Revisar los siguientes campos',
-                    content:(
-                        <div>
-                            {res.data.errores}
-                        </div>
-                    ), onOk(){}, 
-                })
+    showInputCorreccion(id_anteproyecto) {
+        this.setState({
+            visible_correcciones: true,
+            props_correcciones:{
+                id_docente: this.state.usuario.id_docente,
+                id_anteproyecto: id_anteproyecto
             }
-        }).catch(err => {
-                message.error('Error en el servidor verificar con el encargado.');   
-        })
+        })   
     }
-
-    noEsFactible(id_anteproyecto) {
-        // message.error('Click on No');
+    handleFactible(id_anteproyecto, checked){
         axios.put('/api/anteproyecto/factibilidad', {
             id_docente: this.state.usuario.id_docente,
             id_anteproyecto: id_anteproyecto,
-            esFactible: false
+            esFactible: checked ? 'factible' : 'no_factible'
         }).then(res => {
             if(res.status === 200 ){
                 message.success('Anteproyecto marcado como no factible !')
@@ -148,7 +149,7 @@ export default class RevisionDocente extends Component{
     }
     render(){
         const {anteproyectos, filterAnteproyectos} = this.state
-
+        // console.warn(anteproyectos)
         const columns = [
             {
                 className: 'center-text',
@@ -183,7 +184,7 @@ export default class RevisionDocente extends Component{
                 key: 'objetivo_general'
             },{
                 className: 'center-text',
-                title: 'Detalles asesor externo',
+                title: 'Asesor externo',
                 dataIndex: 'detalles_asesor_externo',
                 key: 'detalles_asesor_externo',
                 render: (text, record) => (
@@ -193,7 +194,7 @@ export default class RevisionDocente extends Component{
                 )
             },{
                 className: 'center-text',
-                title: 'Detalles del alumno',
+                title: 'Alumno',
                 dataIndex: 'detalles_alumno',
                 key: 'detalles_alumno',
                 render: (text, record) => (
@@ -220,19 +221,21 @@ export default class RevisionDocente extends Component{
                 key: 'factible',
                 render: (text, record) => (
                     <span>
-                        <Popconfirm title="¿El proyecto es factible?" onConfirm={() => this.esFactible(record.id)} onCancel={() => this.noEsFactible(record.id)} okText="Si" cancelText="No">
-                            <Button icon="line-chart"></Button>
-                        </Popconfirm>
+                        <Switch style={{marginRight: 3, marginBottom: 3}} defaultChecked={(record.revision && (record.revision.esFactible === 'factible')) ? true : false} checkedChildren="Factible" unCheckedChildren={<Icon type="cross" />} onChange={(checked) => this.handleFactible(record.id, checked)} />
+                        <Button style={{marginLeft: 3}} icon="exception" onClick={() => this.showInputCorreccion(record.id)}>Correción</Button>
                     </span>
                 )
             }
         ]
         return (
+            <div>
             <Row type="flex" justify="center" align="middle" style={{marginTop: 20}}>
                 <Col xs={24} lg={24}>
-                    <Table bordered title={() => 'Anteproyectos registrados'} dataSource={filterAnteproyectos} className="full-width" columns={columns} pagination={{ pageSize: 8 }}  scroll={{ x: 1200 }} />
+                    <Table bordered title={() => 'Anteproyectos registrados'} dataSource={filterAnteproyectos} className="full-width" columns={columns} pagination={{ pageSize: 8 }}  scroll={{ x: 1500 }} />
                 </Col>
-            </Row> 
+            </Row>
+            <FormCorreccion visible={this.state.visible_correcciones} id_docente={this.state.props_correcciones.id_docente} id_anteproyecto={this.state.props_correcciones.id_anteproyecto}/> 
+            </div>
         )
     }
 

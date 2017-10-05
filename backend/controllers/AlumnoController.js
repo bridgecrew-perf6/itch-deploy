@@ -2,7 +2,10 @@ const Alumno = require('../models').Alumno;
 const Periodo = require('../models').Periodo;
 const asesor_externo = require('../models').asesor_externo;
 const Usuario = require('../models').Usuario;
+const Docente = require('../models').Docente;
 const Anteproyecto = require('../models').Anteproyecto;
+const revision_anteproyecto = require('../models').revision_anteproyecto;
+
 const Sequelize = require('../models').Sequelize
 const sequelize = require('../models').sequelize
 const generator = require('generate-password');
@@ -82,10 +85,11 @@ module.exports.updateDatosAnteproyecto = (req, res) => {
         })  
 }
 
+
 module.exports.getAnteproyecto = (req, res) => {
     // el alumno puedo cambiar su id jeje
     const id_alumno = req.params.id;
-    Anteproyecto.findOne({where: {id_alumno}, include: [{model: Alumno, as: 'alumno'}, {model: Periodo, as: 'periodo'}, {model: asesor_externo, as: 'asesor_externo'}]})
+    Anteproyecto.findOne({where: {id_alumno}, include: [{model: revision_anteproyecto, as: 'revisiones', include: [{model: Docente, as: 'docente'}]},{model: Alumno, as: 'alumno'}, {model: Periodo, as: 'periodo'}, {model: asesor_externo, as: 'asesor_externo'}]})
         .then(anteproyecto => {
             res.status(200).json(anteproyecto);
         }).catch(err => {
