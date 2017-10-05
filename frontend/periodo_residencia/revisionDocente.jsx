@@ -20,7 +20,8 @@ export default class RevisionDocente extends Component{
             visible_correcciones: false,
             props_correcciones: {
                 id_docente: null,
-                id_anteproyecto: null
+                id_anteproyecto: null,
+                correo_alumno: null
             }
         }
         // console.wa
@@ -33,11 +34,11 @@ export default class RevisionDocente extends Component{
             visible_correcciones: false,
             props_correcciones: {
                 id_docente: null,
-                id_anteproyecto: null
+                id_anteproyecto: null,
+                correo_alumno: null
             }
         }
     }
-    
     // TABLE
     onInputChange = (e) => {
         this.setState({
@@ -116,12 +117,13 @@ export default class RevisionDocente extends Component{
             ), onOk(){}
         });
     }
-    showInputCorreccion(id_anteproyecto) {
+    showInputCorreccion(id_anteproyecto, correo_alumno) {
         this.setState({
             visible_correcciones: true,
             props_correcciones:{
                 id_docente: this.state.usuario.id_docente,
-                id_anteproyecto: id_anteproyecto
+                id_anteproyecto: id_anteproyecto,
+                correo_alumno: correo_alumno
             }
         })   
     }
@@ -222,7 +224,7 @@ export default class RevisionDocente extends Component{
                 render: (text, record) => (
                     <span>
                         <Switch style={{marginRight: 3, marginBottom: 3}} defaultChecked={(record.revision && (record.revision.esFactible === 'factible')) ? true : false} checkedChildren="Factible" unCheckedChildren={<Icon type="cross" />} onChange={(checked) => this.handleFactible(record.id, checked)} />
-                        <Button style={{marginLeft: 3}} icon="exception" onClick={() => this.showInputCorreccion(record.id)}>Correción</Button>
+                        <Button style={{marginLeft: 3}} icon="exception" onClick={() => this.showInputCorreccion(record.id, record.detalles_alumno.usuario.correo)}>Correción</Button>
                     </span>
                 )
             }
@@ -234,7 +236,7 @@ export default class RevisionDocente extends Component{
                     <Table bordered title={() => 'Anteproyectos registrados'} dataSource={filterAnteproyectos} className="full-width" columns={columns} pagination={{ pageSize: 8 }}  scroll={{ x: 1500 }} />
                 </Col>
             </Row>
-            <FormCorreccion visible={this.state.visible_correcciones} id_docente={this.state.props_correcciones.id_docente} id_anteproyecto={this.state.props_correcciones.id_anteproyecto}/> 
+            <FormCorreccion visible={this.state.visible_correcciones} id_docente={this.state.props_correcciones.id_docente} id_anteproyecto={this.state.props_correcciones.id_anteproyecto} correo_alumno={this.state.props_correcciones.correo_alumno}/> 
             </div>
         )
     }

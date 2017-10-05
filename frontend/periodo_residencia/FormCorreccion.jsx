@@ -37,6 +37,7 @@ export default class FormCorreccion extends Component{
         this.state = {
             id_docente: props.id_docente,
             id_anteproyecto: props.id_anteproyecto,
+            correo_alumno: props.correo_alumno,
             visible: props.visible,
         }
     }
@@ -45,6 +46,7 @@ export default class FormCorreccion extends Component{
         this.setState({
             id_docente: nextProps.id_docente,
             id_anteproyecto: nextProps.id_anteproyecto,
+            correo_alumno: nextProps.correo_alumno,
             visible: visible
         })
     }
@@ -68,7 +70,8 @@ export default class FormCorreccion extends Component{
             axios.put('/api//anteproyecto/factibilidad/correciones', {
                 id_docente: this.state.id_docente,
                 id_anteproyecto: this.state.id_anteproyecto,
-                comentario: values.comentario
+                comentario: values.comentario,
+                correo_alumno: this.state.correo_alumno
             }).then(res => {
                 if(res.status === 200 ){
                     message.success('Se han enviado las correcciones!')
