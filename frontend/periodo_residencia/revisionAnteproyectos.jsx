@@ -56,11 +56,11 @@ export default class revisionAnteproyectos extends Component{
                         axios.get(`/api/periodo/${id_periodo}`)
                         .then(res =>{
                             if(res.status === 200){
-                                // console.log(res.data.anteproyectos)
+                                // console.log('=>', res.data)
                                 const anteproyectos = res.data.anteproyectos.map((anteproyecto, index) => {
                                     const count_factible =  anteproyecto.revisiones.filter((revision) => revision.esFactible === 'factible').length;
                                     const porcentaje_factibilidad = Number((count_factible * 100 / anteproyecto.revisiones.length).toFixed(1)) || 0
-                                    console.log('corr', anteproyecto.revisiones)
+                                    // console.log('corr', anteproyecto.revisiones)
                                     const revisiones = (
                                         <span>
                                             {anteproyecto.revisiones.map((revision, key) => {

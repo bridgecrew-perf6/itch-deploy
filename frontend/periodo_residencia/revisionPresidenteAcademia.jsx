@@ -4,6 +4,7 @@ const {Option, OptGroup}  = Select;
 import PDF2 from 'react-pdf-js-infinite';
 
 import axios from 'axios';
+import moment from 'moment';
 
 export default class RevisionPresidenteAcademia extends Component{
     constructor(props){
@@ -144,7 +145,14 @@ export default class RevisionPresidenteAcademia extends Component{
     }
     render(){
         const {anteproyectos, filterAnteproyectos, periodo} = this.state
-        console.warn(periodo.anteproyectos)
+        // console.warn(periodo.anteproyectos)
+        const fecha_inicio_entrega = periodo.fecha_inicio_entrega_anteproyecto,
+            fecha_fin_entrega = periodo.fecha_fin_entrega_anteproyecto;
+        const currentDate = moment().format('YYYY-MM-DD');
+        // console.log(fecha_inicio_entrega)
+        // console.log(fecha_fin_entrega)
+        // console.log(currentDate)
+            
         var columns = [
             {
                 width: 200,
@@ -233,7 +241,9 @@ export default class RevisionPresidenteAcademia extends Component{
                 key: 'dictamen',
                 render: (text, record) => (
                     <span>
+                        {(fecha_inicio_entrega < currentDate && fecha_fin_entrega > currentDate) ?
                         <Switch checkedChildren="Aprobado" defaultChecked={(record.dictamen === 'aprobado') ? true : false} unCheckedChildren="No aprobado" onChange={(checked) => this.handleDictamen(record.id, checked)} />
+                        : <p style={{color: '#ff5757'}}>La fecha de revisión finalizo</p>}
                     </span>
                 )
             },
@@ -262,7 +272,7 @@ export default class RevisionPresidenteAcademia extends Component{
         return (
             <Row type="flex" justify="center" align="middle" style={{marginTop: 20}}>
                 <Col xs={24} lg={24}>
-                    <Table bordered title={() => 'Anteproyectos registrados'} dataSource={filterAnteproyectos} className="full-width" columns={columns} pagination={{ pageSize: 8 }}  scroll={{ x: 1500 }} />
+                    <Table bordered title={() => 'Registro de dictamen y selección de asesores internos'} dataSource={filterAnteproyectos} className="full-width" columns={columns} pagination={{ pageSize: 8 }}  scroll={{ x: 1500 }} />
                 </Col>
             </Row> 
         )
