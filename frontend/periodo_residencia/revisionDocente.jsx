@@ -6,6 +6,7 @@ const FormItem = Form.Item;
 import PDF2 from 'react-pdf-js-infinite';
 
 import axios from 'axios';
+import moment from 'moment';
 
 // components
 import FormCorreccion from './FormCorreccion.jsx';
@@ -14,6 +15,7 @@ export default class RevisionDocente extends Component{
     constructor(props){
         super(props);
         this.state = {
+            periodo: props.periodo,
             anteproyectos: props.anteproyectos,
             filterAnteproyectos: props.anteproyectos,
             usuario: props.usuario,
@@ -28,6 +30,7 @@ export default class RevisionDocente extends Component{
     }
     componentWillReceiveProps(nextProps){
         this.state = {
+            periodo: nextProps.periodo,
             anteproyectos: nextProps.anteproyectos,
             filterAnteproyectos: nextProps.anteproyectos,
             usuario: nextProps.usuario,
@@ -150,7 +153,10 @@ export default class RevisionDocente extends Component{
         })
     }
     render(){
-        const {anteproyectos, filterAnteproyectos} = this.state
+        const {anteproyectos, filterAnteproyectos, periodo} = this.state
+        const fecha_inicio_entrega = periodo.fecha_inicio_entrega_anteproyecto,
+            fecha_fin_entrega = periodo.fecha_fin_entrega_anteproyecto;
+        const currentDate = moment().format('YYYY-MM-DD');
         // console.warn(anteproyectos)
         const columns = [
             {
@@ -223,8 +229,13 @@ export default class RevisionDocente extends Component{
                 key: 'factible',
                 render: (text, record) => (
                     <span>
-                        <Switch style={{marginRight: 3, marginBottom: 3}} defaultChecked={(record.revision && (record.revision.esFactible === 'factible')) ? true : false} checkedChildren="Factible" unCheckedChildren={<Icon type="cross" />} onChange={(checked) => this.handleFactible(record.id, checked)} />
-                        <Button style={{marginLeft: 3}} icon="exception" onClick={() => this.showInputCorreccion(record.id, record.detalles_alumno.usuario.correo)}>Correción</Button>
+                        {(fecha_inicio_entrega < currentDate && fecha_fin_entrega > currentDate) ?
+                        <span>
+                            <Switch style={{marginRight: 3, marginBottom: 3}} defaultChecked={(record.revision && (record.revision.esFactible === 'factible')) ? true : false} checkedChildren="Factible" unCheckedChildren={<Icon type="cross" />} onChange={(checked) => this.handleFactible(record.id, checked)} />
+                            <Button style={{marginLeft: 3}} icon="exception" onClick={() => this.showInputCorreccion(record.id, record.detalles_alumno.usuario.correo)}>Correción</Button>
+                        </span>
+                        : <p style={{color: '#ff5757'}}>La fecha de revisión finalizo</p>
+                        }
                     </span>
                 )
             }

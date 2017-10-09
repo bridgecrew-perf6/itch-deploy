@@ -26,12 +26,68 @@ export default class revisionAnteproyectos extends Component{
                 if(_res.status === 200 && _res.data.habilitado === true){
                     // ROL DE DOCENTE
                     if(_res.data.rol === 'docente'){
-                        axios.get(`/api/anteproyectos/${id_periodo}`)
+                        axios.get(`/api/periodo/${id_periodo}`)
+                        .then(res =>{
+                            if(res.status === 200){
+                                // console.log('=>', res.data)
+                                const anteproyectos = res.data.anteproyectos.map((anteproyecto, index) => {
+                                    // console.warn(anteproyecto)
+                                    return {
+                                        key: uuid.v1(),
+                                        id: anteproyecto.id,
+                                        id_alumno: anteproyecto.id_alumno,
+                                        dictamen: anteproyecto.dictamen,
+                                        id_asesor_externo: anteproyecto.id_asesor_externo,
+                                        id_periodo: anteproyecto.id_periodo,
+                                        nombre: anteproyecto.nombre,
+                                        objetivo_general: anteproyecto.objetivo_general,
+                                        detalles_alumno: anteproyecto.alumno,
+                                        detalles_asesor_externo: anteproyecto.asesor_externo,
+                                        anteproyecto: anteproyecto.path_file_anteproyecto,
+                                        revision: anteproyecto.revisiones.find((revision) => revision.id_docente === this.state.usuario.id_docente)
+                                    }
+                                })
+                                this.setState({
+                                    renderRevision: <RevisionDocente periodo={res.data} usuario={this.state.usuario} anteproyectos={anteproyectos}/>
+                                })
+                            }
+                        })
+                    }else if(_res.data.rol === 'presidente_academia'){
+                        axios.get(`/api/periodo/${id_periodo}`)
                             .then(res =>{
                                 if(res.status === 200){
-                                    // console.log(res)
-                                    const anteproyectos = res.data.map((anteproyecto, index) => {
-                                        // console.warn(anteproyecto)
+                                    // console.log('=>', res.data)
+                                    const anteproyectos = res.data.anteproyectos.map((anteproyecto, index) => {
+                                        const count_factible =  anteproyecto.revisiones.filter((revision) => revision.esFactible === 'factible').length;
+                                        const porcentaje_factibilidad = Number((count_factible * 100 / anteproyecto.revisiones.length).toFixed(1)) || 0
+                                        // console.log('corr', anteproyecto.revisiones)
+                                        const revisiones = (
+                                            <span>
+                                                {anteproyecto.revisiones.map((revision, key) => {
+                                                    if(revision.esFactible === 'factible'){
+                                                        return (
+                                                            <p key={key}>
+                                                            <Badge status="success" text={`${revision.docente.titulo} ${revision.docente.nombre} ${revision.docente.ap_paterno} ${revision.docente.ap_materno}`} />
+                                                            </p>
+                                                        )
+                                                    }else if(revision.esFactible === 'corrección'){
+                                                        return (
+                                                            <p key={key}>
+                                                            <Badge status="processing" text={`${revision.docente.titulo} ${revision.docente.nombre} ${revision.docente.ap_paterno} ${revision.docente.ap_materno}`} />
+                                                            </p>
+                                                        )
+                                                    }else if(revision.esFactible === 'no_factible'){
+                                                        return (
+                                                            <p key={key}>
+                                                            <Badge status="error" text={`${revision.docente.titulo} ${revision.docente.nombre} ${revision.docente.ap_paterno} ${revision.docente.ap_materno}`} />
+                                                            </p>
+                                                        )
+                                                    }
+                                                    
+                                                })}
+                                            </span>
+                                        )
+                                    
                                         return {
                                             key: uuid.v1(),
                                             id: anteproyecto.id,
@@ -43,74 +99,18 @@ export default class revisionAnteproyectos extends Component{
                                             objetivo_general: anteproyecto.objetivo_general,
                                             detalles_alumno: anteproyecto.alumno,
                                             detalles_asesor_externo: anteproyecto.asesor_externo,
+                                            asesor_interno: anteproyecto.asesor_interno,
                                             anteproyecto: anteproyecto.path_file_anteproyecto,
-                                            revision: anteproyecto.revisiones.find((revision) => revision.id_docente === this.state.usuario.id_docente)
+                                            revisiones,
+                                            porcentaje_factibilidad,
+                                            dictamen: anteproyecto.dictamen
                                         }
                                     })
                                     this.setState({
-                                        renderRevision: <RevisionDocente usuario={this.state.usuario} anteproyectos={anteproyectos}/>
+                                        renderRevision: <RevisionPresidenteAcademia periodo={res.data} usuario={this.state.usuario} anteproyectos={anteproyectos}/>
                                     })
                                 }
                             })
-                    }else if(_res.data.rol === 'presidente_academia'){
-                        axios.get(`/api/periodo/${id_periodo}`)
-                        .then(res =>{
-                            if(res.status === 200){
-                                // console.log('=>', res.data)
-                                const anteproyectos = res.data.anteproyectos.map((anteproyecto, index) => {
-                                    const count_factible =  anteproyecto.revisiones.filter((revision) => revision.esFactible === 'factible').length;
-                                    const porcentaje_factibilidad = Number((count_factible * 100 / anteproyecto.revisiones.length).toFixed(1)) || 0
-                                    // console.log('corr', anteproyecto.revisiones)
-                                    const revisiones = (
-                                        <span>
-                                            {anteproyecto.revisiones.map((revision, key) => {
-                                                if(revision.esFactible === 'factible'){
-                                                    return (
-                                                        <p key={key}>
-                                                        <Badge status="success" text={`${revision.docente.titulo} ${revision.docente.nombre} ${revision.docente.ap_paterno} ${revision.docente.ap_materno}`} />
-                                                        </p>
-                                                    )
-                                                }else if(revision.esFactible === 'corrección'){
-                                                    return (
-                                                        <p key={key}>
-                                                        <Badge status="processing" text={`${revision.docente.titulo} ${revision.docente.nombre} ${revision.docente.ap_paterno} ${revision.docente.ap_materno}`} />
-                                                        </p>
-                                                    )
-                                                }else if(revision.esFactible === 'no_factible'){
-                                                    return (
-                                                        <p key={key}>
-                                                        <Badge status="error" text={`${revision.docente.titulo} ${revision.docente.nombre} ${revision.docente.ap_paterno} ${revision.docente.ap_materno}`} />
-                                                        </p>
-                                                    )
-                                                }
-                                                
-                                            })}
-                                        </span>
-                                    )
-                                
-                                    return {
-                                        key: index,
-                                        id: anteproyecto.id,
-                                        id_alumno: anteproyecto.id_alumno,
-                                        dictamen: anteproyecto.dictamen,
-                                        id_asesor_externo: anteproyecto.id_asesor_externo,
-                                        id_periodo: anteproyecto.id_periodo,
-                                        nombre: anteproyecto.nombre,
-                                        objetivo_general: anteproyecto.objetivo_general,
-                                        detalles_alumno: anteproyecto.alumno,
-                                        detalles_asesor_externo: anteproyecto.asesor_externo,
-                                        asesor_interno: anteproyecto.asesor_interno,
-                                        anteproyecto: anteproyecto.path_file_anteproyecto,
-                                        revisiones,
-                                        porcentaje_factibilidad,
-                                        dictamen: anteproyecto.dictamen
-                                    }
-                                })
-                                this.setState({
-                                    renderRevision: <RevisionPresidenteAcademia periodo={res.data} usuario={this.state.usuario} anteproyectos={anteproyectos}/>
-                                })
-                            }
-                        })
                     }
                     
                 }else{
