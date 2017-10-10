@@ -96,8 +96,6 @@ module.exports.getAnteproyecto = (req, res) => {
             console.log(err)
             res.status(406).json({err: err})
         })
-
-
 }
 
 module.exports.add = (req, res) => {

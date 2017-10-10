@@ -48,6 +48,7 @@ export default class RevisionDocente extends Component{
             searchText: e.target.value
         })
     }
+
     onSearch = () => {
         const {searchText, anteproyectos} = this.state
         const reg = new RegExp(searchText, 'gi');
@@ -56,8 +57,8 @@ export default class RevisionDocente extends Component{
             filterDropdownVisible: false,
             filtered: !!searchText,
             filterAnteproyectos: anteproyectos.map((record) => {
-                console.warn(record)
-                 const match = record.nombre.match(reg);
+                console.warn('record=> ',record)
+                 const match = record.nombre ? record.nombre.match(reg) : null;
                  if(!match){
                      return null;
                  }

@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {message, Modal, Row, Col, Select, Table, Button, Input, Icon, Popconfirm, Switch, Popover} from 'antd';
 const {Option, OptGroup}  = Select;
 import PDF2 from 'react-pdf-js-infinite';
-
 import axios from 'axios';
 import moment from 'moment';
 
@@ -39,8 +38,9 @@ export default class RevisionPresidenteAcademia extends Component{
             filterDropdownVisible: false,
             filtered: !!searchText,
             filterAnteproyectos: anteproyectos.map((record) => {
-                console.warn(record)
-                 const match = record.nombre.match(reg);
+                // console.warn(record)
+                const match = record.nombre ? record.nombre.match(reg) : null;
+                
                  if(!match){
                      return null;
                  }
@@ -103,25 +103,38 @@ export default class RevisionPresidenteAcademia extends Component{
             ), onOk(){}
         });
     }
-    handleDictamen = (id_anteproyecto, isCheck) => {
+    handleDictamen = (anteproyecto, isCheck) => {
         const dictamen = (isCheck) ? 'aprobado' : 'no aprobado';
-        axios.put('/api/anteproyecto/set_dictamen',{id_anteproyecto, dictamen})
-            .then(res => {
-                if(res.status === 200 ){
-                    message.success('Anteproyecto actualizado!')
-                }else{
-                    Modal.error({
-                        title: 'Error al actualizar anteproyecto. Revisar los siguientes campos',
-                        content:(
-                            <div>
-                                {res.data.errores}
-                            </div>
-                        ), onOk(){}, 
-                    })
-                }
-            }).catch(err => {
-                    message.error('Error en el servidor verificar con el encargado.');   
-            })
+        // validar que existan nombre_anteproyecto, asesor_interno y externo
+        const nombre_anteproyecto = anteproyecto.nombre,
+            asesor_interno = anteproyecto.asesor_interno,
+            asesor_externo = anteproyecto.detalles_asesor_externo;
+        if(nombre_anteproyecto === null){
+            message.warn('Para completar el proceso, falta el nombre del anteproyecto.')
+        }else if(asesor_externo === null){
+            message.warn('Para completar el proceso, falta el asesor externo.')
+        }else if(asesor_interno === null){
+            message.warn('Para completar el proceso, falta el asesor interno.')
+        }else{
+            axios.put('/api/anteproyecto/set_dictamen',{id_anteproyecto: anteproyecto.id, dictamen})
+                .then(res => {
+                    if(res.status === 200 ){
+                        message.success('Anteproyecto actualizado!')
+                    }else{
+                        Modal.error({
+                            title: 'Error al actualizar anteproyecto. Revisar los siguientes campos',
+                            content:(
+                                <div>
+                                    {res.data.errores}
+                                </div>
+                            ), onOk(){}, 
+                        })
+                    }
+                }).catch(err => {
+                        message.error('Error en el servidor verificar con el encargado.');   
+                })
+        }
+        
     }
     handleAsesorInterno = (id_asesor_interno, id_anteproyecto) => {
         axios.put('/api/anteproyecto/set_asesor_interno', {
@@ -242,7 +255,7 @@ export default class RevisionPresidenteAcademia extends Component{
                 render: (text, record) => (
                     <span>
                         {(fecha_inicio_entrega < currentDate && fecha_fin_entrega > currentDate) ?
-                        <Switch checkedChildren="Aprobado" defaultChecked={(record.dictamen === 'aprobado') ? true : false} unCheckedChildren="No aprobado" onChange={(checked) => this.handleDictamen(record.id, checked)} />
+                            <Switch checkedChildren="Aprobado" defaultChecked={(record.dictamen === 'aprobado') ? true : false} unCheckedChildren="No aprobado" onChange={(checked) => this.handleDictamen(record, checked)} />
                         : <p style={{color: '#ff5757'}}>La fecha de revisión finalizo</p>}
                     </span>
                 )

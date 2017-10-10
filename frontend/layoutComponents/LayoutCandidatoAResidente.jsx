@@ -66,6 +66,7 @@ class LayoutCandidatoAResidente extends Component{
     
     handleMenu = ({item, key, selectedKeys}) => {
         if(key == 1){ // Registrar anteproyecto
+            const anteproyecto = this.state;
             this.setState({
                 componentSelected: key,
                 visibleCambiarContrasenia: false,

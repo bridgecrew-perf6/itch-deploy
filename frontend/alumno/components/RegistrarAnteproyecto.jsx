@@ -4,8 +4,10 @@ const TreeNode = TreeSelect.TreeNode;
 const FormItem = Form.Item;
 const Option = Select.Option;
 const Panel = Collapse.Panel;
-import axios from 'axios';
 
+
+import axios from 'axios';
+import moment from 'moment';
 
 const CreateRegistrarProyecto = Form.create()(
     (props => {
@@ -212,6 +214,11 @@ export default class RegistrarAnteproyecto extends Component{
             border: 0,
             overflow: 'hidden',
           };
+        const fecha_inicio_entrega = anteproyecto.periodo.fecha_inicio_entrega_anteproyecto,
+            fecha_fin_entrega = periodo.anteproyecto.fecha_fin_entrega_anteproyecto;
+        const currentDate = moment().format('YYYY-MM-DD');
+
+        console.warn(anteproyecto);
         return(
             <div>
                 <Row type="flex" justify="center">
