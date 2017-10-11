@@ -35,7 +35,7 @@ const CreateFormDepartamento = Form.create()(
           );
         var jefe_departamento = null
         if(departamento)
-            jefe_departamento = departamento.docentes.find(docente => docente.Usuario.rol === 'jefe_departamento') || null;
+            jefe_departamento = departamento.docentes.find(docente => docente.usuario.rol === 'jefe_departamento') || null;
         return(
             <Modal
                 visible={visible}

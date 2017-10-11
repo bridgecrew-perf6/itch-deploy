@@ -52,6 +52,30 @@ export default class Dictamen extends Component{
         })
         
     }
+    handleGenerarDictamen = () => {
+        // generar dictamen abrir una ventana con el pdf y actualizar la pagina del sitio jeje
+        const {periodo} = this.state
+        axios.post('/api/periodo/generar_dictamen',{
+            id_periodo: periodo.id
+        }).then((res) => {
+            if(res.status === 200){
+                // form.resetFields();
+                console.log(res.data)
+                message.success("Dictamen generado satisfactoriamente!")
+            }else{
+                Modal.error({
+                    title: 'Error al intentar generar el dictamen',
+                    content:(
+                        <div>
+                            {res.data.errores}
+                        </div>
+                    ), onOk(){}, 
+                })
+            }
+        }).catch((err) => {
+            message.error(err);                                    
+        })
+    }
     render(){
         const {departamento, dictamen_anteproyectos, periodo} = this.state;
         const columns = [
@@ -135,16 +159,20 @@ export default class Dictamen extends Component{
                                             <h2 style={{textAlign: 'center'}}>DEPARTAMENTO DE {periodo.carrera.departamento.nombre.toUpperCase()}</h2>
                                             <h3 style={{textAlign: 'center'}}>CARRERA: {periodo.carrera.nombre.toUpperCase()}</h3>
                                         </Col>;
-            // indicar si ya se genero que los datos podrian ser incongruentes jeje
             // propuesta solo se puede generar entre la fecha del periodo 
             // ¿Que pasa con lo proyectos que no son aprobados?
-            if(periodo.filename_dictamen == null){ // no se ha generado
-                renderButtonDictamen = <Button type="primary" icon="file-pdf"> Generar dictamen </Button> 
+            
+            if(periodo.filename_dictamen === null){ // no se ha generado
+                renderButtonDictamen = 
+                            <Popconfirm title={(<div><p>Al generar el dictamen se eliminaran los anteproyectos que no fueron aceptados, </p><p>¿Esta de acuerdo?</p></div>)} onConfirm={() => this.handleGenerarDictamen()} okText="Estoy seguro" cancelText="Cancelar">
+                                <Button type="primary" icon="file-pdf"> Generar dictamen </Button> 
+                            </Popconfirm>
             }else{ // ya existe jeje
-                
                 renderButtonDictamen = <ButtonGroup>
-                                            <Button icon="file-pdf"> Generar dictamen </Button> 
-                                            <Button type="primary" icon="eye-o"> Ver </Button>
+                                            <Popconfirm title={(<div><p>Al generar el dictamen se eliminaran los anteproyectos que no fueron aceptados</p><p> y se sobrescribira el nuevo dictamen</p><p>¿Esta de acuerdo?</p></div>)} onConfirm={() => this.handleGenerarDictamen()} okText="Estoy seguro" cancelText="Cancelar">
+                                                <Button  icon="file-pdf"> Generar dictamen </Button> 
+                                            </Popconfirm>
+                                            <Button type="primary" icon="eye-o"> <a style={{color: 'white'}} target="_blank" href={`/api/dictamen/pdf/${periodo.filename_dictamen}`}>Ver</a></Button>
                                         </ButtonGroup> ;           
             }
         }

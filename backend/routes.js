@@ -113,6 +113,13 @@ module.exports =  (app, express, passport) => {
     
     router.route('/periodo/fecha_fin_entrega_anteproyecto')
         .put(isAuth, periodoController.updateFechaFinEntregaAnteproyectos);
+    
+    router.route('/dictamen/pdf/:filename')
+        .get(isAuth, periodoController.getDictamenPDF);
+        
+    router.route('/periodo/generar_dictamen')
+        .post(periodoController.generarDictamen)
+        // put actualizar dictamen jeje
 
 
 

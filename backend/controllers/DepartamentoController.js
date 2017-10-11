@@ -17,7 +17,7 @@ const rol = {
 module.exports.findById = (req, res) => {
     Departamento.findOne({
         where: {id: req.params.id},
-        include: [{model: Carrera, as: 'carreras', include: [{model: Periodo, as: 'periodos'}]}, {model: Docente, as: 'docentes', include: [{model: Usuario, attributes: ['rol']}] } ]})
+        include: [{model: Carrera, as: 'carreras', include: [{model: Periodo, as: 'periodos'}]}, {model: Docente, as: 'docentes', include: [{model: Usuario, as:'usuario', attributes: ['rol']}] } ]})
         .then((departamento) => {
             res.status(200).json(departamento);
         }).catch(err => {
@@ -26,10 +26,11 @@ module.exports.findById = (req, res) => {
 
 }
 module.exports.findAll = (req, res) => {
-    Departamento.findAll({include: [{model: Carrera, as: 'carreras'}, {model: Docente, as: 'docentes', include: [{model: Usuario, attributes: ['rol']}]}]})
+    Departamento.findAll({include: [{model: Carrera, as: 'carreras'}, {model: Docente, as: 'docentes', include: [{model: Usuario, as: 'usuario', attributes: ['rol']}]}]})
         .then(departamentos => {
             res.status(200).json(departamentos);
         }).catch(err => {
+            console.log(err)
             res.status(406).json({err: err});
         });
 }
