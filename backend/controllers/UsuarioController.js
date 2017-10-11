@@ -74,9 +74,9 @@ module.exports.isAuth = (req, res) => {
 		if(req.user.rol === rol.JEFE_DEPARTAMENTO || req.user.rol === rol.DOCENTE){
 			// Buscar el docente
 			const id_usuario = req.user.id;
-			Docente.findOne({where: {id_usuario}})
+			Docente.findOne({where: {id_usuario}, include: [{model: docente_carreras, as: 'docente_carrera'}]})
 				.then((docente) => {
-					res.status(200).json({isAuth: true, rol: req.user.rol, id_docente: docente.id, id_departamento: docente.id_departamento});				
+					res.status(200).json({isAuth: true, rol: req.user.rol, id_docente: docente.id,docente_carrera: docente.docente_carrera, id_departamento: docente.id_departamento});				
 				}).catch(err => {
 					res.status(406).json({err: err})
 				})

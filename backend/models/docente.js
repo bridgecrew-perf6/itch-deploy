@@ -44,7 +44,8 @@ module.exports = (sequelize, DataTypes) => {
 
     Docente.hasMany(models.docente_carreras, {
       foreignKey: 'id_docente',
-      onDelete: 'CASCADE'
+      onDelete: 'CASCADE',
+      as: 'docente_carrera'
     });
     
   }

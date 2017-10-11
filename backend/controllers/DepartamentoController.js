@@ -1,5 +1,6 @@
 const Departamento = require('../models').Departamento;
 const Carrera = require('../models').Carrera;
+const docente_carreras = require('../models').docente_carreras;
 const Docente = require('../models').Docente;
 const Usuario = require('../models').Usuario;
 const Periodo = require('../models').Periodo;
@@ -11,6 +12,7 @@ const rol = {
     JEFE_DEPARTAMENTO: 'jefe_departamento',
     PRESIDENTE_ACADEMIA: 'presidente_academia'
 }
+
 
 
 

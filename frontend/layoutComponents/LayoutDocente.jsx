@@ -14,6 +14,7 @@ import {getIsAuth} from '../api.jsx';
 // components
 import CambiarContrasenia from '../layoutComponents/CambiarContrasenia.jsx';
 import RevisionAnteproyectos from '../periodo_residencia/revisionAnteproyectos.jsx';
+import AddCandidatoAResidente from '../periodo_residencia/addCandidatoResidente.jsx';
 
 class LayoutJefeDepartamento extends Component{
     constructor(){
@@ -78,6 +79,33 @@ class LayoutJefeDepartamento extends Component{
                     render: <RevisionAnteproyectos usuario={usuario} departamento={departamento}/>
                 }
             })
+        }else if(key == 2){
+            const {departamento, usuario} = this.state;
+            console.log('this=>',usuario)
+            const presidente_academia = usuario.docente_carrera.find((docente) => docente.rol === 'presidente_academia');
+            if(presidente_academia){
+                console.log(presidente_academia);
+                this.setState({
+                    componentSelected: key,
+                    visibleCambiarContrasenia: false,
+                    visible_add_docente: false,
+                    componentRender: {
+                        title: 'Registro de candidato a residente',
+                        render: <AddCandidatoAResidente departamento={departamento} presidente_academia={presidente_academia} />
+                    }
+                })
+            }else{
+                this.setState({
+                    componentSelected: key,
+                    visibleCambiarContrasenia: false,
+                    visible_add_docente: false,
+                    componentRender: {
+                        title: 'Permiso denegado',
+                        render: <p>Permiso denegado, solo el presidente de academia puede realizar esta acción.</p>
+                    }
+                })
+            }
+            
         }else if(key == 3){
             this.setState({
                 visibleCambiarContrasenia: true,
@@ -106,6 +134,10 @@ class LayoutJefeDepartamento extends Component{
                             <Menu.Item key="1" >
                                 <Icon type="calendar" />
                                 <span>Revisión anteproyectos</span>
+                            </Menu.Item>
+                            <Menu.Item key="2" >
+                                <Icon type="usergroup-add"/>
+                                <span>Agregar candidato a residente</span>
                             </Menu.Item>
                             <Menu.Divider/>
                             <SubMenu
