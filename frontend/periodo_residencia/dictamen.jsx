@@ -6,6 +6,7 @@ const ButtonGroup = Button.Group;
 
 import axios from 'axios';
 import PDF2 from 'react-pdf-js-infinite';
+import moment from 'moment';
 
 export default class Dictamen extends Component{
     constructor(props){
@@ -78,6 +79,8 @@ export default class Dictamen extends Component{
     }
     render(){
         const {departamento, dictamen_anteproyectos, periodo} = this.state;
+        const currentDate = moment().format('YYYY-MM-DD');
+
         const columns = [
             {
                 width: 50,
@@ -161,20 +164,23 @@ export default class Dictamen extends Component{
                                         </Col>;
             // propuesta solo se puede generar entre la fecha del periodo 
             // ¿Que pasa con lo proyectos que no son aprobados?
-            
-            if(periodo.filename_dictamen === null){ // no se ha generado
-                renderButtonDictamen = 
-                            <Popconfirm title={(<div><p>Al generar el dictamen se eliminaran los anteproyectos que no fueron aceptados, </p><p>¿Esta de acuerdo?</p></div>)} onConfirm={() => this.handleGenerarDictamen()} okText="Estoy seguro" cancelText="Cancelar">
-                                <Button type="primary" icon="file-pdf"> Generar dictamen </Button> 
-                            </Popconfirm>
-            }else{ // ya existe jeje
-                renderButtonDictamen = <ButtonGroup>
-                                            <Popconfirm title={(<div><p>Al generar el dictamen se eliminaran los anteproyectos que no fueron aceptados</p><p> y se sobrescribira el nuevo dictamen</p><p>¿Esta de acuerdo?</p></div>)} onConfirm={() => this.handleGenerarDictamen()} okText="Estoy seguro" cancelText="Cancelar">
-                                                <Button  icon="file-pdf"> Generar dictamen </Button> 
-                                            </Popconfirm>
-                                            <Button type="primary" icon="eye-o"> <a style={{color: 'white'}} target="_blank" href={`/api/dictamen/pdf/${periodo.filename_dictamen}`}>Ver</a></Button>
-                                        </ButtonGroup> ;           
-            }
+            if(currentDate > periodo.fecha_inicio && currentDate < periodo.fecha_fin){
+                if(periodo.filename_dictamen === null){ // no se ha generado
+                    renderButtonDictamen = 
+                                <Popconfirm title={(<div><p>Al generar el dictamen se eliminaran los anteproyectos que no fueron aceptados, </p><p>¿Esta de acuerdo?</p></div>)} onConfirm={() => this.handleGenerarDictamen()} okText="Estoy seguro" cancelText="Cancelar">
+                                    <Button type="primary" icon="file-pdf"> Generar dictamen </Button> 
+                                </Popconfirm>
+                }else{ // ya existe jeje
+                    renderButtonDictamen = <ButtonGroup>
+                                                <Popconfirm title={(<div><p>Al generar el dictamen se eliminaran los anteproyectos que no fueron aceptados</p><p> y se sobrescribira el nuevo dictamen</p><p>¿Esta de acuerdo?</p></div>)} onConfirm={() => this.handleGenerarDictamen()} okText="Estoy seguro" cancelText="Cancelar">
+                                                    <Button  icon="file-pdf"> Generar dictamen </Button> 
+                                                </Popconfirm>
+                                                <Button type="primary" icon="eye-o"> <a style={{color: 'white'}} target="_blank" href={`/api/dictamen/pdf/${periodo.filename_dictamen}`}>Ver</a></Button>
+                                            </ButtonGroup> ;           
+                }
+            }else{
+                renderButtonDictamen = <Button type="primary" icon="eye-o"> <a style={{color: 'white'}} target="_blank" href={`/api/dictamen/pdf/${periodo.filename_dictamen}`}>Ver dictamen</a></Button>
+            }   
         }
         return (
             <div>
