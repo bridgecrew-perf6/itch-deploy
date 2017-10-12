@@ -16,7 +16,8 @@ export default class GestionPeriodoDeResidencia extends Component{
             departamento: props.departamento,
             carreraSeleccionada: null,
             visible_add_alumno: false,
-            id_periodo: null
+            id_periodo: null,
+            alumnos_rechazados_por_carrera: []
         }
     }
     showListaCandidatosResidente = (id_periodo) => {
@@ -47,6 +48,8 @@ export default class GestionPeriodoDeResidencia extends Component{
         })
     }
     
+
+
     handleChageCarrera = (value) => {
         const {departamento} = this.state;
         const carrera = departamento.carreras.find((carrera) => `${carrera.id}` === value);
@@ -54,12 +57,18 @@ export default class GestionPeriodoDeResidencia extends Component{
             .then(res => {
                 if(res.status === 200){
                     // console.log('alv',res.data)
-                    this.setState({
-                        carreraSeleccionada: res.data,
-                        visible_add_alumno: false,
-                    })
+                    axios.get(`/api/alumnos/${carrera.id}/rechazados`)
+                        .then(_res => {
+                            if(_res.status === 200){
+                                this.setState({
+                                    alumnos_rechazados_por_carrera: _res.data._alumnos,
+                                    carreraSeleccionada: res.data,
+                                    visible_add_alumno: false,
+                                })
+                            }
+                        })
                 }else{
-                    message.warning('Verificar los docentes asignados.')
+                    message.warning('Verificar conexión.')
                 }
             })   
     }
@@ -80,7 +89,7 @@ export default class GestionPeriodoDeResidencia extends Component{
         
     }
     render(){
-        const {departamento, carreraSeleccionada, visible_add_alumno, id_periodo, visible_lista_candidatos_residente} = this.state
+        const {departamento, carreraSeleccionada, visible_add_alumno, id_periodo, visible_lista_candidatos_residente, alumnos_rechazados_por_carrera} = this.state
         const periodos = carreraSeleccionada ? carreraSeleccionada.periodos.map((periodo, index) => {
                 return { 
                     id: periodo.id, 
@@ -157,7 +166,7 @@ export default class GestionPeriodoDeResidencia extends Component{
                     <Table bordered title={() => 'Gestión de periodos'} dataSource={periodos} className="full-width" columns={columns} pagination={{ pageSize: 8 }}  scroll={{ x: 1000 }} />
                 </Col>
                 
-                <FormAddAlumno visible={visible_add_alumno} carrera={carreraSeleccionada} id_periodo={id_periodo}/>
+                <FormAddAlumno visible={visible_add_alumno} carrera={carreraSeleccionada} id_periodo={id_periodo} alumnos_rechazados_por_carrera={alumnos_rechazados_por_carrera}/>
             </Row>
 
             

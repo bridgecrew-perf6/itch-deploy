@@ -55,8 +55,9 @@ module.exports =  (app, express, passport) => {
     router.route('/carrera/:id_carrera/periodos')
         .get(carreraController.findById)
 
-    router.route('/carrera/:id/periodos')
-        .get(carreraController.findById)
+    // router.route('/carrera/:id/periodos')
+    //     .get(carreraController.findById)
+
     router.route('/carrera/docente_habilitado')
         .put(isAuth, carreraController.docenteHabilitado)
     // EMPRESAS
@@ -88,6 +89,11 @@ module.exports =  (app, express, passport) => {
     router.route('/alumno/file_anteproyecto/:id_anteproyecto')
         .post(isAuth,alumnoController.addFileAnteproyecto);
 
+    router.route('/alumnos/:id_carrera/rechazados')
+        .get(isAuth, alumnoController.findAllRechazadosPorCarrera)
+
+    router.route('/alumno/retry_anteproyecto')
+        .put(isAuth, alumnoController.retryAnteproyecto)
     // ANTEPROYECTO
     router.route('/anteproyectos/:id_periodo')
         .get(isAuth, anteproyectoController.findByPeriodo)

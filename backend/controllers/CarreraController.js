@@ -62,6 +62,7 @@ module.exports.findAnteproyectosByPeriodo = (req, res) => {
             res.status(406).json({err: err})
         })
 }
+
 module.exports.findById = (req, res) => {
     Carrera.findOne({
         where: {id: req.params.id_carrera},

@@ -79,7 +79,10 @@ module.exports.generarDictamen = (req, res) => {
         // pendiente redireccionar jeje
         _periodo.update({filename_dictamen: `${_periodo.periodo}-${_periodo.ciclo}.pdf`})
             .then(__periodo => {
-                res.status(200).json(__periodo);
+                Anteproyecto.destroy({where: {dictamen: 'no aprobado', id_periodo}})
+                    .then(affectedRows => {
+                        res.status(200).json(__periodo);
+                    })
             }).catch(err => {
                 console.log(err);
                 res.status(406).json({err: err});

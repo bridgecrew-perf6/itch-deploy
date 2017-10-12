@@ -1,5 +1,6 @@
 const Alumno = require('../models').Alumno;
 const Periodo = require('../models').Periodo;
+const Carrera = require('../models').Carrera;
 const asesor_externo = require('../models').asesor_externo;
 const Usuario = require('../models').Usuario;
 const Docente = require('../models').Docente;
@@ -65,6 +66,44 @@ module.exports.addFileAnteproyecto = (req, res) => {
     // console.log(req);
 }
 
+module.exports.retryAnteproyecto = (req, res) => {
+    const id_alumno = req.body.id_alumno,
+        id_periodo = req.body.id_periodo;
+    Anteproyecto.create({
+            id_alumno,
+            id_periodo
+        }).then((_anteproyecto)=>{
+        res.status(200).json(_anteproyecto)
+    }).catch(Sequelize.ValidationError, (err) => {
+        var errores = err.errors.map((element) => {
+            return `${element.path}: ${element.message}`
+        })
+        // console.log('==>', errores)
+        res.status(202).json({errores})
+    }).catch((err) => {
+        console.log(err)
+        res.status(406).json({err: err})
+    }) 
+    
+}
+module.exports.findAllRechazadosPorCarrera = (req, res) => {
+    const id_carrera = req.params.id_carrera;
+    // console.log('entaaa')
+    Alumno.findAll({
+        where: {
+            id_carrera,
+            id: {
+                $notIn: [sequelize.literal(`select anteproyectos.id_alumno from anteproyectos join periodos on anteproyectos.id_periodo=periodos.id where periodos.id_carrera=${id_carrera}`)]
+            }
+        }
+    }).then(_alumnos => {
+        // console.log('ress', _alumnos)
+        res.status(200).json({_alumnos})
+    }).catch(err => {
+        console.log(err)
+        res.status(406).json({err: err})
+    })
+}
 module.exports.updateDatosAnteproyecto = (req, res) => {
     const id_anteproyecto = req.params.id,
             id_asesor_externo = req.body.id_asesor_externo,
