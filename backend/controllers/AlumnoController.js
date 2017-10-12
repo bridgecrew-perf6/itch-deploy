@@ -69,11 +69,19 @@ module.exports.addFileAnteproyecto = (req, res) => {
 module.exports.retryAnteproyecto = (req, res) => {
     const id_alumno = req.body.id_alumno,
         id_periodo = req.body.id_periodo;
-    Anteproyecto.create({
-            id_alumno,
-            id_periodo
-        }).then((_anteproyecto)=>{
-        res.status(200).json(_anteproyecto)
+    sequelize.transaction(t => {
+        return Alumno.findOne({where: {id: id_alumno}}, {transaction: t})
+            .then(_alumno => {
+                return Usuario.update({rol: 'candidato_residente'}, {where: {id: _alumno.id_usuario}}, {transaction: t})
+                    .then( _usuario => {
+                        return Anteproyecto.create({
+                            id_alumno,
+                            id_periodo
+                        },{transaction: t})
+                    })
+            })
+    }).then((_anteproyecto)=>{
+        res.status(200).json(_anteproyecto);
     }).catch(Sequelize.ValidationError, (err) => {
         var errores = err.errors.map((element) => {
             return `${element.path}: ${element.message}`
@@ -84,6 +92,22 @@ module.exports.retryAnteproyecto = (req, res) => {
         console.log(err)
         res.status(406).json({err: err})
     }) 
+
+    // Anteproyecto.create({
+    //         id_alumno,
+    //         id_periodo
+    //     }).then((_anteproyecto)=>{
+    //     res.status(200).json(_anteproyecto)
+    // }).catch(Sequelize.ValidationError, (err) => {
+    //     var errores = err.errors.map((element) => {
+    //         return `${element.path}: ${element.message}`
+    //     })
+    //     // console.log('==>', errores)
+    //     res.status(202).json({errores})
+    // }).catch((err) => {
+    //     console.log(err)
+    //     res.status(406).json({err: err})
+    // }) 
     
 }
 module.exports.findAllRechazadosPorCarrera = (req, res) => {
