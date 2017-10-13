@@ -13,7 +13,7 @@ module.exports = {
         allowNull: false,
       },
       puesto: {
-        type: Sequelize.STRING(40),
+        type: Sequelize.STRING(100),
         allowNull: false
       },
       correo:{ 

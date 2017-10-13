@@ -9,7 +9,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       nombre: {
-        type: Sequelize.STRING(100),
+        type: Sequelize.STRING(200),
         allowNull: false,
         unique: true
       },
@@ -34,7 +34,7 @@ module.exports = {
         type: Sequelize.STRING(15)
       },
       nombre_titular: {
-        type: Sequelize.STRING(100),
+        type: Sequelize.STRING(150),
         allowNull: false
       },
       puesto_titular: {
@@ -42,7 +42,7 @@ module.exports = {
         allowNull: false
       },
       nombre_firma_acuerdo: {
-        type: Sequelize.STRING(100),
+        type: Sequelize.STRING(150),
         allowNull: false
       },
       puesto_firma_acuerdo: {

@@ -248,7 +248,7 @@ class Empresa extends Component{
                     </Col>
                 </Row>
                 <Row type="flex" justify="center" align="middle" style={{marginTop: 30}}>
-                    <Table dataSource={filterEmpresas} className="full-width" columns={columns} pagination={{ pageSize: 5 }} loading={loadTable} scroll={{ x: 800 }} expandedRowRender={this.expandedRowRender} />
+                    <Table dataSource={filterEmpresas} className="full-width" columns={columns} pagination={{ pageSize: 5 }} loading={loadTable} scroll={{ x: 1200 }} expandedRowRender={this.expandedRowRender} />
                 </Row>
                 <FormEmpresa visible={visible} onAddEmpresa={this.handleAddEmpresa.bind(this)}/>
                 <FormEditEmpresa visible={visibleFormEditEmpresa} empresa={props_edit_empresa} onReloadFetch={this.fetchEmpresas.bind(this)}/>
