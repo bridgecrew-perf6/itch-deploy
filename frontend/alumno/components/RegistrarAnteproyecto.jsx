@@ -205,6 +205,7 @@ export default class RegistrarAnteproyecto extends Component{
         });
     }
     
+
     render(){
         const {anteproyecto, empresas} = this.state
         const customPanelStyle = {
@@ -214,11 +215,12 @@ export default class RegistrarAnteproyecto extends Component{
             border: 0,
             overflow: 'hidden',
           };
+        // console.warn(')>', anteproyecto.periodo)
         const fecha_inicio_entrega = anteproyecto.periodo.fecha_inicio_entrega_anteproyecto,
-            fecha_fin_entrega = periodo.anteproyecto.fecha_fin_entrega_anteproyecto;
+            fecha_fin_entrega = anteproyecto.periodo.fecha_fin_entrega_anteproyecto;
         const currentDate = moment().format('YYYY-MM-DD');
 
-        console.warn(anteproyecto);
+        // console.warn(anteproyecto);
         return(
             <div>
                 <Row type="flex" justify="center">

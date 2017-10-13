@@ -20,6 +20,7 @@ export default class revisionAnteproyectos extends Component{
             renderRevision: null
         }
     }
+    
     handleChangePeriodo = (id_periodo) => {
         axios.put('/api/carrera/docente_habilitado', {id_docente: this.state.usuario.id_docente, id_periodo: id_periodo})
             .then(_res => {

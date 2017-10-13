@@ -164,7 +164,7 @@ export default class Dictamen extends Component{
                                         </Col>;
             // propuesta solo se puede generar entre la fecha del periodo 
             // ¿Que pasa con lo proyectos que no son aprobados?
-            if(currentDate > periodo.fecha_inicio && currentDate < periodo.fecha_fin){
+            if(currentDate >= periodo.fecha_inicio && currentDate < periodo.fecha_fin){
                 if(periodo.filename_dictamen === null){ // no se ha generado
                     renderButtonDictamen = 
                                 <Popconfirm title={(<div><p>Al generar el dictamen se eliminaran los anteproyectos que no fueron aceptados, </p><p>¿Esta de acuerdo?</p></div>)} onConfirm={() => this.handleGenerarDictamen()} okText="Estoy seguro" cancelText="Cancelar">

@@ -159,6 +159,8 @@ export default class RevisionDocente extends Component{
             fecha_fin_entrega = periodo.fecha_fin_entrega_anteproyecto;
         const currentDate = moment().format('YYYY-MM-DD');
         // console.warn(anteproyectos)
+        console.warn(')>', filterAnteproyectos);
+
         const columns = [
             {
                 className: 'center-text',

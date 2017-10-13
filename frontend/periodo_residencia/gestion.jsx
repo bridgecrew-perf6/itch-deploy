@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
-import {message, Modal, Row, Col, Select, Table, Button, Avatar, DatePicker} from 'antd';
+import {message, Modal, Row, Col, Select, Table, Button, Avatar, DatePicker, Timeline, Icon} from 'antd';
 const Option = Select.Option;
 
 import axios from 'axios';
 import moment from 'moment';
 import uuid from 'uuid';
 
-// components
+// component
 import FormAddAlumno from '../alumno/components/FormAddAlumno.jsx';
 
 export default class GestionPeriodoDeResidencia extends Component{
@@ -26,15 +26,18 @@ export default class GestionPeriodoDeResidencia extends Component{
                 if(res.status === 200){
                     const candidatos = res.data.map((candidato, index) => {
                         return (
-                                <li key={index}>
+                                <Timeline.Item key={index} color="green" dot={<Icon type="check-circle-o" style={{ fontSize: '16px' }} />}>
                                     {`${candidato.nombre} ${candidato.ap_paterno} ${candidato.ap_materno}`}
-                                </li>
+                                </Timeline.Item>
                         )
                     })
                     Modal.info({
                         width: 600,
                         title: 'Lista de candidatos a residente del periodo.',
-                        content: (<div>{candidatos}</div>),
+                        content: (
+                            <Timeline>
+                                {candidatos}
+                            </Timeline>),
                         onOk(){}
                     })
                 }

@@ -35,6 +35,7 @@ class LayoutCandidatoAResidente extends Component{
             if(usuario.rol === 'candidato_residente'){
                 axios.get(`/api/alumno/${usuario.id_alumno}/anteproyecto`)
                     .then(res => {
+                        // console.warn(res.data)
                         if(res.status === 200){
                             this.setState({
                                 anteproyecto: res.data,
