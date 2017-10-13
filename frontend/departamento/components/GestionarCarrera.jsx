@@ -34,7 +34,7 @@ const CreateFormAsignacion = Form.create()(
                             optionFilterProp="children"
                             filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                         >
-                            {docentes.map((docente, index) => {return <Option key={index} value={`${docente.id}`}>{docente.nombre}</Option>})}
+                            {docentes.map((docente, index) => {return <Option key={uuid.v1()} value={`${docente.id}`}>{docente.nombre}</Option>})}
                         </Select>
                     )}
                 </FormItem>
@@ -49,7 +49,7 @@ const CreateFormAsignacion = Form.create()(
                             optionFilterProp="children"
                             filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                         >
-                            {docentes.map((docente, index) => {return <Option key={index} value={`${docente.id}`}>{docente.nombre}</Option>})}
+                            {docentes.map((docente, index) => {return <Option key={uuid.v1()} value={`${docente.id}`}>{docente.nombre}</Option>})}
                         </Select>
                     )}
                 </FormItem>

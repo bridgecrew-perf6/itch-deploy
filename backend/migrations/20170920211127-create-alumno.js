@@ -12,7 +12,6 @@ module.exports = {
         type: Sequelize.STRING(8),
         allowNull: false,
         unique: true,
-        COMMENT: "I'm a comment!"
       },
       nombre: {
         type: Sequelize.STRING(40),

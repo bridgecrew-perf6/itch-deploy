@@ -14,15 +14,118 @@ module.exports = {
     */
     return queryInterface.bulkInsert('Docentes', [
       {
-        titulo: '',
-        nombre: '',
-        ap_paterno: '',
-        ap_materno: '',
-        id_usuario: '', // empieza en el 2
-        id_departamento: '', // en el departamento 1 que es de sistemas pon nombres de profes mas o menos jeje,
+        titulo: 'M.C.',
+        nombre: 'Yanet',
+        ap_paterno: 'Evangelista',
+        ap_materno: 'Alcocer',
+        id_usuario: 2,
+        id_departamento: 1, 
+        createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
+        updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
+      {
+        titulo: 'ING.',
+        nombre: 'José Daniel',
+        ap_paterno: 'Sanchéz',
+        ap_materno: 'Rodríguez',
+        id_usuario: 3, 
+        id_departamento: 1, 
+        createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
+        updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
+      {
+        titulo: 'M.C.',
+        nombre: 'Oscar Gabriel',
+        ap_paterno: 'Flores',
+        ap_materno: 'Rodríguez',
+        id_usuario: 4, 
+        id_departamento: 1, 
+        createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
+        updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
+      {
+        titulo: 'M.C.',
+        nombre: 'Moises',
+        ap_paterno: 'Vázquez',
+        ap_materno: 'Peña',
+        id_usuario: 5, 
+        id_departamento: 1, 
+        createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
+        updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
+      {
+        titulo: 'ING.',
+        nombre: 'Israel',
+        ap_paterno: 'Nieto',
+        ap_materno: 'Granados',
+        id_usuario: 6, 
+        id_departamento: 1, 
+        createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
+        updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
+      {
+        titulo: 'ING',
+        nombre: 'José',
+        ap_paterno: 'Espinoza',
+        ap_materno: 'Benitez',
+        id_usuario: 7, 
+        id_departamento: 2, 
+        createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
+        updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
+      {
+        titulo: 'ING.',
+        nombre: 'Victor',
+        ap_paterno: 'García',
+        ap_materno: 'Díaz',
+        id_usuario: 8, 
+        id_departamento: 2, 
+        createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
+        updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
+      {
+        titulo: 'M.C.',
+        nombre: 'Ramiro',
+        ap_paterno: 'Ruiz',
+        ap_materno: 'Silva',
+        id_usuario: 9, 
+        id_departamento: 2, 
+        createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
+        updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
+      {
+        titulo: 'LIC.',
+        nombre: 'Esmeralda',
+        ap_paterno: 'Hernández',
+        ap_materno: 'Ramírez',
+        id_usuario: 10, 
+        id_departamento: 3, 
+        createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
+        updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
+      {
+        titulo: 'ING.',
+        nombre: 'Adriana',
+        ap_paterno: 'Maldonado',
+        ap_materno: 'Bravo',
+        id_usuario: 11, 
+        id_departamento: 3, 
+        createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
+        updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
+      {
+        titulo: 'LIC.',
+        nombre: 'Roxana',
+        ap_paterno: 'Ruiz',
+        ap_materno: 'Silva',
+        id_usuario: 12, 
+        id_departamento: 3, 
         createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
         updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
       }
+      
+
+
     ])
   },
 
