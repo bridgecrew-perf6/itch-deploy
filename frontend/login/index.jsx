@@ -6,7 +6,6 @@ const {Content, Header} = Layout;
 import { Form, Icon, Input, Button, Checkbox } from 'antd';
 const FormItem = Form.Item;
 
-// Componentes
 import WrappedLoginForm from './components/FormLogin.jsx';
 
 export default class Login extends Component{

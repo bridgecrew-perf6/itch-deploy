@@ -8,9 +8,10 @@ const passport = require('passport');
 const session = require('express-session');
 const methodOverride = require('method-override');
 
-const PORT = (process.env.NODE_ENV == 'development') ? 3000 : 80;
 // CONFIG ENVIROMENT
 require('dotenv').config()
+const PORT = (process.env.NODE_ENV === 'development') ? 3000 : 80;
+
 
 
 // MIDDLEWARES
@@ -36,5 +37,5 @@ require('./backend/routes')(app, express, passport);
 // sync db
 // db.sync();
 app.listen(PORT, () => {
-    console.log(`servidor levantado en el puerto ${process.env.NODE_PORT}` );
+    console.log(`servidor levantado en el puerto ${PORT}` );
 })
