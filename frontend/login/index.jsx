@@ -14,7 +14,7 @@ export default class Login extends Component{
             <div>
                 <Row type="flex" justify="center" align="middle" style={{height: '100%'}}>
                     <Col lg={16} xs={22} >
-                        <Card style={{borderBottomRightRadius: 7, borderBottomLeftRadius: 7, borderTopLeftRadius: 7, borderTopRightRadius: 7, paddingTop: 25, paddingBottom: 25}}>
+                        <Card style={{borderBottomRightRadius: 7, borderBottomLeftRadius: 7, borderTopLeftRadius: 7, borderTopRightRadius: 7, paddingTop: 30, paddingBottom: 30}}>
                             <Row type="flex" justify="center" align="middle">
                                 <Col lg={12} xs={22} style={{paddingLeft: 20, paddingRight: 20}}>
                                     <Row className="custom-image" type="flex" justify="center">

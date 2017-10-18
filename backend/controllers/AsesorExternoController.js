@@ -2,12 +2,13 @@ const AsesorExterno = require('../models').asesor_externo;
 const Sequelize = require('../models').Sequelize
 
 module.exports.add = (req, res) => {
+    // Tenemos que crear el usuario y el correo se debe de quitar
     console.log(req.body);
+
     const nombre = req.body.nombre,
         puesto = req.body.puesto,
         id_empresa = req.body.id_empresa,
         correo = req.body.correo
-
     AsesorExterno.create({
         nombre,
         puesto,
