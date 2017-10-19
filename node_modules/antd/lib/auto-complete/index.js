@@ -4,10 +4,6 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _extends2 = require('babel-runtime/helpers/extends');
-
-var _extends3 = _interopRequireDefault(_extends2);
-
 var _typeof2 = require('babel-runtime/helpers/typeof');
 
 var _typeof3 = _interopRequireDefault(_typeof2);
@@ -15,6 +11,10 @@ var _typeof3 = _interopRequireDefault(_typeof2);
 var _defineProperty2 = require('babel-runtime/helpers/defineProperty');
 
 var _defineProperty3 = _interopRequireDefault(_defineProperty2);
+
+var _extends2 = require('babel-runtime/helpers/extends');
+
+var _extends3 = _interopRequireDefault(_extends2);
 
 var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
 
@@ -72,9 +72,12 @@ var AutoComplete = function (_React$Component) {
             var children = _this.props.children;
 
             var element = children && _react2['default'].isValidElement(children) && children.type !== _rcSelect.Option ? _react2['default'].Children.only(_this.props.children) : _react2['default'].createElement(_input2['default'], null);
+            var elementProps = (0, _extends3['default'])({}, element.props);
+            // https://github.com/ant-design/ant-design/pull/7742
+            delete elementProps.children;
             return _react2['default'].createElement(
                 _InputElement2['default'],
-                element.props,
+                elementProps,
                 element
             );
         };

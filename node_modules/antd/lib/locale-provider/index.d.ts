@@ -12,6 +12,7 @@ export interface LocaleProviderProps {
         Popconfirm?: Object;
         Transfer?: Object;
         Select?: Object;
+        Upload?: Object;
     };
     children?: React.ReactElement<any>;
 }
@@ -34,6 +35,7 @@ export default class LocaleProvider extends React.Component<LocaleProviderProps,
             Popconfirm?: Object | undefined;
             Transfer?: Object | undefined;
             Select?: Object | undefined;
+            Upload?: Object | undefined;
         };
     };
     componentWillMount(): void;

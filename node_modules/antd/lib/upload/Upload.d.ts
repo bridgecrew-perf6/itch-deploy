@@ -57,6 +57,7 @@ export default class Upload extends React.Component<UploadProps, any> {
     onChange: (info: any) => void;
     componentWillReceiveProps(nextProps: any): void;
     onFileDrop: (e: any) => void;
+    beforeUpload: (file: any, fileList: any) => boolean | PromiseLike<any>;
     clearProgressTimer(): void;
     render(): JSX.Element;
 }

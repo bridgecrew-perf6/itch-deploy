@@ -73,6 +73,7 @@ var UploadList = function (_React$Component) {
 
         _this.handleClose = function (file) {
             var onRemove = _this.props.onRemove;
+
             if (onRemove) {
                 onRemove(file);
             }

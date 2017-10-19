@@ -58,6 +58,11 @@
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
   background-clip: padding-box;
 }
+.ant-dropdown-menu-item-group-title {
+  color: rgba(0, 0, 0, 0.43);
+  padding: 6px 8px;
+  transition: all .3s;
+}
 .ant-dropdown-menu-item,
 .ant-dropdown-menu-submenu-title {
   padding: 7px 8px;

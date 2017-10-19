@@ -12,6 +12,7 @@ import LayoutJefeDepartamento from './layoutComponents/LayoutJefeDepartamento.js
 import LayoutCandidatoAResidente from './layoutComponents/LayoutCandidatoAResidente.jsx';
 import LayoutDocente from './layoutComponents/LayoutDocente.jsx';
 import LayoutAsesorExterno from './layoutComponents/LayoutAsesorExterno.jsx';
+import LayoutResidente from './layoutComponents/LayoutResidente.jsx';
 import Page404 from './layoutComponents/Page404.jsx';
 
 
@@ -21,6 +22,7 @@ const AppRoutes = () =>
                 <LayoutAdmin path="/admin" />
                 <LayoutJefeDepartamento path="/jefe_departamento"/>
                 <LayoutCandidatoAResidente path="/candidato_residente"/>
+                <LayoutResidente path="/residente"/>                
                 <LayoutDocente path="/docente"/>
                 <LayoutAsesorExterno path="/asesor_externo"/>
                 <Route component={Page404} />

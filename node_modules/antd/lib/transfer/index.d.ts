@@ -11,7 +11,7 @@ export interface TransferProps {
     prefixCls?: string;
     className?: string;
     dataSource: TransferItem[];
-    targetKeys: string[];
+    targetKeys?: string[];
     selectedKeys?: string[];
     render?: (record: TransferItem) => React.ReactNode;
     onChange?: (targetKeys: string[], direction: string, moveKeys: any) => void;
