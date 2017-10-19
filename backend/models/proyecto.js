@@ -24,7 +24,8 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       as: 'anteproyecto'
     })
-    Proyecto.hasMany(models.asesoria, {
+
+    Proyecto.hasMany(models.Asesoria, {
       foreignKey: 'id_proyecto',
       as: 'asesorias'
     })

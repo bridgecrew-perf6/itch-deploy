@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     revision_seguimiento.belongsTo(models.Docente, {
       foreignKey: 'id_docente',
       onDelete: 'CASCADE',
-      as: 'id_docente'
+      as: 'docente'
     })
   }
   return revision_seguimiento;
