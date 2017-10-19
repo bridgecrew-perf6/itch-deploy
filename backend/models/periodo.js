@@ -54,11 +54,16 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'id_periodo',
       as: 'anteproyectos'
     })
-      Periodo.belongsTo(models.Carrera, {
-        foreignKey: 'id_carrera',
-        onDelete: 'CASCADE',
-        as: 'carrera'
-      })
+    Periodo.belongsTo(models.Carrera, {
+      foreignKey: 'id_carrera',
+      onDelete: 'CASCADE',
+      as: 'carrera'
+    })
+    Periodo.hasMany(models.Seguimiento, {
+      foreignKey: 'id_periodo',
+      onDelete: 'CASCADE',
+      as: 'seguimientos'
+    })
   }
   return Periodo;
 };
