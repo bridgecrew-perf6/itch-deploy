@@ -16,10 +16,16 @@ module.exports = {
         type: Sequelize.STRING(100),
         allowNull: false
       },
-      correo:{ 
-        type: Sequelize.STRING,
+      id_usuario: {
+        type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
         allowNull: false,
-        unique: true
+        unique: true,
+        references: {
+          model: 'Usuarios',
+          key: 'id',
+          as: 'id_usuario'
+        }
       },
       id_empresa: {
         type: Sequelize.INTEGER,

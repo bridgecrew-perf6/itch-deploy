@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     rol: {
       type: DataTypes.ENUM, 
       allowNull: false, 
-      values: ['candidato_residente','residente','docente','admin','jefe_departamento'],
+      values: ['candidato_residente','residente','docente','admin','jefe_departamento', 'asesor_externo'],
       validate: {
         notEmpty: {msg: 'El campo debe tener un valor'}
       }

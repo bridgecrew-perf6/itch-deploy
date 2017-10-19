@@ -1,5 +1,6 @@
 const Usuario = require('../models/index').Usuario;
 const Alumno = require('../models').Alumno;
+const AsesorExterno = require('../models').asesor_externo;
 const docente_carreras = require('../models').docente_carreras;
 const Docente = require('../models').Docente
 const Sequelize = require('../models/index').Sequelize;
@@ -13,7 +14,8 @@ const rol = {
 	PRESIDENTE_ACADEMIA: 'presidente_academia',
 	CANDIDATO_RESIDENTE: 'candidato_residente',
 	RESIDENTE: 'residente',
-	ADMIN: 'admin'
+	ADMIN: 'admin',
+	ASESOR_EXTERNO: 'asesor_externo'
 }
 
 const generateHash = (contrasenia) => {
@@ -86,6 +88,14 @@ module.exports.isAuth = (req, res) => {
 			Alumno.findOne({where: {id_usuario}})
 				.then(alumno => {
 					res.status(200).json({isAuth: true, rol: req.user.rol, id_alumno: alumno.id, id_carrera: alumno.id_carrera});
+				}).catch(err => {
+					res.status(406).json({err: err})
+				})
+		}else if(req.user.rol === rol.ASESOR_EXTERNO){
+			const id_usuario = req.user.id;
+			AsesorExterno.findOne({where: {id_usuario}})
+				.then(asesor_externo => {
+					res.status(200).json({isAuth: true, rol: req.user.rol, id_asesor_externo: asesor_externo.id, id_empresa: asesor_externo.id_empresa})
 				}).catch(err => {
 					res.status(406).json({err: err})
 				})
