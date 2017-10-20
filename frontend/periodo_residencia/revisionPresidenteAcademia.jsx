@@ -142,6 +142,7 @@ export default class RevisionPresidenteAcademia extends Component{
         }).then(res => {
             if(res.status === 200 ){
                 message.success('Anteproyecto actualizado!')
+                window.location.reload();
             }else{
                 Modal.error({
                     title: 'Error al actualizar anteproyecto. Revisar los siguientes campos',
@@ -254,7 +255,7 @@ export default class RevisionPresidenteAcademia extends Component{
                 key: 'dictamen',
                 render: (text, record) => (
                     <span>
-                        {(fecha_inicio_entrega < currentDate && fecha_fin_entrega > currentDate) ?
+                        {(fecha_inicio_entrega <= currentDate && fecha_fin_entrega >= currentDate) ?
                             <Switch checkedChildren="Aprobado" defaultChecked={(record.dictamen === 'aprobado') ? true : false} unCheckedChildren="No aprobado" onChange={(checked) => this.handleDictamen(record, checked)} />
                         : <p style={{color: '#ff5757'}}>La fecha de revisión finalizo</p>}
                     </span>

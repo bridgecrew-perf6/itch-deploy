@@ -5,20 +5,33 @@ import moment from 'moment';
 const { Item } = Form;
 
 
-export default class ProyectoDeResidencia extends Component{
 
+export default class ProyectoDeResidencia extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            proyecto: props.proyecto
+        }
+    }
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            proyecto: nextProps.proyecto
+        })
+    }
     render(){
+        const {proyecto} = this.state;
+        console.log('proyecto => ', this.state.proyecto)
         return (
             <div>
                 <Form>
                     <Item label="Título">
-                        <Input value="Aqui va el titulo"  readOnly />
+                        <Input value={proyecto.anteproyecto.nombre}  readOnly />
                     </Item>
-                    <Item label="Objetivo">
-                        <Input value="Aqui va el objetivo" readOnly />
+                    <Item label="Objetivo general">
+                        <Input value={proyecto.anteproyecto.objetivo_general}  readOnly />
                     </Item>
                     <Button type="primary" icon="file-pdf">
-                        Anteproyecto
+                        <a style={{color: 'white'}} href={`/api/anteproyecto/pdf/${proyecto.anteproyecto.path_file_anteproyecto}`} target="_blank"> Anteproyecto</a>
                     </Button>
                 </Form>
                 {/* divider */}

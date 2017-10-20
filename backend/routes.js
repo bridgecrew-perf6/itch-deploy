@@ -77,7 +77,7 @@ module.exports =  (app, express, passport) => {
         .post(isAuth, AsesorController.add)
     //Anteproyectos por periodo
     router.route('/periodo/:id_periodo/anteproyectos')
-        .get(carreraController.findAnteproyectosByPeriodo);
+        .get(isAuth, carreraController.findAnteproyectosByPeriodo);
     // ALUMNOS
     router.route('/alumno')
         .post(isAuth, alumnoController.add)
@@ -85,7 +85,11 @@ module.exports =  (app, express, passport) => {
     router.route('/alumno/:id/anteproyecto')
         .get(isAuth, alumnoController.getAnteproyecto)
         .put(isAuth, alumnoController.updateDatosAnteproyecto);
-    
+        
+    router.route('/alumno/:id/proyecto')
+        .get(isAuth, alumnoController.getProyecto)
+        // .put(isAuth, )
+
     router.route('/alumno/file_anteproyecto/:id_anteproyecto')
         .post(isAuth,alumnoController.addFileAnteproyecto);
 

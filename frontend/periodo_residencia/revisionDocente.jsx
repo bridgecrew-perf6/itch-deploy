@@ -232,7 +232,7 @@ export default class RevisionDocente extends Component{
                 key: 'factible',
                 render: (text, record) => (
                     <span>
-                        {(fecha_inicio_entrega < currentDate && fecha_fin_entrega > currentDate) ?
+                        {(fecha_inicio_entrega <= currentDate && fecha_fin_entrega >= currentDate) ?
                         <span>
                             <Switch style={{marginRight: 3, marginBottom: 3}} defaultChecked={(record.revision && (record.revision.esFactible === 'factible')) ? true : false} checkedChildren="Factible" unCheckedChildren={<Icon type="cross" />} onChange={(checked) => this.handleFactible(record.id, checked)} />
                             <Button style={{marginLeft: 3}} icon="exception" onClick={() => this.showInputCorreccion(record.id, record.detalles_alumno.usuario.correo)}>Correción</Button>

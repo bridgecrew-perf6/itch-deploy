@@ -5,6 +5,7 @@ const asesor_externo = require('../models').asesor_externo;
 const Usuario = require('../models').Usuario;
 const Docente = require('../models').Docente;
 const Anteproyecto = require('../models').Anteproyecto;
+const Proyecto = require('../models').Proyecto;
 const revision_anteproyecto = require('../models').revision_anteproyecto;
 
 const Sequelize = require('../models').Sequelize
@@ -160,7 +161,44 @@ module.exports.getAnteproyecto = (req, res) => {
             res.status(406).json({err: err})
         })
 }
+//                     include: [{model: Anteproyecto, as: 'anteproyecto', include: [{model: revision_anteproyecto, as: 'revisiones', include: [{model: Docente, as: 'docente'}]},{model: Alumno, as: 'alumno'}, {model: Periodo, as: 'periodo'}, {model: asesor_externo, as: 'asesor_externo'}] }]
 
+module.exports.getProyecto = (req, res) => {
+    const id_alumno = req.params.id;
+    sequelize.transaction( t => {
+        return Anteproyecto.findOne({where: {id_alumno: id_alumno}}, {transaction: t})
+            .then(_anteproyecto => {
+                // console.log('========>', _anteproyecto)
+                return Proyecto.findOrCreate({
+                    where: {id_anteproyecto: _anteproyecto.id},
+                    include: [{model: Anteproyecto, as: 'anteproyecto', include: [{model: revision_anteproyecto, as: 'revisiones', include: [{model: Docente, as: 'docente'}]},{model: Alumno, as: 'alumno'}, {model: Periodo, as: 'periodo'}, {model: asesor_externo, as: 'asesor_externo'}] }],                    
+                    transaction: t
+                }).spread((proyecto_find, created) => {
+                    if(created){
+                        // buscar el proyecto :c
+                        return Proyecto.findOne({
+                            where: {id_anteproyecto: _anteproyecto.id},
+                            include: [{model: Anteproyecto, as: 'anteproyecto', include: [{model: revision_anteproyecto, as: 'revisiones', include: [{model: Docente, as: 'docente'}]},{model: Alumno, as: 'alumno'}, {model: Periodo, as: 'periodo'}, {model: asesor_externo, as: 'asesor_externo'}] }],                    
+                        }, {transaction: t})
+                    }else {
+                        return proyecto_find;
+                    }
+                });
+            })
+
+    }).then((_proyecto)=>{
+        res.status(200).json(_proyecto)
+    }).catch(Sequelize.ValidationError, (err) => {
+        var errores = err.errors.map((element) => {
+            return `${element.path}: ${element.message}`
+        })
+        // console.log('==>', errores)
+        res.status(202).json({errores})
+    }).catch((err) => {
+        console.log(err)
+        res.status(406).json({err: err})
+    })
+}
 module.exports.add = (req, res) => {
     const no_control = req.body.no_control,
         nombre = req.body.nombre,

@@ -37,27 +37,27 @@ export default class LayoutResidente extends Component{
                     isAuth: usuario.isAuth,
                     usuario: usuario,
                     componentRender: {
-                        title: 'Proyecto de residencia',
-                        render: <ProyectoDeResidencia proyecto={null}/>
+                        
                     }
                 })
-                // axios.get(`/api/alumno/${usuario.id_alumno}/anteproyecto`)
-                //     .then(res => {
-                //         // console.warn(res.data)
-                //         if(res.status === 200){
-                //             this.setState({
-                //                 anteproyecto: res.data,
-                //                 isAuth: usuario.isAuth,
-                //                 usuario: usuario,
-                //                 componentRender: {
-                //                     title: 'Registrar anteproyecto',
-                //                     render: <RegistrarAnteproyecto anteproyecto={res.data}/>
-                //                 }
-                //             })
-                //         }else{
-                //             this.setState({isAuth: false})
-                //         }
-                //     })
+                axios.get(`/api/alumno/${usuario.id_alumno}/proyecto`)
+                    .then(res => {
+                        // console.warn(res.data)
+                        if(res.status === 200){
+                            this.setState({
+                                proyecto: res.data,
+                                isAuth: usuario.isAuth,
+                                usuario: usuario,
+                                componentRender: {
+                                    title: 'Proyecto de residencia',
+                                    render: <ProyectoDeResidencia proyecto={res.data}/>
+                                   
+                                }
+                            })
+                        }else{
+                            this.setState({isAuth: false})
+                        }
+                    })
             }else{
                 this.setState({isAuth: false})
             }
@@ -81,7 +81,7 @@ export default class LayoutResidente extends Component{
                 visibleCambiarContrasenia: false,
                 componentRender: {
                     title: 'Proyecto de residencia',
-                    render: <ProyectoDeResidencia proyecto={null}/>
+                    render: <ProyectoDeResidencia proyecto={proyecto}/>
                 }
             })
         }
