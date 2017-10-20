@@ -1,6 +1,6 @@
 const Periodo = require('../models').Periodo;
 const Usuario = require('../models').Usuario;
-
+const Seguimiento = require('../models').Seguimiento;
 const Docente = require('../models').Docente;
 const Carrera = require('../models').Carrera;
 const Departamento = require('../models').Departamento;
@@ -21,6 +21,31 @@ const path = require('path')
 const transporter = require('../../config/email');
 
 
+
+module.exports.addSeguimiento = (req, res) => {
+    const id_periodo = req.body.id_periodo,
+        fecha_inicial = req.body.fecha_inicial,
+        fecha_final = req.body.fecha_final;
+
+    Seguimiento.create({
+        id_periodo,
+        fecha_inicial,
+        fecha_final
+    }).then((seguimiento)=>{
+        res.status(200).json(seguimiento);
+    }).catch(Sequelize.ValidationError, (err) => {
+        var errores = err.errors.map((element) => {
+            return `${element.path}: ${element.message}`
+        })
+        // console.log('==>', errores)
+        res.status(202).json({errores})
+    }).catch((err) => {
+        console.log(err)
+        res.status(406).json({err: err})
+    }) 
+
+
+}
 module.exports.updateFechaFinEntregaAnteproyectos = (req, res) => {
     const id_periodo = req.body.id_periodo,
         fecha_fin_entrega_anteproyecto = req.body.fecha_fin_entrega_anteproyecto;

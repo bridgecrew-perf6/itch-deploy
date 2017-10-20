@@ -124,8 +124,10 @@ module.exports =  (app, express, passport) => {
         .get(isAuth, periodoController.getDictamenPDF);
         
     router.route('/periodo/generar_dictamen')
-        .post(periodoController.generarDictamen)
+        .post(isAuth, periodoController.generarDictamen)
         // put actualizar dictamen jeje
+    router.route('/periodo/seguimiento')
+        .post(isAuth, periodoController.addSeguimiento);
 
 
 

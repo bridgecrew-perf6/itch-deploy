@@ -8,6 +8,7 @@ import uuid from 'uuid';
 
 // component
 import FormAddAlumno from '../alumno/components/FormAddAlumno.jsx';
+import FormAddSeguimiento from '../periodo_residencia/addSeguimiento.jsx';
 
 export default class GestionPeriodoDeResidencia extends Component{
     constructor(props){
@@ -16,6 +17,7 @@ export default class GestionPeriodoDeResidencia extends Component{
             departamento: props.departamento,
             carreraSeleccionada: null,
             visible_add_alumno: false,
+            visible_add_seguimiento: false,
             id_periodo: null,
             alumnos_rechazados_por_carrera: []
         }
@@ -47,10 +49,36 @@ export default class GestionPeriodoDeResidencia extends Component{
     showAddAlumno = (id_periodo) => {
         this.setState({
             visible_add_alumno: true,
+            visible_add_seguimiento: false,
+            id_periodo
+        })
+    }
+    showAddSeguimiento = (id_periodo, fecha_fin) => {
+        this.setState({
+            visible_add_alumno: false,
+            visible_add_seguimiento: true,
             id_periodo
         })
     }
     
+    showSeguimientos = (seguimientos) => {
+        console.warn(seguimientos);
+        const seguimientos_map = seguimientos.map((seguimiento, key) => {
+            return (
+                <p key={key}>{seguimiento.fecha_inicial} - {seguimiento.fecha_final}</p>
+            )
+        })
+        Modal.info({
+            title: 'Seguimientos',
+            width: 600,
+            content: (
+                <div>
+                    {seguimientos_map}
+                </div>
+            ),
+            onOk(){}
+        })
+    }
 
 
     handleChageCarrera = (value) => {
@@ -67,6 +95,7 @@ export default class GestionPeriodoDeResidencia extends Component{
                                     alumnos_rechazados_por_carrera: _res.data._alumnos,
                                     carreraSeleccionada: res.data,
                                     visible_add_alumno: false,
+                                    visible_add_seguimiento: false
                                 })
                             }
                         })
@@ -92,7 +121,8 @@ export default class GestionPeriodoDeResidencia extends Component{
         
     }
     render(){
-        const {departamento, carreraSeleccionada, visible_add_alumno, id_periodo, visible_lista_candidatos_residente, alumnos_rechazados_por_carrera} = this.state
+        const {departamento, carreraSeleccionada, visible_add_alumno, id_periodo, visible_lista_candidatos_residente, alumnos_rechazados_por_carrera, visible_add_seguimiento} = this.state
+        const currentDate = moment().format('YYYY-MM-DD');
         const periodos = carreraSeleccionada ? carreraSeleccionada.periodos.map((periodo, index) => {
                 return { 
                     id: periodo.id, 
@@ -104,25 +134,31 @@ export default class GestionPeriodoDeResidencia extends Component{
                     fecha_inicio_entrega_anteproyecto: periodo.fecha_inicio_entrega_anteproyecto,
                     fecha_fin_entrega_anteproyecto:  periodo.fecha_fin_entrega_anteproyecto,
                     acciones: (moment().format('YYYY-MM-DD') >= periodo.fecha_inicio_entrega_anteproyecto && moment().format('YYYY-MM-DD') <= periodo.fecha_fin_entrega_anteproyecto) ? true : false,
-                    lista_candidatos: 'sisisi'
+                    lista_candidatos: 'on',
+                    seguimientos: periodo.seguimientos
                 }
         }): null;
         const columns = [
             {
+                className: 'center-text',
                 title: 'Periodo',
                 key: 'periodo',
                 dataIndex: 'periodo'
-            }, {
+            }, 
+            {
+                className: 'center-text',
                 title: 'Ciclo',
                 key: 'ciclo',
                 dataIndex: 'ciclo'
             },
             {
+                className: 'center-text',
                 title: 'Fecha de periodo',
                 key: 'fecha_periodo',
                 dataIndex: 'fecha_periodo'
             },
             {
+                className: 'center-text',
                 title: 'Fecha entrega anteproyectos',
                 key: 'fecha_entrega_anteproyecto',
                 dataIndex: 'fecha_entrega_anteproyecto',
@@ -131,9 +167,24 @@ export default class GestionPeriodoDeResidencia extends Component{
                         {record.fecha_inicio_entrega_anteproyecto} - <DatePicker onChange={(momentDate, stringDate) => {this.handleChangeFechaFinEntregaAnteproyecto(momentDate, record.id)}} disabledDate={current => (current.format('YYYY-MM-DD') > moment(record.fecha_fin, "YYYY-MM-DD").format('YYYY-MM-DD') || current.format('YYYY-MM-DD') < moment(record.fecha_inicio_entrega_anteproyecto, "YYYY-MM-DD").format('YYYY-MM-DD') ) } format="YYYY-MM-DD"  defaultValue={moment(record.fecha_fin_entrega_anteproyecto, "YYYY-MM-DD")}/>
                     </span>
                 )
-            },{
+            },
+            {
                 className: 'center-text',
-                title: 'Acciones',
+                title: 'Seguimientos',
+                key: 'seguimientos',
+                dataIndex: 'seguimientos',
+                render: (text, record) => (
+                    <div>
+                        <Button style={{marginRight: 2, marginLeft: 2}} type="primary" icon="bars" onClick={() => this.showSeguimientos(record.seguimientos)}>Lista</Button>
+                        {(currentDate > record.fecha_fin) ? '' :
+                        <Button style={{marginRight: 2, marginLeft: 2}} icon="plus" onClick={() => this.showAddSeguimiento(record.id, record.fecha_fin)}>Seguimiento</Button>
+                        }
+                    </div>
+                )
+            },
+            {
+                className: 'center-text',
+                title: 'Agregar candidato',
                 key: 'acciones',
                 dataIndex: 'Acciones',
                 render: (text, record) => (
@@ -166,10 +217,11 @@ export default class GestionPeriodoDeResidencia extends Component{
                         </Select>
                 </Col>
                 <Col xs={24} lg={20}>
-                    <Table bordered title={() => 'Gestión de periodos'} dataSource={periodos} className="full-width" columns={columns} pagination={{ pageSize: 8 }}  scroll={{ x: 1000 }} />
+                    <Table bordered title={() => 'Gestión de periodos'} dataSource={periodos} className="full-width" columns={columns} pagination={{ pageSize: 8 }}  scroll={{ x: 1500 }} />
                 </Col>
                 
                 <FormAddAlumno visible={visible_add_alumno} carrera={carreraSeleccionada} id_periodo={id_periodo} alumnos_rechazados_por_carrera={alumnos_rechazados_por_carrera}/>
+                <FormAddSeguimiento visible={visible_add_seguimiento} id_periodo={id_periodo}/>
             </Row>
 
             

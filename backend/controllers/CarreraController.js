@@ -5,6 +5,8 @@ const docente_carreras = require('../models').docente_carreras;
 const Periodo = require('../models').Periodo;
 const Anteproyecto = require('../models').Anteproyecto;
 const Alumno = require('../models').Alumno;
+const Seguimiento = require('../models').Seguimiento;
+
 
 
 
@@ -63,10 +65,11 @@ module.exports.findAnteproyectosByPeriodo = (req, res) => {
         })
 }
 
+
 module.exports.findById = (req, res) => {
     Carrera.findOne({
         where: {id: req.params.id_carrera},
-        include: [{model: Periodo, as: 'periodos', attributes: ['id', 'periodo', 'ciclo', 'fecha_inicio', 'fecha_fin', 'fecha_inicio_entrega_anteproyecto', 'fecha_fin_entrega_anteproyecto', 'id_carrera'] } ] })
+        include: [{model: Periodo, as: 'periodos', attributes: ['id', 'periodo', 'ciclo', 'fecha_inicio', 'fecha_fin', 'fecha_inicio_entrega_anteproyecto', 'fecha_fin_entrega_anteproyecto', 'id_carrera'], include: [{model: Seguimiento, as:'seguimientos'}]} ] })
         .then((carrera) => {
             res.status(200).json(carrera);
         }).catch(err => {

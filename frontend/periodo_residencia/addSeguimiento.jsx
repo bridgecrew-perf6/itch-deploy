@@ -1,29 +1,38 @@
 import React, {Component} from 'react';
 import {render} from 'react-dom';
-import { Button, Modal, Form, Input,Icon, message} from 'antd';
+import { Button, Modal, Form, Input,Icon, message, DatePicker} from 'antd';
 const FormItem = Form.Item;
 const { TextArea } = Input;
+const RangePicker = DatePicker.RangePicker;
+
 
 import axios from 'axios';
+import moment from 'moment';
 
-const CreateFormCorreccion = Form.create()(
+
+const CreateFormAddSeguimiento= Form.create()(
     (props => {
         const { visible, onCancel, onCreate, form} = props;
         const { getFieldDecorator} = form;
-
+        const rangeConfigPeriodoSeguimiento = {
+            rules: [{ type: 'array', required: true, message: 'Seleccione la fecha de inicio y fin del seguimiento' }],
+        };  
         return(
             <Modal
                 visible={visible}
-                title="Correcciones para anteproyecto"
+                title="Agregar seguimiento de residencia"
                 okText="Guardar"
                 onCancel={onCancel}
                 onOk={onCreate}
             >
-                <Form layout="vertical">
-                    <FormItem label="Correcciones del anteproyecto">
-                        {getFieldDecorator('comentario', {
-                            rules: [{required: true, message: 'Debe indicar las correcciones.'}, {max: 500, message: 'Las correcciones no deben pasar 500 caracteres'}]
-                        })(<TextArea maxLength='500' placeholder="Escriba aqui las correcciones" autosize={{ minRows: 2, maxRows: 6 }} />)}
+                <Form layout="vertical" style={{width: '100%'}}>
+                    <FormItem
+                        label="Seleccione la fecha de inicio y fin del seguimiento"
+                        style={{width: '100%'}}
+                        >
+                        {getFieldDecorator('fechas_seguimiento', rangeConfigPeriodoSeguimiento)(
+                            <RangePicker format="ll" disabledDate={current => current.format('YYYY-MM-DD') < moment().format('YYYY-MM-DD')} />
+                        )}
                     </FormItem>
                 </Form>
             </Modal>
@@ -31,22 +40,18 @@ const CreateFormCorreccion = Form.create()(
     })
 )
 
-export default class FormCorreccion extends Component{
+export default class FormAddSeguimiento extends Component{
     constructor(props){
         super(props);
         this.state = {
-            id_docente: props.id_docente,
-            id_anteproyecto: props.id_anteproyecto,
-            correo_alumno: props.correo_alumno,
+            id_periodo: props.id_periodo, 
             visible: props.visible,
         }
     }
     componentWillReceiveProps(nextProps) {
-        const {visible} = nextProps;
+        const {visible, id_periodo} = nextProps;
         this.setState({
-            id_docente: nextProps.id_docente,
-            id_anteproyecto: nextProps.id_anteproyecto,
-            correo_alumno: nextProps.correo_alumno,
+            id_periodo: id_periodo,
             visible: visible
         })
     }
@@ -64,24 +69,27 @@ export default class FormCorreccion extends Component{
             if (err) {
                 return;
             }
+
+            const fecha_inicial = values.fechas_seguimiento[0].format('YYYY-MM-DD'),
+                fecha_final = values.fechas_seguimiento[1].format('YYYY-MM-DD'),
+                id_periodo = this.state.id_periodo;
             // console.log('Received values of form: ', values);
-            
+            // console.log('id_periodo', this.state.id_periodo);
             // crear post al servidor
-            axios.put('/api/anteproyecto/factibilidad/correciones', {
-                id_docente: this.state.id_docente,
-                id_anteproyecto: this.state.id_anteproyecto,
-                comentario: values.comentario,
-                correo_alumno: this.state.correo_alumno
+            axios.post('/api/periodo/seguimiento', {
+                id_periodo,
+                fecha_inicial,
+                fecha_final
             }).then(res => {
                 if(res.status === 200 ){
-                    message.success('Se han enviado las correcciones!')
+                    message.success('Seguimiento agregado satisfactoriamente!')
                     form.resetFields();
                     this.setState({
                         visible: false
                     })
                 }else{
                     Modal.error({
-                        title: 'Error al enviar las correcciones. Revisar los siguientes campos',
+                        title: 'Error al agregar el seguimiento. Revisar los siguientes campos',
                         content:(
                             <div>
                                 {res.data.errores}
@@ -100,7 +108,7 @@ export default class FormCorreccion extends Component{
     render(){
         return(
             <div>
-                <CreateFormCorreccion
+                <CreateFormAddSeguimiento
                     ref={this.saveFormRef}
                     visible={this.state.visible}
                     onCancel={this.handleCancel}
