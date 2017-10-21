@@ -92,6 +92,12 @@ module.exports =  (app, express, passport) => {
 
     router.route('/alumno/file_anteproyecto/:id_anteproyecto')
         .post(isAuth,alumnoController.addFileAnteproyecto);
+    
+    router.route('/alumno/file_plan_trabajo/:id_proyecto')
+        .post(isAuth, alumnoController.addFilePlanTrabajo)
+
+    router.route('/proyecto/pdf/:filename')
+        .get(isAuth, alumnoController.getProyectoPDF)
 
     router.route('/alumnos/:id_carrera/rechazados')
         .get(isAuth, alumnoController.findAllRechazadosPorCarrera)
@@ -104,6 +110,7 @@ module.exports =  (app, express, passport) => {
 
     router.route('/anteproyecto/pdf/:filename')
         .get(isAuth, anteproyectoController.getAnteproyectoPDF)
+    
     router.route('/anteproyecto/factibilidad')
         .put(isAuth, anteproyectoController.addFactibilidad)
         

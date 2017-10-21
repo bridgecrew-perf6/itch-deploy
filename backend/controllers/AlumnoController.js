@@ -13,6 +13,7 @@ const sequelize = require('../models').sequelize
 const generator = require('generate-password');
 const transporter = require('../../config/email');
 const fs = require('fs');
+const path = require('path');
 
 
 
@@ -25,7 +26,44 @@ const uploadFileAnteproyecto = multer({
         fileFilter: (req, file, cb) => (file.mimetype !== 'application/pdf')? cb(null, false, new Error('El archivo debe ser PDF')): cb(null, true) 
     }).single('fileAnteproyecto');
 
+const uploadFilePlanTrabajo = multer({
+    dest: './storeFiles/planes_de_trabajo',
+    limits:  {fileSize: MAX_FILE_SIZE_ANTEPROYECTO, files: 1,}, 
+    fileFilter: (req, file, cb) => (file.mimetype !== 'application/pdf')? cb(null, false, new Error('El archivo debe ser PDF')): cb(null, true)     
+}).single('filePlanTrabajo');
 
+
+module.exports.addFilePlanTrabajo = (req, res) => {
+    const id_proyecto = req.params.id_proyecto;
+    uploadFilePlanTrabajo(req, res, err => {
+        if(err) {
+            console.error(err);
+            res.status(406).json(err);
+        }else{
+            sequelize.transaction(t => {
+                return Proyecto.findOne({where: {id: id_proyecto}}, {transaction: t})
+                    .then(_proyecto => {
+                        // borramos el archivo del plan de trabajo si ya tiene uno
+                        if(_proyecto.filename_plan_trabajo){
+                            fs.unlink(`./storeFiles/planes_de_trabajo/${_proyecto.filename_plan_trabajo}`);
+                        }
+                        return Proyecto.update({filename_plan_trabajo: req.file.filename}, {where: {id: id_proyecto}}, {transaction: t});
+                    })
+            }).then((_proyecto)=>{
+                // console.log('success=======>    ', result)
+                res.status(200).json(_proyecto)
+            }).catch(Sequelize.ValidationError, (err) => {
+                var errores = err.errors.map((element) => {
+                    return `${element.path}: ${element.message}`
+                })
+                // console.log('==>', errores)
+                res.status(202).json({errores})
+            }).catch((err) => {
+                res.status(406).json({err: err})
+            }) 
+        }
+    })
+}
 
 module.exports.addFileAnteproyecto = (req, res) => {
     const id_anteproyecto = req.params.id_anteproyecto;
@@ -42,7 +80,7 @@ module.exports.addFileAnteproyecto = (req, res) => {
                         console.log('ya existe el anteproyecto=========== lo borramos cues')
                         fs.unlink(`./storeFiles/anteproyectos/${anteproyecto_record.path_file_anteproyecto}`);
                     }
-                    console.log(req.file)
+                    // console.log(req.file)
                     // console.log(anteproyecto_record)
                     return Anteproyecto.update({path_file_anteproyecto: req.file.filename},{where: {id: id_anteproyecto}}, {transaction: t});
                 })
@@ -65,6 +103,14 @@ module.exports.addFileAnteproyecto = (req, res) => {
 
     }));
     // console.log(req);
+}
+
+module.exports.getProyectoPDF = (req, res) => {
+    const filename = req.params.filename;
+    const ruta_pdf = path.join(__dirname, `../../storeFiles/planes_de_trabajo/${filename}`)
+    var pdf = fs.readFileSync(ruta_pdf);
+    res.contentType("application/pdf");
+    res.send(pdf);
 }
 
 module.exports.retryAnteproyecto = (req, res) => {
