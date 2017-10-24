@@ -15,6 +15,7 @@ import {getIsAuth} from '../api.jsx';
 import CambiarContrasenia from '../layoutComponents/CambiarContrasenia.jsx';
 import RevisionAnteproyectos from '../periodo_residencia/revisionAnteproyectos.jsx';
 import AddCandidatoAResidente from '../periodo_residencia/addCandidatoResidente.jsx';
+import RevisionProyectoResidencia from '../docente/components/RevisionProyectoResidencia.jsx';
 
 class LayoutJefeDepartamento extends Component{
     constructor(){
@@ -111,6 +112,42 @@ class LayoutJefeDepartamento extends Component{
                 visibleCambiarContrasenia: true,
                 visible_add_docente: false
             })
+        }else if(key == 4){ // proyectos de residencia
+            axios.get(`/api/proyectos/asesor_interno/${this.state.usuario.id_docente}`)
+                .then(res => {
+                    if(res.status === 200){
+                        this.setState({
+                            componentSelected: key,
+                            visibleCambiarContrasenia: false,
+                            visible_add_docente: false,
+                            componentRender: {
+                                    title: 'Proyectos de residencia asignados',
+                                    render: <RevisionProyectoResidencia proyectos={res.data}/>
+                            }
+                        })
+                    }
+                })
+            
+        }else if(key == 5){ // asesorias de residencia
+            this.setState({
+                componentSelected: key,
+                visibleCambiarContrasenia: false,
+                visible_add_docente: false,
+                componentRender: {
+                        title: 'View',
+                        render: <p>Asesorias de residencia</p>
+                }
+            })
+        }else if(key == 6){ // seguimientos de residencia
+            this.setState({
+                componentSelected: key,
+                visibleCambiarContrasenia: false,
+                visible_add_docente: false,
+                componentRender: {
+                        title: 'View',
+                        render: <p>Seguimientos de residencia</p>
+                }
+            })
         }
     }
     render(){
@@ -139,6 +176,15 @@ class LayoutJefeDepartamento extends Component{
                                 <Icon type="usergroup-add"/>
                                 <span>Agregar candidato a residente</span>
                             </Menu.Item>
+                            
+                            <SubMenu
+                                key="sub2"
+                                title={<span><Icon type="book"/><span>Proyectos de residencia</span></span>}
+                            >
+                                <Menu.Item key="4">Proyectos de residencia</Menu.Item>
+                                <Menu.Item key="5">Asesorias de residencia</Menu.Item>
+                                <Menu.Item key="6">Seguimientos de residencia</Menu.Item>
+                            </SubMenu>
                             <Menu.Divider/>
                             <SubMenu
                                 key="sub1"

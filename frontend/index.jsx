@@ -6,6 +6,10 @@ import {BrowserRouter as Router} from 'react-router-dom';
 import {browserHistory} from 'react-router';
 import esES from '../node_modules/antd/lib/locale-provider/es_ES';
 import moment from 'moment';
+
+// react virtualized list
+import '../node_modules/react-virtualized/styles.css';
+
 // It's recommended to set locale in entry file globaly.
 import '../node_modules/moment/locale/es';
 moment.locale('es');

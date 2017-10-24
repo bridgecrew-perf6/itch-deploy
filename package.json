@@ -54,6 +54,6 @@
   "scripts": {
     "start": "nodemon server.js",
     "dev": "concurrently \"nodemon server.js\" \"webpack -w\"",
-    "generate:db": "sequelize db:migrate:undo:all && sequelize db:migrate && sequelize db:seed:all"
+    "db": "sequelize db:migrate:undo:all && sequelize db:migrate && sequelize db:seed:all"
   }
 }

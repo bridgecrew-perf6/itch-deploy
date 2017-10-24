@@ -105,7 +105,7 @@ module.exports.addFileAnteproyecto = (req, res) => {
     // console.log(req);
 }
 
-module.exports.getProyectoPDF = (req, res) => {
+module.exports.getPlanDeTrabajoPDF = (req, res) => {
     const filename = req.params.filename;
     const ruta_pdf = path.join(__dirname, `../../storeFiles/planes_de_trabajo/${filename}`)
     var pdf = fs.readFileSync(ruta_pdf);
