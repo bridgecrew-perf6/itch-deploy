@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       as: 'proyecto'
     });
     observaciones.belongsTo(models.Docente, {
-      foreignKey: 'id_asesor_externo',
+      foreignKey: 'id_asesor_interno',
       onDelete: 'CASCADE',
       as: 'asesor_interno'
     });

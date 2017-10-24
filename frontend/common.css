@@ -105,3 +105,18 @@
 .pdf{
   width: 100% !important;
 }
+
+.file-preview {
+  width: 600px !important;
+}
+
+.center-block{
+  justify-content: center;
+  overflow-y: 50px;
+}
+
+.border-top{
+  border-top: 1px solid #d7d9db;
+  margin-top: 20px;
+  padding-top: 10px;
+}

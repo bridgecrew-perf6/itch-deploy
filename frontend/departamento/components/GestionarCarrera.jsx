@@ -224,7 +224,7 @@ export default class GestionarCarrera extends Component{
         var isSelectedRow = (record) => {
             // console.warn('asignado => ', docentesAsignados);
             // console.warn('record =>', record)
-            console.warn(docentesAsignados.find((docente) => (docente.id_docente === record.id && docente.rol==='docente')))
+            // console.warn(docentesAsignados.find((docente) => (docente.id_docente === record.id && docente.rol==='docente')))
             return docentesAsignados.find((docente) => (docente.id_docente === record.id && docente.rol==='docente')) ? true : false
             // return true;
         }

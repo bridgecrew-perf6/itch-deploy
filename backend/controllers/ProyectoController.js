@@ -5,6 +5,7 @@ const Usuario = require('../models').Usuario;
 const asesor_externo = require('../models').asesor_externo;
 const Empresa = require('../models').Empresa;
 const Periodo = require('../models').Periodo;
+const observaciones = require('../models').observaciones;
 
 
 
@@ -22,4 +23,65 @@ module.exports.getProyectosByAsesorInterno = (req, res) => {
         console.log(err)
         res.status(406).json({err: err})
     })
+}
+module.exports.findObservaciones = (req, res) => {
+    const id_proyecto = req.params.id_proyecto;
+
+    observaciones.findAll({
+        where: {
+            id_proyecto,
+        }
+    }).then(_observaciones => {
+        res.status(200).json(_observaciones);
+    }).catch(err => {
+        console.log(err)
+        res.status(406).json({err: err})
+    })
+}
+
+module.exports.updateObservacion = (req, res) => {
+    const id_observacion = req.body.id_observacion,
+        solucionada = req.body.solucionada;
+
+    observaciones.update({
+        solucionada
+    },{where: {id: id_observacion}}).then((_observacion)=>{
+        // console.log('success=======>    ', result)
+        res.status(200).json(_observacion)
+    }).catch(Sequelize.ValidationError, (err) => {
+        var errores = err.errors.map((element) => {
+            return `${element.path}: ${element.message}`
+        })
+        // console.log('==>', errores)
+        res.status(202).json({errores})
+    }).catch((err) => {
+        console.log(err);
+        res.status(406).json({err: err})
+    }) 
+}
+module.exports.addObservacion = (req, res) => {
+    // console.log('==========>',req.body)
+    const id_proyecto = req.body.id_proyecto,
+        id_asesor_interno = req.body.id_asesor_interno,
+        tipo = req.body.tipo,
+        observacion = req.body.observacion;
+
+    observaciones.create({
+        id_proyecto,
+        id_asesor_interno,
+        tipo,
+        observacion
+    }).then((_observacion)=>{
+        res.status(200).json(_observacion);
+    }).catch(Sequelize.ValidationError, (err) => {
+        var errores = err.errors.map((element) => {
+            return `${element.path}: ${element.message}`
+        })
+        // console.log('==>', errores)
+        res.status(202).json({errores})
+    }).catch((err) => {
+        console.log(err)
+        res.status(406).json({err: err})
+    }) 
+    
 }

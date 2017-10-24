@@ -108,7 +108,14 @@ module.exports =  (app, express, passport) => {
 
     // PROYECTO
     router.route('/proyectos/asesor_interno/:id_asesor_interno')
-        .get(proyectoController.getProyectosByAsesorInterno)
+        .get(isAuth, proyectoController.getProyectosByAsesorInterno)
+    
+    router.route('/proyecto/observacion')
+        .post(isAuth, proyectoController.addObservacion)
+        .put(isAuth, proyectoController.updateObservacion)
+
+    router.route('/proyecto/:id_proyecto/observaciones')
+        .get(isAuth, proyectoController.findObservaciones)
     // ANTEPROYECTO
     router.route('/anteproyectos/:id_periodo')
         .get(isAuth, anteproyectoController.findByPeriodo)

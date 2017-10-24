@@ -13,12 +13,14 @@ export default class RevisionProyectoResidencia extends Component{
         super(props);
         this.state = {
             proyectos: props.proyectos,
+            usuario: props.usuario,
             renderProyecto: null
         }
     }
     componentWillReceiveProps(nextProps){
         this.setState({
             proyectos: nextProps.proyectos,
+            usuario: props.usuario,
             renderProyecto: null
         })
     }
@@ -29,7 +31,7 @@ export default class RevisionProyectoResidencia extends Component{
                 if(res.status === 200){
                     // console.warn('proyecto', res.data)
                     this.setState({
-                        renderProyecto: <Proyecto proyecto={res.data}/>
+                        renderProyecto: <Proyecto proyecto={res.data} usuario={this.state.usuario}/>
                     })
                 }
             })

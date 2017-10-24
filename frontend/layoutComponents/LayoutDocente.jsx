@@ -82,7 +82,7 @@ class LayoutJefeDepartamento extends Component{
             })
         }else if(key == 2){
             const {departamento, usuario} = this.state;
-            console.log('this=>',usuario)
+            // console.log('this=>',usuario)
             const presidente_academia = usuario.docente_carrera.find((docente) => docente.rol === 'presidente_academia');
             if(presidente_academia){
                 console.log(presidente_academia);
@@ -122,7 +122,7 @@ class LayoutJefeDepartamento extends Component{
                             visible_add_docente: false,
                             componentRender: {
                                     title: 'Proyectos de residencia asignados',
-                                    render: <RevisionProyectoResidencia proyectos={res.data}/>
+                                    render: <RevisionProyectoResidencia proyectos={res.data} usuario={this.state.usuario}/>
                             }
                         })
                     }

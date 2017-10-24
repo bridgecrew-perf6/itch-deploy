@@ -6,6 +6,7 @@ const Usuario = require('../models').Usuario;
 const Docente = require('../models').Docente;
 const Anteproyecto = require('../models').Anteproyecto;
 const Proyecto = require('../models').Proyecto;
+const observaciones = require('../models').observaciones;
 const revision_anteproyecto = require('../models').revision_anteproyecto;
 
 const Sequelize = require('../models').Sequelize
@@ -217,7 +218,7 @@ module.exports.getProyecto = (req, res) => {
                 // console.log('========>', _anteproyecto)
                 return Proyecto.findOrCreate({
                     where: {id_anteproyecto: _anteproyecto.id},
-                    include: [{model: Anteproyecto, as: 'anteproyecto', include: [{model: revision_anteproyecto, as: 'revisiones', include: [{model: Docente, as: 'docente'}]},{model: Alumno, as: 'alumno'}, {model: Periodo, as: 'periodo'}, {model: asesor_externo, as: 'asesor_externo'}] }],                    
+                    include: [{model: observaciones, as: 'observaciones'},{model: Anteproyecto, as: 'anteproyecto', include: [{model: revision_anteproyecto, as: 'revisiones', include: [{model: Docente, as: 'docente'}]},{model: Alumno, as: 'alumno'}, {model: Periodo, as: 'periodo'}, {model: asesor_externo, as: 'asesor_externo'}] }],                    
                     transaction: t
                 }).spread((proyecto_find, created) => {
                     if(created){

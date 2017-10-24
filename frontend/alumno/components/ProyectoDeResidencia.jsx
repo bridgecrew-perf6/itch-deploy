@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
-import {Card, Icon, Form, Input, Button, Row, Col} from 'antd';
+import {Card, Icon, Form, Input, Button, Row, Col, Timeline} from 'antd';
 import axios from 'axios';
 import moment from 'moment';
 const { Item } = Form;
+
 
 // components
 import WrappedFormPlanTrabajo from '../../periodo_residencia/plan_trabajo.jsx';
@@ -37,15 +38,25 @@ export default class ProyectoDeResidencia extends Component{
                     </Item>
                 </Form>
                 {/* divider */}
-                <Row>
+                <Row className="border-top">
                     <Col xs={24} lg={24}>
                         <a style={{color: '#4da1ff'}} href="/plantillas/plan_de_trabajo.docx">Plantilla de plan de trabajo <Icon type="cloud-download"/></a>
                     </Col>
                     <Col xs={24} lg={12}>
                         <WrappedFormPlanTrabajo proyecto={proyecto}/>
                     </Col>
-                    <Col xs={24} lg={12}>
-
+                    <Col xs={24} lg={12} >
+                        <p style={{marginLeft: 40, marginBottom: 15}}>Observaciones del plan de trabajo</p>
+                            <Timeline className="center-block" style={{marginLeft: 40,overflow: 'scroll', height: 180, paddingLeft: 20, paddingTop: 20}}>
+                                {proyecto.observaciones.filter(obs => obs.tipo==='plan_de_trabajo').map((observacion, index) => {
+                                        return (
+                                            <Timeline.Item key={index} color={observacion.solucionada? 'green' : 'red'}  dot={observacion.solucionada ? <Icon   type="check-circle-o"/> : <Icon type="clock-circle-o" style={{ fontSize: '16px' }}/> }>
+                                                {observacion.observacion} 
+                                            </Timeline.Item>
+                                        )
+                                    }
+                                )}
+                            </Timeline>
                     </Col>
                 </Row>
             </div>
