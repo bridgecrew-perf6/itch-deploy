@@ -33,7 +33,43 @@ const uploadFilePlanTrabajo = multer({
     fileFilter: (req, file, cb) => (file.mimetype !== 'application/pdf')? cb(null, false, new Error('El archivo debe ser PDF')): cb(null, true)     
 }).single('filePlanTrabajo');
 
+const uploadFileCronograma = multer({
+    dest: './storeFiles/cronogramas',
+    limits:  {fileSize: MAX_FILE_SIZE_ANTEPROYECTO, files: 1,}, 
+    fileFilter: (req, file, cb) => (file.mimetype !== 'application/pdf')? cb(null, false, new Error('El archivo debe ser PDF')): cb(null, true)     
+}).single('fileCronograma');
 
+module.exports.addCronograma = (req, res) => {
+    const id_proyecto = req.params.id_proyecto;
+    uploadFileCronograma(req, res, err => {
+        if(err) {
+            console.error(err);
+            res.status(406).json(err);
+        }else{
+            sequelize.transaction(t => {
+                return Proyecto.findOne({where: {id: id_proyecto}}, {transaction: t})
+                    .then(_proyecto => {
+                        // borramos el archivo del plan de trabajo si ya tiene uno
+                        if(_proyecto.filename_cronograma){
+                            fs.unlink(`./storeFiles/cronogramas/${_proyecto.filename_cronograma}`);
+                        }
+                        return Proyecto.update({filename_cronograma: req.file.filename}, {where: {id: id_proyecto}}, {transaction: t});
+                    })
+            }).then((_proyecto)=>{
+                // console.log('success=======>    ', result)
+                res.status(200).json(_proyecto)
+            }).catch(Sequelize.ValidationError, (err) => {
+                var errores = err.errors.map((element) => {
+                    return `${element.path}: ${element.message}`
+                })
+                // console.log('==>', errores)
+                res.status(202).json({errores})
+            }).catch((err) => {
+                res.status(406).json({err: err})
+            }) 
+        }
+    })
+}
 module.exports.addFilePlanTrabajo = (req, res) => {
     const id_proyecto = req.params.id_proyecto;
     uploadFilePlanTrabajo(req, res, err => {
@@ -109,6 +145,14 @@ module.exports.addFileAnteproyecto = (req, res) => {
 module.exports.getPlanDeTrabajoPDF = (req, res) => {
     const filename = req.params.filename;
     const ruta_pdf = path.join(__dirname, `../../storeFiles/planes_de_trabajo/${filename}`)
+    var pdf = fs.readFileSync(ruta_pdf);
+    res.contentType("application/pdf");
+    res.send(pdf);
+}
+
+module.exports.getCronogramaPDF = (req, res) => {
+    const filename = req.params.filename;
+    const ruta_pdf = path.join(__dirname, `../../storeFiles/cronogramas/${filename}`)
     var pdf = fs.readFileSync(ruta_pdf);
     res.contentType("application/pdf");
     res.send(pdf);

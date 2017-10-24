@@ -7,6 +7,7 @@ const { Item } = Form;
 
 // components
 import WrappedFormPlanTrabajo from '../../periodo_residencia/plan_trabajo.jsx';
+import WrappedCronograma from '../../periodo_residencia/cronograma.jsx';
 
 export default class ProyectoDeResidencia extends Component{
     constructor(props){
@@ -40,6 +41,7 @@ export default class ProyectoDeResidencia extends Component{
                 {/* divider */}
                 <Row className="border-top">
                     <Col xs={24} lg={24}>
+                        <h2 style={{marginBottom: 20}}>Plan de trabajo</h2>
                         <a style={{color: '#4da1ff'}} href="/plantillas/plan_de_trabajo.docx">Plantilla de plan de trabajo <Icon type="cloud-download"/></a>
                     </Col>
                     <Col xs={24} lg={12}>
@@ -59,6 +61,30 @@ export default class ProyectoDeResidencia extends Component{
                             </Timeline>
                     </Col>
                 </Row>
+                <Row className="border-top">
+
+                    <Col xs={24} lg={24}>
+                        <h2 style={{marginBottom: 20}}>Cronograma</h2>
+                        <a style={{color: '#4da1ff'}} href="/plantillas/cronograma.docx">Plantilla de cronograma de actividades <Icon type="cloud-download"/></a>
+                    </Col>
+                    <Col xs={24} lg={12}>
+                        <WrappedCronograma proyecto={proyecto}/>
+                    </Col>
+                    <Col xs={24} lg={12} >
+                        <p style={{marginLeft: 40, marginBottom: 15}}>Observaciones del cronograma de actividades</p>
+                            <Timeline className="center-block" style={{marginLeft: 40,overflow: 'scroll', height: 180, paddingLeft: 20, paddingTop: 20}}>
+                                {proyecto.observaciones.filter(obs => obs.tipo==='cronograma').map((observacion, index) => {
+                                        return (
+                                            <Timeline.Item key={index} color={observacion.solucionada? 'green' : 'red'}  dot={observacion.solucionada ? <Icon   type="check-circle-o"/> : <Icon type="clock-circle-o" style={{ fontSize: '16px' }}/> }>
+                                                {observacion.observacion} 
+                                            </Timeline.Item>
+                                        )
+                                    }
+                                )}
+                            </Timeline>
+                    </Col>
+                </Row>
+
             </div>
         )
     }

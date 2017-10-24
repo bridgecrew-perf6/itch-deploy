@@ -55,6 +55,13 @@ export default class Proyecto extends Component{
             visibleAddObservacion: true
         })        
     }
+    showAgregarObservacionCronograma = () => {
+        const {proyecto} = this.state;
+        this.setState({
+            tipo_observacion: 'cronograma',
+            visibleAddObservacion: true
+        })        
+    }
     onChangeObservacion = (id_observacion, solucionada) => {
         axios.put('/api/proyecto/observacion', {
             id_observacion,
@@ -71,6 +78,15 @@ export default class Proyecto extends Component{
         const {proyecto, visibleAddObservacion, tipo_observacion, usuario, observaciones} = this.state
         // console.warn(usuario);
         const observacionesPlanTrabajo = observaciones.filter(obs => obs.tipo==='plan_de_trabajo').map((observacion) => {
+            return {
+                key: uuid.v1(),
+                id: observacion.id,
+                observacion: observacion.observacion,
+                solucionada: observacion.solucionada
+            }
+        })
+
+        const observacionesCronograma = observaciones.filter(obs => obs.tipo==='cronograma').map((observacion) => {
             return {
                 key: uuid.v1(),
                 id: observacion.id,
@@ -120,6 +136,7 @@ export default class Proyecto extends Component{
                 {/* divider */}
                 <Row className="border-top">
                     <Col xs={24} lg={6} >
+                        <h2 style={{marginBottom: 20}}>Plan de trabajo</h2>
                         <Item  label={(
                                 <span>
                                     Plan de trabajo&nbsp;
@@ -143,8 +160,38 @@ export default class Proyecto extends Component{
                         </Item>
                     </Col>
                     <Col xs={24} lg={18}>
-                        <Button style={{marginBottom: 10}} type="primary" icon="exclamation-circle-o" onClick={this.showAgregarObservacionPlanTrabajo}>Agregar observación</Button>
+                        <Button style={{marginBottom: 10, marginTop: 45}}  icon="plus" onClick={this.showAgregarObservacionPlanTrabajo}>Agregar observación</Button>
                         <Table title={() => 'Observaciones de plan de trabajo'} columns={columnsPlanTrabajo} dataSource={observacionesPlanTrabajo} pagination={{ pageSize: 4 }} />
+                    </Col>
+                </Row>
+                <Row className="border-top">
+                    <Col xs={24} lg={6} >
+                        <h2 style={{marginBottom: 20}}>Cronograma de actividades</h2>
+                        <Item  label={(
+                                <span>
+                                    Cronograma de actividades&nbsp;
+                                    <Tooltip title={`Ultima fecha de actualización: ${moment(proyecto.updatedAt).utc().format('ll')}`}>
+                                        <Icon type="clock-circle-o"/>
+                                    </Tooltip>
+                                </span>
+                            )}>
+                            <Upload
+                                className="file-preview"
+                                style={{width: 600}}
+                                listType="picture-card"
+                                fileList={[{
+                                    uid: -1,
+                                    name: 'cronograma.pdf',
+                                    status: 'done',
+                                    url: `/api/cronograma/pdf/${proyecto.filename_cronograma}`
+                                }]}
+                                onRemove={false}
+                            />
+                        </Item>
+                    </Col>
+                    <Col xs={24} lg={18}>
+                        <Button style={{marginBottom: 10,  marginTop: 45}}  icon="plus" onClick={this.showAgregarObservacionCronograma}>Agregar observación</Button>
+                        <Table title={() => 'Observaciones del cronograma de actividades'} columns={columnsPlanTrabajo} dataSource={observacionesCronograma} pagination={{ pageSize: 4 }} />
                     </Col>
                 </Row>
                 <FormAddObservacion updateObservaciones={this.updateObservaciones.bind(this)} id_proyecto={proyecto.id} tipo={tipo_observacion} usuario={usuario} visible={visibleAddObservacion}/>

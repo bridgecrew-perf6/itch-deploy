@@ -100,6 +100,12 @@ module.exports =  (app, express, passport) => {
     router.route('/plan_de_trabajo/pdf/:filename')
         .get(isAuth, alumnoController.getPlanDeTrabajoPDF)
 
+    router.route('/alumno/cronograma/:id_proyecto')
+        .post(isAuth, alumnoController.addCronograma)
+    
+    router.route('/cronograma/pdf/:filename')
+        .get(isAuth, alumnoController.getCronogramaPDF)
+
     router.route('/alumnos/:id_carrera/rechazados')
         .get(isAuth, alumnoController.findAllRechazadosPorCarrera)
 
