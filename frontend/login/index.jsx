@@ -5,6 +5,7 @@ import {Row, Col, Card, Layout} from 'antd';
 const {Content, Header} = Layout;
 import { Form, Icon, Input, Button, Checkbox } from 'antd';
 const FormItem = Form.Item;
+import Particles from 'react-particles-js';
 
 import WrappedLoginForm from './components/FormLogin.jsx';
 
@@ -12,7 +13,10 @@ export default class Login extends Component{
     render(){
         return(
             <div>
-                <Row type="flex" justify="center" align="middle" style={{height: '100%'}}>
+                <Particles style={{background: '#282c34', position: 'absolute', backgroundSize: 'cover', backgroundRepeat: 'no-repeat'}} params={require('./particles.json')}>
+                
+                </Particles>
+                <Row type="flex" justify="center" align="middle" style={{height: '100%', position: 'absolute', marginLeft: 'auto',marginRight: 'auto',left: 0, right: 0}}>
                     <Col lg={16} xs={22} >
                         <Card style={{borderBottomRightRadius: 7, borderBottomLeftRadius: 7, borderTopLeftRadius: 7, borderTopRightRadius: 7, paddingTop: 30, paddingBottom: 30}}>
                             <Row type="flex" justify="center" align="middle">

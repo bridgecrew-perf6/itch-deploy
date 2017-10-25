@@ -20,19 +20,217 @@ const printer = new PdfPrinter(fonts);
 
 
 module.exports = {
-    generarFormatoAsesoria: (id_asesoria, res) => {
+    generarFormatoAsesoria: (asesoria, res) => {
+        var asesor_interno = `      ${asesoria.proyecto.anteproyecto.asesor_interno.titulo} ${asesoria.proyecto.anteproyecto.asesor_interno.nombre} ${asesoria.proyecto.anteproyecto.asesor_interno.ap_materno} ${asesoria.proyecto.anteproyecto.asesor_interno.ap_materno}      `;
+        var residente = `      ${asesoria.proyecto.anteproyecto.alumno.nombre} ${asesoria.proyecto.anteproyecto.alumno.ap_paterno} ${asesoria.proyecto.anteproyecto.alumno.ap_materno}      `;
         var docDefinition = {
+            background: [
+                {
+                    margin: [0,250,0,0],
+                    image: __dirname + '/../public/img/escudo.png',
+                    width: 400,
+                    height: 400,
+                    alignment: 'center'
+                }
+            ],
             pageSize: 'A4',
-            pageOrientation: 'landscape',
-            pageMargins: [40, 100, 40, 60],
+            pageMargins: [40, 150, 40, 100],
+            header: (currentPage, pageCount) => {
+                return {
+                    margin: [40, 20, 40, 0],
+                    alignment: 'justify',
+                    columns: [
+                        {
+                            table: {
+                                widths: ['*','*'],
+                                body: [
+                                    [{image: __dirname+'/../public/img/sep-tec.png', width: 200, height: 70,alignment: 'left', },{margin: [0,25,0,0],alignment: 'right',text: [{text: 'TECNOLÓGICO NACIONAL DE MEXICO\n', bold: true, style: 'header_tecnm'},{text: 'Instituto Tecnológico de Chilpancingo', bold: true, style: 'header_itch'}]}],
+                                    [{text: '“2015, Año del Generalísimo José María Morelos y Pavón”', alignment: 'center', style: 'header_bottom', colSpan: 2}]
+                                ]
+                            },
+                            layout: 'noBorders'
+                        }
+                        
+                        
+                    ]
+                }
+            },
+            footer: (currentPage, pageCount) => {
+                return {
+                    margin: [40, 20, 40, 0],
+                    alignment: 'justify',
+                    columns: [
+                        {
+                            table: {
+                                widths: [40, '*', 40, 40,40],
+                                body: [
+                                    [
+                                        {image: __dirname+'/../public/img/tec_Logo.png', width: 40, height: 40 },
+                                        {alignment: 'center',text: [
+                                            {text: 'Av. José Francisco Ruíz Massieu No. 5, Colonia Villa Moderna, C.P.  39090 Chilpancingo, Guerrero.', style: 'footer_text'},
+                                            {text: '\nTeléfono: (747) 48 01022, Tel/Fax: 47 2 10 14 ', style: 'footer_text'},
+                                            {text: 'www.itchilpancingo.edu.mx', link: 'http://www.itchilpancingo.edu.mx',style: 'link_footer'},
+                                            {text: ', email: ', style: 'footer_text'},
+                                            {text: 'itchilpancingo@hotmail.com', style:'link_footer'},
+                                            {text: '\nFacebook: ', style: 'footer_text'},
+                                            {text: 'Tecnológico de Chilpancingo Comunicación',link: 'https://www.facebook.com/Tecnológico-de-Chilpancingo-Comunicación-131577620223301/', decoration:'underline', style:'link_footer'}
+
+                                        ]},
+                                        {image: __dirname+'/../public/img/footer_2.png', width: 40, height: 40},
+                                        {image: __dirname+'/../public/img/footer_3.png', width: 40, height: 40},
+                                        {image: __dirname+'/../public/img/footer_4.png', width: 40, height: 40},
+
+                                    
+                                    ],
+                                ]
+                            },
+                            layout: 'noBorders'
+                        }
+                        
+                        
+                    ]
+                }
+            },
             content: [
                 {
                     alignment: 'center',
                     width: '*',
                     bold: true,
-                    text: `INSTITUTO TECNOLÓGICO DE CHILPANCINGO \n DEPARTAMENTO DE `
+                    text: `Anexo V \n Formato de registro de asesoria`
                 },
-            ]
+                {
+                    margin: [0, 50, 0,0],
+                    alignment: 'right',
+                    width: '*',
+                    text: `Chilpancingo, Guerrero. A ${moment(asesoria.fecha, 'YYYY-MM-DD').format('LL')}`,
+                    decoration: 'underline',
+                    style: 'normal'                    
+                },
+                {
+                    margin: [0, 20, 0,0],
+                    alignment: 'left',
+                    width: '*',
+                    text: [
+                        {text: 'Departamento Académico: ', style: 'normal'},
+                        {text: asesoria.proyecto.anteproyecto.periodo.carrera.departamento.nombre, style: 'normal', decoration: 'underline'},
+                    ],                
+                },
+                {
+                    margin: [0, 15, 0,0],
+                    alignment: 'left',
+                    width: '*',
+                    text: [
+                        {text: 'Nombre del Residente: ', style: 'normal'},
+                        {text: `${asesoria.proyecto.anteproyecto.alumno.nombre} ${asesoria.proyecto.anteproyecto.alumno.ap_paterno} ${asesoria.proyecto.anteproyecto.alumno.ap_materno} `, style: 'normal', decoration: 'underline'},
+                    ],                
+                },
+                {
+                    margin: [0, 15, 0,0],
+                    alignment: 'justify',
+                    width: '*',
+                    text: [
+                        {text: 'Número de Control: ', style: 'normal'},
+                        {text: `${asesoria.proyecto.anteproyecto.alumno.no_control}`, style: 'normal', decoration: 'underline'},
+                        {text: ' Carrera: ', style: 'normal'},
+                        {text: `${asesoria.proyecto.anteproyecto.periodo.carrera.nombre}`, style: 'normal', decoration: 'underline'},
+                    ],                
+                },
+                {
+                    margin: [0, 15, 0,0],
+                    alignment: 'left',
+                    width: '*',
+                    text: [
+                        {text: 'Nombre del Proyecto: ', style: 'normal'},
+                        {text: `${asesoria.proyecto.anteproyecto.nombre}`, style: 'normal', decoration: 'underline'},
+                    ],                
+                },
+                {
+                    margin: [0, 15, 0,0],
+                    alignment: 'left',
+                    width: '*',
+                    text: [
+                        {text: 'Periodo de realización de residencia profesional: ', style: 'normal'},
+                        {text: `${asesoria.proyecto.anteproyecto.periodo.periodo} ${asesoria.proyecto.anteproyecto.periodo.ciclo}`, style: 'normal', decoration: 'underline'},
+                    ],                
+                },
+                {
+                    margin: [0, 15, 0,0],
+                    alignment: 'left',
+                    width: '*',
+                    text: [
+                        {text: 'Empresa, organismo o dependencia: ', style: 'normal'},
+                        {text: `${asesoria.proyecto.anteproyecto.asesor_externo.empresa.nombre}`, style: 'normal', decoration: 'underline'},
+                    ],                
+                },
+                {
+                    margin: [0, 15, 0,0],
+                    alignment: 'left',
+                    width: '*',
+                    text: [
+                        {text: 'Asesoria número: ', style: 'normal'},
+                        {text: `${asesoria.id}`, style: 'normal', decoration: 'underline'},
+                        {text: ' Tipo de asesoria: ', style: 'normal'},
+                        {text: `Virtual`, style: 'normal', decoration: 'underline'},
+                    ],                
+                },
+                {
+                    margin: [0, 15, 0,0],
+                    alignment: 'left',
+                    width: '*',
+                    text: [
+                        {text: 'Temas a asesorar: ', style: 'normal'},
+                        {text: `${asesoria.temas_a_asesorar}`, style: 'normal', decoration: 'underline'},
+                    ],                
+                },
+                {
+                    margin: [0, 15, 0,0],
+                    alignment: 'left',
+                    width: '*',
+                    text: [
+                        {text: 'Solución recomendada: ', style: 'normal'},
+                        {text: `${asesoria.soluciones_recomendadas.map(solucion => `${solucion.solucion} `)}`, style: 'normal', decoration: 'underline'},
+                    ],                
+                },
+                {
+                    margin: [0,100, 0,0],
+                    table: {
+                        widths: ['*','*'],
+                        alignment: 'center',
+                        body: [
+                            [{alignment: 'center',style: 'normal', text: asesor_interno, decoration: 'overline'}, {alignment: 'center',text: residente, style:'normal', decoration: 'overline'}],
+                            [{alignment: 'center',text: 'Asesor interno', style:'normal'}, {alignment: 'center',text: 'Residente', style:'normal'}],
+                        ]
+                    },
+                    layout: 'noBorders'              
+                },
+
+
+            ],
+            styles: {
+                normal: {
+                    fontSize: 11.5
+                },
+                header_tecnm: {
+                    color: '#bababa',
+                    fontSize: 12
+                },
+                header_itch: {
+                    color: '#bababa',
+                    fontSize: 11
+                },
+                header_bottom: {
+                    color: '#bababa',
+                    fontSize: 9
+                },
+                footer_text: {
+                    color: '#bababa',
+                    fontSize: 7.5
+                },
+                link_footer: {
+                    color: '#0b24fb',
+                    fontSize: 7.5
+                }
+            }
         }
         var pdfDoc = printer.createPdfKitDocument(docDefinition);
         pdfDoc.pipe(res);

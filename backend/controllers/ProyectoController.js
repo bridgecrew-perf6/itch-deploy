@@ -8,6 +8,9 @@ const Periodo = require('../models').Periodo;
 const observaciones = require('../models').observaciones;
 const Asesoria = require('../models').Asesoria;
 const solucion_recomendada = require('../models').solucion_recomendada;
+const Carrera = require('../models').Carrera;
+const Departamento = require('../models').Departamento;
+const Docente = require('../models').Docente;
 
 
 
@@ -93,7 +96,16 @@ module.exports.findObservaciones = (req, res) => {
 }
 
 module.exports.generarFormatoDeAsesoria = (req, res) => {
-    pdfs.generarFormatoAsesoria(req.params.id_asesoria, res);
+    const id_asesoria = req.params.id_asesoria;
+    Asesoria.findOne({
+        where: {id: id_asesoria},
+        include: [{model: solucion_recomendada, as: 'soluciones_recomendadas'},{model: Proyecto, as:'proyecto', include: [{model: Anteproyecto, as: 'anteproyecto', include: [{model: Docente, as: 'asesor_interno'},{model: asesor_externo, as: 'asesor_externo', include: [{model: Empresa, as: 'empresa'}]},{model: Alumno, as: 'alumno'},{model: Periodo, as: 'periodo', include: [{model: Carrera, as: 'carrera', include: [{model: Departamento, as: 'departamento'}]}]}]}]}]
+    }).then(_asesoria => {
+        pdfs.generarFormatoAsesoria(_asesoria, res);
+    }).catch(err => {
+        console.log(err)
+        res.status(406).json({err: err})
+    })
 }
 module.exports.findAsesorias = (req, res) => {
     const id_proyecto = req.params.id_proyecto;
