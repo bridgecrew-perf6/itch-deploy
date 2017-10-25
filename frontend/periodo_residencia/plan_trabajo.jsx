@@ -39,13 +39,14 @@ class FormPlanTrabajo extends Component{
                     <FormItem label="Seleccione su plan de trabajo">
                         {getFieldDecorator('file_plan_trabajo', {
                             valuePropName: 'fileList',
-                            getValueFromEvent: this.normFile
+                            getValueFromEvent: this.normFile,
+                            initialValue: proyecto.filename_plan_trabajo? [{uid: 1, name: 'plan_de_trabajo.pdf', status: 'done', url: `/api/plan_de_trabajo/pdf/${proyecto.filename_plan_trabajo}`}]: []
+
                         })(
                             <Upload.Dragger
                                 name="filePlanTrabajo"
                                 action={`/api/alumno/file_plan_trabajo/${proyecto.id}`}
                                 beforeUpload={this.beforeUpload}
-                                defaultFileList={proyecto.filename_plan_trabajo? [{uid: 1, name: 'plan_de_trabajo.pdf', status: 'done', url: `/api/plan_de_trabajo/pdf/${proyecto.filename_plan_trabajo}`}]: []}
                             >
                                 <p className="ant-upload-drag-icon">
                                 <Icon type="inbox" />

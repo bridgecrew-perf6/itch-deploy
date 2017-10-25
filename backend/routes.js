@@ -122,6 +122,9 @@ module.exports =  (app, express, passport) => {
 
     router.route('/proyecto/:id_proyecto/observaciones')
         .get(isAuth, proyectoController.findObservaciones)
+
+    router.route('/proyecto/asesoria')
+        .post(isAuth, proyectoController.addAsesoria)
     // ANTEPROYECTO
     router.route('/anteproyectos/:id_periodo')
         .get(isAuth, anteproyectoController.findByPeriodo)

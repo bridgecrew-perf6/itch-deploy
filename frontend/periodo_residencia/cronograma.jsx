@@ -39,13 +39,13 @@ class FormCronograma extends Component{
                     <FormItem label="Seleccione su cronograma de actividades">
                         {getFieldDecorator('file_cronograma', {
                             valuePropName: 'fileList',
-                            getValueFromEvent: this.normFile
+                            getValueFromEvent: this.normFile,
+                            initialValue: proyecto.filename_cronograma? [{uid: 1, name: 'cronograma.pdf', status: 'done', url: `/api/cronograma/pdf/${proyecto.filename_cronograma}`}]: []
                         })(
                             <Upload.Dragger
                                 name="fileCronograma"
                                 action={`/api/alumno/cronograma/${proyecto.id}`}
                                 beforeUpload={this.beforeUpload}
-                                defaultFileList={proyecto.filename_cronograma? [{uid: 1, name: 'cronograma.pdf', status: 'done', url: `/api/cronograma/pdf/${proyecto.filename_cronograma}`}]: []}
                             >
                                 <p className="ant-upload-drag-icon">
                                 <Icon type="inbox" />

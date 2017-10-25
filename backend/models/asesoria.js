@@ -8,6 +8,11 @@ module.exports = (sequelize, DataTypes) => {
         isDate: true
       }
     },
+    permitir_generar_formato: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+    },
     url_avance: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -29,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       as: 'proyecto'
     })
-    Asesoria.belongsTo(models.Proyecto, {
+    Asesoria.belongsTo(models.Docente, {
       foreignKey: 'id_asesor_interno',
       onDelete: 'CASCADE',
       as: 'asesor_interno'

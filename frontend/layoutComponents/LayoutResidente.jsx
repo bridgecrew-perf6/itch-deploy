@@ -14,6 +14,7 @@ import {getIsAuth} from '../api.jsx';
 // components
 import CambiarContrasenia from '../layoutComponents/CambiarContrasenia.jsx';
 import ProyectoDeResidencia from '../alumno/components/ProyectoDeResidencia.jsx';
+import RegistrarAsesoria from '../alumno/components/RegistrarAsesoria.jsx'
 
 export default class LayoutResidente extends Component{
     constructor(){
@@ -74,18 +75,48 @@ export default class LayoutResidente extends Component{
     }
     
     handleMenu = ({item, key, selectedKeys}) => {
-        if(key == 1){ // Registrar anteproyecto
-            const proyecto = this.state;
+        const {usuario} = this.state;
+        if(key == 1){ // Registrar anteproyecto /
+            axios.get(`/api/alumno/${usuario.id_alumno}/proyecto`)
+                .then(res => {
+                    // console.warn(res.data)
+                    if(res.status === 200){
+                        this.setState({
+                            componentSelected: key,
+                            visibleCambiarContrasenia: false,
+                            componentRender: {
+                                title: 'Proyecto de residencia',
+                                render: <ProyectoDeResidencia proyecto={res.data}/>
+                            }
+                        })
+                    }
+                })
+            
+        }else if(key == 2){
+            axios.get(`/api/alumno/${usuario.id_alumno}/proyecto`)
+            .then(res => {
+                // console.warn(res.data)
+                if(res.status === 200){
+                    this.setState({
+                        componentSelected: key,
+                        visibleCambiarContrasenia: false,
+                        componentRender: {
+                            title: 'Asesorias',
+                            render: <RegistrarAsesoria usuario={usuario} proyecto={res.data}/>
+                        }
+                    })
+                }
+            })
+        }else if(key == 4){
             this.setState({
                 componentSelected: key,
                 visibleCambiarContrasenia: false,
                 componentRender: {
-                    title: 'Proyecto de residencia',
-                    render: <ProyectoDeResidencia proyecto={proyecto}/>
+                    title: 'Seguimientos',
+                    render: <p>Seguimientos  a</p>
                 }
             })
-        }
-        if(key == 3){ // modal cambiar contraseña
+        }else if(key == 3){ // modal cambiar contraseña
             this.setState({
                 visibleCambiarContrasenia: true,
             })
@@ -112,6 +143,15 @@ export default class LayoutResidente extends Component{
                                 <Icon type="inbox"/>
                                 <span>Proyecto</span>
                             </Menu.Item>
+                            <Menu.Item key="2" >
+                                <Icon type="solution"/>
+                                <span>Asesorias</span>
+                            </Menu.Item>
+                            <Menu.Item key="4" >
+                                <Icon type="calendar"/>
+                                <span>Seguimientos</span>
+                            </Menu.Item>
+
                             <SubMenu
                                 key="sub1"
                                 title={<span><Icon type="user" /><span>Usuario</span></span>}

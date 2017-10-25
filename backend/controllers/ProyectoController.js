@@ -6,6 +6,7 @@ const asesor_externo = require('../models').asesor_externo;
 const Empresa = require('../models').Empresa;
 const Periodo = require('../models').Periodo;
 const observaciones = require('../models').observaciones;
+const Asesoria = require('../models').Asesoria;
 
 
 
@@ -23,6 +24,33 @@ module.exports.getProyectosByAsesorInterno = (req, res) => {
         console.log(err)
         res.status(406).json({err: err})
     })
+}
+
+module.exports.addAsesoria = (req, res) => {
+    const id_proyecto = req.body.id_proyecto,
+        id_asesor_interno = req.body.id_asesor_interno,
+        fecha = req.body.fecha,
+        url_avance = req.body.url_avance,
+        temas_a_asesorar = req.body.temas_a_asesorar;
+    // console.log(')===========>', req.body)
+    Asesoria.create({
+        id_proyecto,
+        id_asesor_interno,
+        fecha,
+        url_avance,
+        temas_a_asesorar
+    }).then((_asesoria)=>{
+        res.status(200).json(_asesoria);
+    }).catch(Sequelize.ValidationError, (err) => {
+        var errores = err.errors.map((element) => {
+            return `${element.path}: ${element.message}`
+        })
+        // console.log('==>', errores)
+        res.status(202).json({errores})
+    }).catch((err) => {
+        console.log(err)
+        res.status(406).json({err: err})
+    })    
 }
 module.exports.findObservaciones = (req, res) => {
     const id_proyecto = req.params.id_proyecto;

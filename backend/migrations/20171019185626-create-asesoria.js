@@ -28,8 +28,13 @@ module.exports = {
           as: 'id_asesor_interno'
         }
       },
+      permitir_generar_formato: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+      },
       fecha: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
         allowNull: false
       },
       url_avance: {
