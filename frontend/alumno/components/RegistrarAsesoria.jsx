@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import {Row, Col, Button, Table, Icon, Alert, Badge} from 'antd';
+import {Row, Col, Button, Table, Icon, Alert, Badge, Modal, Timeline} from 'antd';
 import moment from 'moment';
 // components
 import FormRegistrarAsesoria from './FormRegistrarAsesoria.jsx';
@@ -17,6 +17,22 @@ export default class RegistrarAsesoria extends Component{
     showAddAsesoria = () => {
         this.setState({
             visibleRegistrarAsesoria: true
+        })
+    }
+    showSolucionesRecomendadas = (soluciones_recomendadas) => {
+        Modal.info({
+            width: 600,
+            title: 'Soluciones recomendadas en la asesoria',
+            content: (
+                <div style={{overflow: 'scroll', height: 300}}>
+                    <Timeline style={{marginTop: 30, marginLeft: 30}}>
+                        {soluciones_recomendadas.map((solucion, index) => (
+                            <Timeline.Item key={index} dot={solucion.solucionado?<Icon type="check-circle-o"/> : <Icon type="clock-circle-o" style={{ fontSize: '16px' }} />} color={solucion.solucionado?'green':'red'}>{solucion.solucion}</Timeline.Item>
+                        ))}
+                    </Timeline>
+                </div>
+            ), 
+            onOk(){}
         })
     }
     render(){
@@ -52,8 +68,11 @@ export default class RegistrarAsesoria extends Component{
                 key: 'soluciones_recomendadas',
                 render: (text, record) => (
                     <span>
-                        <Badge count={6} >
-                            <Button onClick={()=>alert('ver soluciones')}>Ver soluciones</Button>
+                        <Badge count={record.soluciones_recomendadas.filter(solucion => {
+                            console.log(solucion);
+                            return !solucion.solucionado
+                        }).length} >
+                            <Button onClick={()=> this.showSolucionesRecomendadas(record.soluciones_recomendadas)}>Ver soluciones</Button>
                         </Badge>
                     </span>
                 )
@@ -81,6 +100,7 @@ export default class RegistrarAsesoria extends Component{
                 asesoria: asesoria,
                 temas_a_asesorar: asesoria.temas_a_asesorar,
                 url_avance: asesoria.url_avance,
+                soluciones_recomendadas: asesoria.soluciones_recomendadas
             }
         })
         return(

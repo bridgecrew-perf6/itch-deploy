@@ -8,6 +8,7 @@ import axios from 'axios';
 // Components
 import Proyecto from '../components/Proyecto.jsx'
 
+
 export default class RevisionProyectoResidencia extends Component{
     constructor(props){
         super(props);
@@ -31,7 +32,7 @@ export default class RevisionProyectoResidencia extends Component{
                 if(res.status === 200){
                     // console.warn('proyecto', res.data)
                     this.setState({
-                        renderProyecto: <Proyecto proyecto={res.data} usuario={this.state.usuario}/>
+                        renderProyecto:(<Proyecto proyecto={res.data} usuario={this.state.usuario}/>)
                     })
                 }
             })
@@ -57,7 +58,9 @@ export default class RevisionProyectoResidencia extends Component{
                         })}
                     </Select>
                 </Col>
-                {renderProyecto}
+                <Col xs={24} lg={24} style={{marginTop: 25}}>
+                    {renderProyecto}
+                </Col>
             </Row>
         )
     }

@@ -123,8 +123,20 @@ module.exports =  (app, express, passport) => {
     router.route('/proyecto/:id_proyecto/observaciones')
         .get(isAuth, proyectoController.findObservaciones)
 
+    router.route('/proyecto/:id_proyecto/asesorias')
+        .get(isAuth, proyectoController.findAsesorias)
+    
+    router.route('/proyecto/asesoria/solucion_recomendada')
+        .post(isAuth, proyectoController.addSolucionRecomendada)
+        .put(isAuth, proyectoController.updateSolucionRecomendada)
+    
+    router.route('/proyecto/asesoria/:id_asesoria/soluciones_recomendadas')
+        .get(isAuth, proyectoController.findSolucionesRecomendadas)
+
     router.route('/proyecto/asesoria')
         .post(isAuth, proyectoController.addAsesoria)
+    router.route('/proyecto/asesoria_autorizar_formato')
+        .put(isAuth, proyectoController.updateAutorizarFormatoAsesoria)
     // ANTEPROYECTO
     router.route('/anteproyectos/:id_periodo')
         .get(isAuth, anteproyectoController.findByPeriodo)
