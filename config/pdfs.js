@@ -20,6 +20,24 @@ const printer = new PdfPrinter(fonts);
 
 
 module.exports = {
+    generarFormatoAsesoria: (id_asesoria, res) => {
+        var docDefinition = {
+            pageSize: 'A4',
+            pageOrientation: 'landscape',
+            pageMargins: [40, 100, 40, 60],
+            content: [
+                {
+                    alignment: 'center',
+                    width: '*',
+                    bold: true,
+                    text: `INSTITUTO TECNOLÓGICO DE CHILPANCINGO \n DEPARTAMENTO DE `
+                },
+            ]
+        }
+        var pdfDoc = printer.createPdfKitDocument(docDefinition);
+        pdfDoc.pipe(res);
+        pdfDoc.end();
+    },
     generarDictamen: (periodo, res) => {
         var content_table = periodo.anteproyectos.map((anteproyecto, index) => {
             return [

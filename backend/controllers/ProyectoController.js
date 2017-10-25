@@ -13,6 +13,11 @@ const solucion_recomendada = require('../models').solucion_recomendada;
 
 const Sequelize = require('../models').Sequelize
 const sequelize = require('../models').sequelize
+const pdfs = require('../../config/pdfs');
+
+const generateHash = (contrasenia) => {
+  return bCrypt.hashSync(contrasenia, bCrypt.genSaltSync(8), null);
+}
 
 module.exports.getProyectosByAsesorInterno = (req, res) => {
     const id_asesor_interno = req.params.id_asesor_interno;
@@ -87,6 +92,9 @@ module.exports.findObservaciones = (req, res) => {
     })
 }
 
+module.exports.generarFormatoDeAsesoria = (req, res) => {
+    pdfs.generarFormatoAsesoria(req.params.id_asesoria, res);
+}
 module.exports.findAsesorias = (req, res) => {
     const id_proyecto = req.params.id_proyecto;
 

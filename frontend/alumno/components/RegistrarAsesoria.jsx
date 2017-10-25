@@ -5,6 +5,7 @@ import moment from 'moment';
 // components
 import FormRegistrarAsesoria from './FormRegistrarAsesoria.jsx';
 import uuid from 'uuid';
+
 export default class RegistrarAsesoria extends Component{
     constructor(props){
         super(props);
@@ -86,7 +87,7 @@ export default class RegistrarAsesoria extends Component{
                 render: (text, record) => (
                     <span>
                         {record.asesoria.permitir_generar_formato? 
-                            <Button icon="file-pdf" type="primary"> Generar formato</Button>
+                            <a  href={`/api/asesoria/${record.asesoria.id}/generar_formato/`} target="_blank"><Button icon="file-pdf" type="primary">Generar formato</Button></a>
                             : <Alert message="El asesor interno debe autorizar el formato" type="warning" showIcon />
                         }
                     </span>
