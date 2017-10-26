@@ -10,7 +10,8 @@ module.exports = {
       },
       url_seguimiento: {
         type: Sequelize.STRING(300),
-        allowNull: false
+        allowNull: true,
+        defaultValue: null
       },
       id_seguimiento: {
         type: Sequelize.INTEGER,

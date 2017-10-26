@@ -3,13 +3,20 @@ module.exports = (sequelize, DataTypes) => {
   var seguimiento_proyecto = sequelize.define('seguimiento_proyecto', {
     url_seguimiento: {
       type: DataTypes.STRING(300),
-      allowNull: false,
+      allowNull: true,
+      defaultValue: null,
       validate: {
         notEmpty: {msg: 'Debe indicar la url del seguimiento'}
       }
     }
   });
   seguimiento_proyecto.associate = (models) => {
+    seguimiento_proyecto.hasMany(models.revision_seguimiento, {
+      foreignKey: 'id_seguimiento_proyecto',
+      onDelete: 'CASCADE',
+      as: 'revisiones_seguimiento'
+
+    })
     seguimiento_proyecto.belongsTo(models.Seguimiento, {
       foreignKey: 'id_seguimiento',
       onDelete: 'CASCADE',

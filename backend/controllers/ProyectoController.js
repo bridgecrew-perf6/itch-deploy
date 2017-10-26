@@ -11,7 +11,9 @@ const solucion_recomendada = require('../models').solucion_recomendada;
 const Carrera = require('../models').Carrera;
 const Departamento = require('../models').Departamento;
 const Docente = require('../models').Docente;
-
+const seguimiento_proyecto = require('../models').seguimiento_proyecto;
+const revision_seguimiento = require('../models').revision_seguimiento;
+const Seguimiento = require('../models').Seguimiento;
 
 
 const Sequelize = require('../models').Sequelize
@@ -121,7 +123,54 @@ module.exports.findAsesorias = (req, res) => {
         res.status(406).json({err: err})
     })
 }
+module.exports.findSeguimientos = (req, res) => {
+    const id_proyecto = req.params.id_proyecto;
+    seguimiento_proyecto.findAll({
+        where: {id_proyecto},
+        include: [{model: revision_seguimiento, as: 'revisiones_seguimiento'},{model: Seguimiento, as: 'seguimiento'}]
+    }).then(seguimientos_proyecto => {
+        res.status(200).json(seguimientos_proyecto);
+    }).catch(err => {
+        console.log(err)
+        res.status(406).json({err: err})
+    })
+}
+module.exports.findOrCreateSeguimientos = (req, res) => {
+    const id_proyecto = req.body.id_proyecto,
+        id_periodo = req.body.id_periodo;
+    console.log(req.body)
+    sequelize.transaction(t => {
+        return Seguimiento.findAll({
+            where: {id_periodo}
+        }, {transaction: t}).then(_seguimientos => {
+            // console.log('busca seguimeibtnp', _seguimientos)
+            return sequelize.Promise.map(_seguimientos, (_seguimiento) => {
+                console.log('el map')
+                return seguimiento_proyecto.findOrCreate({
+                    where: {
+                        id_seguimiento: _seguimiento.id,
+                        id_proyecto: id_proyecto
+                    },
+                    include: [{model: revision_seguimiento, as: 'revisiones_seguimiento', include: [{model: Docente, as: 'docente'}]},{model: Seguimiento, as: 'seguimiento'}],
+                     transaction: t
+                })
+            })
+        })
+    }).then((seguimientos)=>{
+        // console.log('success=======>    ', result)
+        res.status(200).json(seguimientos)
+    }).catch(Sequelize.ValidationError, (err) => {
+        var errores = err.errors.map((element) => {
+            return `${element.path}: ${element.message}`
+        })
+        // console.log('==>', errores)
+        res.status(202).json({errores})
+    }).catch((err) => {
+        console.log(err);
+        res.status(406).json({err: err})
+    })
 
+}
 module.exports.findSolucionesRecomendadas = (req, res) => {
     const id_asesoria = req.params.id_asesoria;
     
@@ -151,6 +200,28 @@ module.exports.updateObservacion = (req, res) => {
         res.status(202).json({errores})
     }).catch((err) => {
         console.log(err);
+        res.status(406).json({err: err})
+    }) 
+}
+
+module.exports.addObservacionSeguimiento = (req, res) => {
+    const id_seguimiento_proyecto = req.body.id_seguimiento,
+        id_docente = req.body.id_docente,
+        observacion = req.body.observacion;
+    revision_seguimiento.create({
+        id_seguimiento_proyecto,
+        id_docente,
+        observacion
+    }).then((_observacion)=>{
+        res.status(200).json(_observacion);
+    }).catch(Sequelize.ValidationError, (err) => {
+        var errores = err.errors.map((element) => {
+            return `${element.path}: ${element.message}`
+        })
+        // console.log('==>', errores)
+        res.status(202).json({errores})
+    }).catch((err) => {
+        console.log(err)
         res.status(406).json({err: err})
     }) 
 }
@@ -201,7 +272,27 @@ module.exports.addSolucionRecomendada = (req, res) => {
     }) 
     
 }
-
+module.exports.updateSeguimiento = (req, res) => {
+    const id_seguimiento = req.body.id_seguimiento,
+        url_seguimiento = req.body.url_seguimiento;
+    console.log('body', req.body);
+    seguimiento_proyecto.update(
+        {url_seguimiento}, {where: {id: id_seguimiento}}
+    ).then((seguimiento)=>{
+        // console.log('success=======>    ', result)
+        console.log(seguimiento)
+        res.status(200).json(seguimiento)
+    }).catch(Sequelize.ValidationError, (err) => {
+        var errores = err.errors.map((element) => {
+            return `${element.path}: ${element.message}`
+        })
+        // console.log('==>', errores)
+        res.status(202).json({errores})
+    }).catch((err) => {
+        console.log(err);
+        res.status(406).json({err: err})
+    }) 
+}
 module.exports.updateSolucionRecomendada = (req, res) => {
     const id_solucion = req.body.id_solucion,
         solucionado = req.body.solucionado;

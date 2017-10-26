@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Card, Icon, Form, Input, Button, Row, Col, Upload, Modal, Tooltip, Table, Switch, message, Tabs} from 'antd';
+import {Card, Icon, Form, Input, Button, Row, Col, Upload, Modal, Tooltip, Table, Switch, message, Tabs, Alert} from 'antd';
 import axios from 'axios';
 import moment from 'moment';
 import uuid from 'uuid';
@@ -11,6 +11,7 @@ const TabPane = Tabs.TabPane;
 // Components
 import FormAddObservacion from '../components/FormAddObservacion.jsx';
 import FormAddSolucion from '../components/FormAddSolucion.jsx';
+import RevisionSeguimiento from '../components/RevisionSeguimiento.jsx'
 
 export default class Proyecto extends Component{
 
@@ -23,8 +24,10 @@ export default class Proyecto extends Component{
             tipo_observacion: '',
             observaciones: [],
             asesorias: [],
+            seguimientos: [],
             visibleAddSolucion: false,
-            id_asesoria: null
+            id_asesoria: null,
+            renderSeguimiento: null
         }
     }
     componentWillReceiveProps(nextProps){
@@ -36,13 +39,15 @@ export default class Proyecto extends Component{
             observaciones: [],
             asesorias: [],
             visibleAddSolucion: false,
-            id_asesoria: null
+            id_asesoria: null,
+            seguimientos: [],
+            renderSeguimiento: null
         })
     }
     componentWillMount(){
         this.updateObservaciones();
     }
-    updateObservaciones(){
+    updateObservaciones = () => {
         const {proyecto} = this.state;
         axios.get(`/api/proyecto/${proyecto.id}/observaciones`)
             .then(res => {
@@ -51,6 +56,7 @@ export default class Proyecto extends Component{
                     // console.warn('=>', res.data)
                     this.setState({
                         visibleAddObservacion: false,
+                        visibleAddSolucion: false,
                         observaciones: res.data
                     })
                 }
@@ -60,14 +66,16 @@ export default class Proyecto extends Component{
         const {proyecto} = this.state;
         this.setState({
             tipo_observacion: 'plan_de_trabajo',
-            visibleAddObservacion: true
+            visibleAddObservacion: true,
+            visibleAddSolucion: false,
         })        
     }
     showAgregarObservacionCronograma = () => {
         const {proyecto} = this.state;
         this.setState({
             tipo_observacion: 'cronograma',
-            visibleAddObservacion: true
+            visibleAddObservacion: true,
+            visibleAddSolucion: false,
         })        
     }
     onChangeObservacion = (id_observacion, solucionada) => {
@@ -82,20 +90,61 @@ export default class Proyecto extends Component{
             }
         })
     }
+    onChangeTabSeguimiento = (key) => {
+        const {seguimientos, usuario} = this.state;
+        const seguimiento = seguimientos.find(seg => seg.id==key);
+        const currentDate = moment().format('YYYY-MM-DD');
+        if(currentDate >= seguimiento.seguimiento.fecha_inicial && currentDate <= seguimiento.seguimiento.fecha_final){
+            this.setState({
+                renderSeguimiento: <RevisionSeguimiento updateSeguimientos={this.updateSeguimientos.bind(this)} usuario={usuario} seguimiento={seguimiento} />
+            })
+        }else{
+            this.setState({
+                renderSeguimiento: <Alert message={`No puede acceder al seguimiento,\n Fecha inicial: ${moment(seguimiento.seguimiento.fecha_inicial, 'YYYY-MM-DD').format('LL')} - Fecha final: ${moment(seguimiento.seguimiento.fecha_final, 'YYYY-MM-DD').format('LL')}`} type="warning" showIcon />
+            })
+        }
+    }
     onChangeTab = (key) => {
         const {proyecto} = this.state;
-        if(key === "2"){
+        if(key === "asesorias"){
             axios.get(`/api/proyecto/${proyecto.id}/asesorias`)
                 .then(res => {
                     if(res.status === 200){
                         this.setState({
                             visibleAddObservacion: false,
+                            visibleAddSolucion: false,
                             asesorias: res.data
+                        })
+                    }
+                })
+        }else if(key === "seguimientos"){
+            axios.get(`/api/proyecto/${proyecto.id}/seguimientos`)
+                .then( res => {
+                    if(res.status === 200){
+                        console.warn('a>', res.data);
+                        this.setState({
+                            visibleAddObservacion: false,
+                            visibleAddSolucion: false,
+                            seguimientos: res.data,
                         })
                     }
                 })
         }
         
+    }
+    updateSeguimientos = () =>{
+        const {proyecto} = this.state;
+        axios.get(`/api/proyecto/${proyecto.id}/seguimientos`)
+        .then( res => {
+            if(res.status === 200){
+                console.warn('a>', res.data);
+                this.setState({
+                    visibleAddObservacion: false,
+                    visibleAddSolucion: false,
+                    seguimientos: res.data,
+                })
+            }
+        })
     }
     showAddSolucion = (id_asesoria) => {
         this.setState({
@@ -172,7 +221,7 @@ export default class Proyecto extends Component{
             })
     }
     render(){
-        const {proyecto, visibleAddObservacion, tipo_observacion, usuario, observaciones, asesorias, id_asesoria, visibleAddSolucion} = this.state
+        const {proyecto, visibleAddObservacion, tipo_observacion, usuario, observaciones, asesorias, id_asesoria, visibleAddSolucion, seguimientos, renderSeguimiento} = this.state
         // console.warn(usuario);
         const observacionesPlanTrabajo = observaciones.filter(obs => obs.tipo==='plan_de_trabajo').map((observacion) => {
             return {
@@ -267,8 +316,8 @@ export default class Proyecto extends Component{
         
         return (
             <div>
-                <Tabs defaultActiveKey="1" onChange={(key) => this.onChangeTab(key) }>
-                    <TabPane tab={<span><Icon type="book" />Proyecto</span>} key="1">
+                <Tabs key="-80" defaultActiveKey="1" onChange={(key) => this.onChangeTab(key) }>
+                    <TabPane tab={<span><Icon type="book" />Proyecto</span>} key="proyecto">
                         <Form>
                             <Item label="Título: ">
                                 <Input value={proyecto.anteproyecto.nombre}  readOnly />
@@ -279,6 +328,7 @@ export default class Proyecto extends Component{
                             
                             <Item label="Anteproyecto: ">
                                 <Upload
+                                    
                                     listType="picture-card"
                                     fileList={[{
                                         uid: -1,
@@ -351,14 +401,25 @@ export default class Proyecto extends Component{
                             </Col>
                         </Row>
                     </TabPane>
-                    <TabPane tab={<span><Icon type="solution" />Asesorias</span>} key="2">
+                    <TabPane tab={<span><Icon type="solution" />Asesorias</span>} key="asesorias">
                         <Row>
                             <Col xs={24} lg={24}>
                                 <Table title={() => 'Asesorias'} columns={columnsAsesorias} dataSource={_asesorias} pagination={{ pageSize: 5 }} scroll={{ x: 1200 }} />
                             </Col>
                         </Row>
                     </TabPane>
-                    <TabPane tab={<span><Icon type="calendar" />Seguimientos</span>} key="3">
+                    <TabPane tab={<span><Icon type="calendar" />Seguimientos</span>} key="seguimientos">
+                        <Tabs key="-90" tabPosition="left" defaultActiveKey="2" onChange={(key) => this.onChangeTabSeguimiento(key)} >
+                            {seguimientos.map(((seguimiento, index) => {
+                                    // console.log('key', seguimiento.id)
+                                    return (
+                                        <TabPane  tab={<span><Icon type="schedule" />{`Seguimiento ${index+1}`}</span>} key={seguimiento.id}>
+                                            {renderSeguimiento}
+                                        </TabPane>
+                                    )
+                            }))}
+                        </Tabs>
+                        
                     </TabPane>
                 </Tabs>
                 <FormAddObservacion updateObservaciones={this.updateObservaciones.bind(this)} id_proyecto={proyecto.id} tipo={tipo_observacion} usuario={usuario} visible={visibleAddObservacion}/>

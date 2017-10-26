@@ -127,27 +127,6 @@ class LayoutJefeDepartamento extends Component{
                         })
                     }
                 })
-            
-        }else if(key == 5){ // asesorias de residencia
-            this.setState({
-                componentSelected: key,
-                visibleCambiarContrasenia: false,
-                visible_add_docente: false,
-                componentRender: {
-                        title: 'View',
-                        render: <p>Asesorias de residencia</p>
-                }
-            })
-        }else if(key == 6){ // seguimientos de residencia
-            this.setState({
-                componentSelected: key,
-                visibleCambiarContrasenia: false,
-                visible_add_docente: false,
-                componentRender: {
-                        title: 'View',
-                        render: <p>Seguimientos de residencia</p>
-                }
-            })
         }
     }
     render(){
@@ -177,14 +156,10 @@ class LayoutJefeDepartamento extends Component{
                                 <span>Agregar candidato a residente</span>
                             </Menu.Item>
                             
-                            <SubMenu
-                                key="sub2"
-                                title={<span><Icon type="book"/><span>Proyectos de residencia</span></span>}
-                            >
-                                <Menu.Item key="4">Proyectos de residencia</Menu.Item>
-                                <Menu.Item key="5">Asesorias de residencia</Menu.Item>
-                                <Menu.Item key="6">Seguimientos de residencia</Menu.Item>
-                            </SubMenu>
+                            <Menu.Item key="4" >
+                                <Icon type="book"/>
+                                <span>Proyectos de residencia</span>
+                            </Menu.Item>
                             <Menu.Divider/>
                             <SubMenu
                                 key="sub1"

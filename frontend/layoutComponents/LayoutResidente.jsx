@@ -16,6 +16,7 @@ import {getIsAuth} from '../api.jsx';
 import CambiarContrasenia from '../layoutComponents/CambiarContrasenia.jsx';
 import ProyectoDeResidencia from '../alumno/components/ProyectoDeResidencia.jsx';
 import RegistrarAsesoria from '../alumno/components/RegistrarAsesoria.jsx'
+import SeguimientoProyecto from '../alumno/components/SeguimientoProyecto.jsx';
 
 export default class LayoutResidente extends Component{
     constructor(){
@@ -76,7 +77,7 @@ export default class LayoutResidente extends Component{
     }
     
     handleMenu = ({item, key, selectedKeys}) => {
-        const {usuario} = this.state;
+        const {usuario, proyecto} = this.state;
         if(key == 1){ // Registrar anteproyecto /
             axios.get(`/api/alumno/${usuario.id_alumno}/proyecto`)
                 .then(res => {
@@ -109,14 +110,23 @@ export default class LayoutResidente extends Component{
                 }
             })
         }else if(key == 4){
-            this.setState({
-                componentSelected: key,
-                visibleCambiarContrasenia: false,
-                componentRender: {
-                    title: 'Seguimientos',
-                    render: <p>Seguimientos  a</p>
-                }
-            })
+            axios.put(`/api/proyecto/seguimientos`, {
+                id_proyecto: proyecto.id,
+                id_periodo: proyecto.anteproyecto.id_periodo
+            }).then( res => {
+                    if(res.status === 200){
+                        // console.warn('seguimientos', res.data);
+                        this.setState({
+                            componentSelected: key,
+                            visibleCambiarContrasenia: false,
+                            componentRender: {
+                                title: 'Seguimientos',
+                                render: <SeguimientoProyecto seguimientos={res.data}/>
+                            }
+                        })
+                    }
+                })
+            
         }else if(key == 3){ // modal cambiar contraseña
             this.setState({
                 visibleCambiarContrasenia: true,

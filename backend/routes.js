@@ -130,6 +130,18 @@ module.exports =  (app, express, passport) => {
         .post(isAuth, proyectoController.addSolucionRecomendada)
         .put(isAuth, proyectoController.updateSolucionRecomendada)
     
+    router.route('/proyecto/seguimientos')
+        .put(isAuth, proyectoController.findOrCreateSeguimientos)
+
+    router.route('/proyecto/:id_proyecto/seguimientos')
+        .get(isAuth, proyectoController.findSeguimientos);
+
+    router.route('/proyecto/seguimiento')
+        .put(isAuth, proyectoController.updateSeguimiento);
+    
+    router.route('/proyecto/seguimiento/observacion')
+        .post(isAuth, proyectoController.addObservacionSeguimiento)
+
     router.route('/proyecto/asesoria/:id_asesoria/soluciones_recomendadas')
         .get(isAuth, proyectoController.findSolucionesRecomendadas)
 
