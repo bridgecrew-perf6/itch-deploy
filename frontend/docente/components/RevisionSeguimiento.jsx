@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
 
-import {Row, Col, Icon, Upload, Card, Form, Alert, Button, Table, Switch} from 'antd';
+import {Row, Col, Icon, Upload, Card, Form, Alert, Button, Table, Switch, message} from 'antd';
 
 const {Item} = Form
 import uuid from 'uuid';
 import moment from 'moment';
+import axios from 'axios';
 
 // components
 import FormAddObservacionSeguimiento from '../components/FormAddObservacionSeguimiento.jsx';
@@ -32,6 +33,18 @@ export default class RevisionSeguimiento extends Component{
     updateSeguimientos = () => {
         this.props.updateSeguimientos();
     }
+    onChangeObservacion = (id_revision_seguimiento, check) => {
+        axios.put(`/api/proyecto/revision_seguimiento`, {
+            id_revision_seguimiento,
+            solucionado: check
+        }).then(res => {
+            if(res.status === 200){
+                message.success('La revisión se ha actulizado satisfactoriamente')
+            }else{
+                message.error('Error al actualizar la revisión, favor de reportar al administrador.')
+            }
+        })
+    }
     render(){
         const {seguimiento, usuario, visible_observacion} = this.state
         // console.warn('se', seguimiento)
@@ -56,7 +69,7 @@ export default class RevisionSeguimiento extends Component{
                 dataIndex: 'solucionado',
                 key: 'solucionado',
                 render: (text, record) => (
-                    <Switch  onChange={(check) => this.onChangeObservacion(record.id, check)} defaultChecked={record.solucionada} checkedChildren="Solucionado" unCheckedChildren={<Icon type="cross" />} />
+                    <Switch  onChange={(check) => this.onChangeObservacion(record.id, check)} defaultChecked={record.solucionado} checkedChildren="Solucionado" unCheckedChildren={<Icon type="cross" />} />
                 )
             },
             {

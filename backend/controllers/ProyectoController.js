@@ -127,7 +127,7 @@ module.exports.findSeguimientos = (req, res) => {
     const id_proyecto = req.params.id_proyecto;
     seguimiento_proyecto.findAll({
         where: {id_proyecto},
-        include: [{model: revision_seguimiento, as: 'revisiones_seguimiento'},{model: Seguimiento, as: 'seguimiento'}]
+        include: [{model: revision_seguimiento, as: 'revisiones_seguimiento'},{model: Seguimiento, as: 'seguimiento'}],
     }).then(seguimientos_proyecto => {
         res.status(200).json(seguimientos_proyecto);
     }).catch(err => {
@@ -211,7 +211,7 @@ module.exports.addObservacionSeguimiento = (req, res) => {
     revision_seguimiento.create({
         id_seguimiento_proyecto,
         id_docente,
-        observacion
+        observacion,
     }).then((_observacion)=>{
         res.status(200).json(_observacion);
     }).catch(Sequelize.ValidationError, (err) => {
@@ -272,10 +272,32 @@ module.exports.addSolucionRecomendada = (req, res) => {
     }) 
     
 }
+
+module.exports.updateRevisionSeguimiento = (req, res) => {
+    const id_revision_seguimiento = req.body.id_revision_seguimiento,
+        solucionado = req.body.solucionado;
+    revision_seguimiento.update(
+        {solucionado},
+        {where: {id: id_revision_seguimiento}}
+    ).then((revision)=>{
+        // console.log('success=======>    ', result)
+        // console.log()
+        res.status(200).json(revision)
+    }).catch(Sequelize.ValidationError, (err) => {
+        var errores = err.errors.map((element) => {
+            return `${element.path}: ${element.message}`
+        })
+        // console.log('==>', errores)
+        res.status(202).json({errores})
+    }).catch((err) => {
+        console.log(err);
+        res.status(406).json({err: err})
+    }) 
+}
 module.exports.updateSeguimiento = (req, res) => {
     const id_seguimiento = req.body.id_seguimiento,
         url_seguimiento = req.body.url_seguimiento;
-    console.log('body', req.body);
+    // console.log('body', req.body);
     seguimiento_proyecto.update(
         {url_seguimiento}, {where: {id: id_seguimiento}}
     ).then((seguimiento)=>{

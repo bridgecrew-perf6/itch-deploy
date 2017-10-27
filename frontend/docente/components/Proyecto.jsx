@@ -425,6 +425,7 @@ export default class Proyecto extends Component{
                 <FormAddObservacion updateObservaciones={this.updateObservaciones.bind(this)} id_proyecto={proyecto.id} tipo={tipo_observacion} usuario={usuario} visible={visibleAddObservacion}/>
                 <FormAddSolucion  id_asesoria={id_asesoria}  visible={visibleAddSolucion}/>
 
+
             </div>
         )
     }

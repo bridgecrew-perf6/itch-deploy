@@ -141,6 +141,9 @@ module.exports =  (app, express, passport) => {
     
     router.route('/proyecto/seguimiento/observacion')
         .post(isAuth, proyectoController.addObservacionSeguimiento)
+    
+    router.route('/proyecto/revision_seguimiento')
+        .put(isAuth, proyectoController.updateRevisionSeguimiento)
 
     router.route('/proyecto/asesoria/:id_asesoria/soluciones_recomendadas')
         .get(isAuth, proyectoController.findSolucionesRecomendadas)
@@ -150,7 +153,7 @@ module.exports =  (app, express, passport) => {
     router.route('/proyecto/asesoria_autorizar_formato')
         .put(isAuth, proyectoController.updateAutorizarFormatoAsesoria)
     router.route('/asesoria/:id_asesoria/generar_formato/')
-        .get(proyectoController.generarFormatoDeAsesoria)
+        .get(isAuth, proyectoController.generarFormatoDeAsesoria)
         
     // ANTEPROYECTO
     router.route('/anteproyectos/:id_periodo')

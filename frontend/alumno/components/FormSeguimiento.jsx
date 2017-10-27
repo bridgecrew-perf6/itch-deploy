@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {render} from 'react-dom';
-import { Button, Modal, Form, Input,Icon, message, Upload, Collapse} from 'antd';
+import { Button, Modal, Form, Input,Icon, message, Upload, Collapse, Badge} from 'antd';
 const FormItem = Form.Item;
 const { TextArea } = Input;
-
+const {Panel} = Collapse;
 import axios from 'axios';
 import moment from 'moment';
 
@@ -30,7 +30,7 @@ class FormSeguimiento extends Component{
     render(){
         const {getFieldDecorator} = this.props.form;
         const {seguimiento} = this.props
-        const customPanelStyle = {
+        const panelStyleSolucionado = {
             background: '#f4f8f9',
             borderRadius: 10,
             marginBottom: 24,
@@ -44,7 +44,7 @@ class FormSeguimiento extends Component{
                     <div className="dropbox">
                         <FormItem label="URL del seguimiento en google drive">
                             {getFieldDecorator('url_seguimiento', {
-                                rules: [{required: true, message: 'El url del archivo es necesario para la revisión.'}, {pattern: '^https:\/\/drive.google.com\/[^\s]*$', message: 'La URL esta mal formada ejemplo: https://drive.google.com/open?id=0B-agd1bGfOTYcHZNWmtFZ1BINzQ'}]
+                                rules: [{required: true, message: 'El url del archivo es necesario para la revisión.'}, {pattern: '^https:\/\/drive.google.com\/[^\\s]*$', message: 'La URL esta mal formada ejemplo: https://drive.google.com/open?id=0B-agd1bGfOTYcHZNWmtFZ1BINzQ'}]
                             })(
                                 <Input prefix={<Icon type="global" style={{ fontSize: 13 }} />} addonAfter={seguimiento.url_seguimiento? <a href={seguimiento.url_seguimiento? seguimiento.url_seguimiento: '#'} target="_blank"><Icon type="cloud"/>Ver seguimiento</a>: null} placeholder="URL del sitio donde esta almacenado el archivo del seguimiento ejemplo: https://drive.google.com/open?id=0B-agd1bGfOTYcHZNWmtFZ1BINzQ"/>
                             )
@@ -56,13 +56,15 @@ class FormSeguimiento extends Component{
                     </div>
                 </Form>
                 <h3 style={{marginTop: 20}}>Observaciones</h3>
-                <Collapse bordered={false} >
-                            {seguimiento.revisiones_seguimiento.map((revision, index) => {
-                                return (<Panel header={revision.docente.nombre} key={index} style={customPanelStyle}>
-                                            
-                                        </Panel>)
-                            })}
-                </Collapse>
+                <div style={{overflowY: 'scroll', height: 300}}> 
+                    <Collapse bordered={false}  >
+                                {seguimiento.revisiones_seguimiento.map((revision, index) => {
+                                    return (<Panel header={(<div>{revision.solucionado ? <Badge status="success" text={`Fecha: ${moment(revision.createdAt).utc().format('LL')} - Revisión por: ${revision.docente.titulo} ${revision.docente.nombre} ${revision.docente.ap_paterno} ${revision.docente.ap_materno}`} />: <Badge text={`Fecha: ${moment(revision.createdAt).utc().format('LL')} - Revisión por: ${revision.docente.titulo} ${revision.docente.nombre} ${revision.docente.ap_paterno} ${revision.docente.ap_materno}`} status="processing"/>}</div>)} key={index} style={panelStyleSolucionado}>
+                                                <h3>Observación: </h3><p>{revision.observacion}</p>
+                                            </Panel>)
+                                })}
+                    </Collapse>
+                </div>
             </div>
 
         )

@@ -53,7 +53,7 @@ export default class RevisionProyectoResidencia extends Component{
                     >
                         {proyectos.map((proyecto, index) => {
                             return (
-                                <Option key={index} value={`${proyecto.anteproyecto.alumno.id}`}>{proyecto.anteproyecto.alumno.nombre}</Option>
+                                <Option key={index} value={`${proyecto.anteproyecto.alumno.id}`}>{`${proyecto.anteproyecto.alumno.no_control} - ${proyecto.anteproyecto.alumno.nombre} ${proyecto.anteproyecto.alumno.ap_paterno} ${proyecto.anteproyecto.alumno.ap_materno}`}</Option>
                             )
                         })}
                     </Select>
