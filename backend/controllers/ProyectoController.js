@@ -36,6 +36,7 @@ module.exports.getProyectosByAsesorInterno = (req, res) => {
         res.status(406).json({err: err})
     })
 }
+
 module.exports.updateAutorizarFormatoAsesoria = (req, res) => {
     const id_asesoria = req.body.id_asesoria,
         permitir_generar_formato = req.body.permitir_generar_formato;
@@ -127,7 +128,7 @@ module.exports.findSeguimientos = (req, res) => {
     const id_proyecto = req.params.id_proyecto;
     seguimiento_proyecto.findAll({
         where: {id_proyecto},
-        include: [{model: revision_seguimiento, as: 'revisiones_seguimiento'},{model: Seguimiento, as: 'seguimiento'}],
+        include: [{model: revision_seguimiento, as: 'revisiones_seguimiento', include: [{model: Docente, as: 'docente'}]},{model: Seguimiento, as: 'seguimiento'}],
     }).then(seguimientos_proyecto => {
         res.status(200).json(seguimientos_proyecto);
     }).catch(err => {

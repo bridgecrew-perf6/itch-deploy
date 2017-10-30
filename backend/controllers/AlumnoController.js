@@ -6,11 +6,13 @@ const Usuario = require('../models').Usuario;
 const Docente = require('../models').Docente;
 const Anteproyecto = require('../models').Anteproyecto;
 const Proyecto = require('../models').Proyecto;
+const seguimiento_proyecto = require('../models').seguimiento_proyecto;
 const observaciones = require('../models').observaciones;
 const revision_anteproyecto = require('../models').revision_anteproyecto;
 const Asesoria = require('../models').Asesoria;
 const solucion_recomendada = require('../models').solucion_recomendada;
-
+const revision_seguimiento = require('../models').revision_seguimiento;
+const Seguimiento = require('../models').Seguimiento;
 const Sequelize = require('../models').Sequelize
 const sequelize = require('../models').sequelize
 const generator = require('generate-password');
@@ -264,14 +266,14 @@ module.exports.getProyecto = (req, res) => {
                 // console.log('========>', _anteproyecto)
                 return Proyecto.findOrCreate({
                     where: {id_anteproyecto: _anteproyecto.id},
-                    include: [{model: Asesoria, as: 'asesorias', include: {model: solucion_recomendada, as: 'soluciones_recomendadas'}},{model: observaciones, as: 'observaciones'},{model: Anteproyecto, as: 'anteproyecto', include: [{model: revision_anteproyecto, as: 'revisiones', include: [{model: Docente, as: 'docente'}]},{model: Alumno, as: 'alumno'}, {model: Periodo, as: 'periodo'}, {model: asesor_externo, as: 'asesor_externo'}] }],                    
+                    include: [{model: seguimiento_proyecto, as: 'seguimientos_proyecto', include: [{model: Seguimiento, as: 'seguimiento'},{model: revision_seguimiento, as: 'revisiones_seguimiento', include: [{model: Docente, as: 'docente'}]}]},{model: Asesoria, as: 'asesorias', include: {model: solucion_recomendada, as: 'soluciones_recomendadas'}},{model: observaciones, as: 'observaciones'},{model: Anteproyecto, as: 'anteproyecto', include: [{model: revision_anteproyecto, as: 'revisiones', include: [{model: Docente, as: 'docente'}]},{model: Alumno, as: 'alumno'}, {model: Periodo, as: 'periodo'}, {model: asesor_externo, as: 'asesor_externo'}] }],                    
                     transaction: t
                 }).spread((proyecto_find, created) => {
                     if(created){
                         // buscar el proyecto :c
                         return Proyecto.findOne({
                             where: {id_anteproyecto: _anteproyecto.id},
-                            include: [{model: Anteproyecto, as: 'anteproyecto', include: [{model: revision_anteproyecto, as: 'revisiones', include: [{model: Docente, as: 'docente'}]},{model: Alumno, as: 'alumno'}, {model: Periodo, as: 'periodo'}, {model: asesor_externo, as: 'asesor_externo'}] }],                    
+                            include: [{model: seguimiento_proyecto, as: 'seguimientos_proyecto', include: [{model: Seguimiento, as: 'seguimiento'},{model: revision_seguimiento, as: 'revisiones_seguimiento', include: [{model: Docente, as: 'docente'}]}]},{model: Anteproyecto, as: 'anteproyecto', include: [{model: revision_anteproyecto, as: 'revisiones', include: [{model: Docente, as: 'docente'}]},{model: Alumno, as: 'alumno'}, {model: Periodo, as: 'periodo'}, {model: asesor_externo, as: 'asesor_externo'}] }],                    
                         }, {transaction: t})
                     }else {
                         return proyecto_find;

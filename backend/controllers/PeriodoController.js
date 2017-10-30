@@ -6,6 +6,7 @@ const Carrera = require('../models').Carrera;
 const Departamento = require('../models').Departamento;
 const docente_carreras = require('../models').docente_carreras;
 const Anteproyecto = require('../models').Anteproyecto;
+const Proyecto = require('../models').Proyecto;
 const revision_anteproyecto = require('../models').revision_anteproyecto;
 const Alumno = require('../models').Alumno;
 const asesor_externo = require('../models').asesor_externo;
@@ -45,6 +46,18 @@ module.exports.addSeguimiento = (req, res) => {
     }) 
 
 
+}
+module.exports.getProyectos = (req, res) => {
+    const id = req.params.id_periodo;
+    Periodo.findOne({
+        where: {id},
+        include: [{model: Anteproyecto, as: 'anteproyectos', where: {dictamen: 'aprobado'}, include: [{model: Alumno, as: 'alumno'}]}]
+    }).then(_periodo => {
+        // console.log('======', _periodo)
+        res.status(200).json(_periodo);
+    }).catch(err => {
+        res.status(406).json({err: err});
+    });
 }
 module.exports.updateFechaFinEntregaAnteproyectos = (req, res) => {
     const id_periodo = req.body.id_periodo,

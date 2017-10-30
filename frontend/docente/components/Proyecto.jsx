@@ -118,6 +118,7 @@ export default class Proyecto extends Component{
                     }
                 })
         }else if(key === "seguimientos"){
+            
             axios.get(`/api/proyecto/${proyecto.id}/seguimientos`)
                 .then( res => {
                     if(res.status === 200){
@@ -316,7 +317,7 @@ export default class Proyecto extends Component{
         
         return (
             <div>
-                <Tabs key="-80" defaultActiveKey="1" onChange={(key) => this.onChangeTab(key) }>
+                <Tabs key=".103." defaultActiveKey="1" onChange={(key) => this.onChangeTab(key) }>
                     <TabPane tab={<span><Icon type="book" />Proyecto</span>} key="proyecto">
                         <Form>
                             <Item label="Título: ">
@@ -339,7 +340,6 @@ export default class Proyecto extends Component{
                                 />
                             </Item>
                         </Form>
-                        {/* divider */}
                         <Row className="border-top">
                             <Col xs={24} lg={6} >
                                 <h2 style={{marginBottom: 20}}>Plan de trabajo</h2>
@@ -361,7 +361,6 @@ export default class Proyecto extends Component{
                                             status: 'done',
                                             url: `/api/plan_de_trabajo/pdf/${proyecto.filename_plan_trabajo}`
                                         }]}
-                                        onRemove={false}
                                     />
                                 </Item>
                             </Col>
@@ -409,17 +408,16 @@ export default class Proyecto extends Component{
                         </Row>
                     </TabPane>
                     <TabPane tab={<span><Icon type="calendar" />Seguimientos</span>} key="seguimientos">
-                        <Tabs key="-90" tabPosition="left" defaultActiveKey="2" onChange={(key) => this.onChangeTabSeguimiento(key)} >
+                        <Tabs key="-99" tabPosition="left" defaultActiveKey="-1" onChange={(key) => this.onChangeTabSeguimiento(key)} >
                             {seguimientos.map(((seguimiento, index) => {
                                     // console.log('key', seguimiento.id)
                                     return (
-                                        <TabPane  tab={<span><Icon type="schedule" />{`Seguimiento ${index+1}`}</span>} key={seguimiento.id}>
+                                        <TabPane tab={<span><Icon type="schedule" />{`Seguimiento ${index+1}`}</span>} key={seguimiento.id}>
                                             {renderSeguimiento}
                                         </TabPane>
                                     )
                             }))}
                         </Tabs>
-                        
                     </TabPane>
                 </Tabs>
                 <FormAddObservacion updateObservaciones={this.updateObservaciones.bind(this)} id_proyecto={proyecto.id} tipo={tipo_observacion} usuario={usuario} visible={visibleAddObservacion}/>

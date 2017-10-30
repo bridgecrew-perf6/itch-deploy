@@ -190,6 +190,9 @@ module.exports =  (app, express, passport) => {
         // put actualizar dictamen jeje
     router.route('/periodo/seguimiento')
         .post(isAuth, periodoController.addSeguimiento);
+    
+    router.route('/periodo/:id_periodo/proyectos')
+        .get(isAuth, periodoController.getProyectos);
 
 
 

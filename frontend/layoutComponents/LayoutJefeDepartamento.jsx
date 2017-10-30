@@ -21,6 +21,7 @@ import FormAddDocente from '../docente/components/FormAddDocente.jsx';
 import GestionPeriodoDeResidencia from '../periodo_residencia/gestion.jsx';
 import FormAperturaPeriodoDeResidencia from '../periodo_residencia/add.jsx'
 import RevisionAnteproyectos from '../periodo_residencia/revisionAnteproyectos.jsx';
+import RevisionSeguimientos from '../periodo_residencia/RevisionSeguimientos.jsx';
 import Dictamen from '../periodo_residencia/dictamen.jsx';
 
 
@@ -138,6 +139,7 @@ class LayoutJefeDepartamento extends Component{
                 }
             })
         }else if(key == 7){
+            // revision de anteproyectos
             const {departamento, usuario} = this.state
             this.setState({
                 visibleCambiarContrasenia: false,
@@ -148,6 +150,7 @@ class LayoutJefeDepartamento extends Component{
                 }
             })
         }else if(key == 8){
+            // preview dictamen
             const {departamento, usuario} = this.state
             this.setState({
                 visibleCambiarContrasenia: false,
@@ -155,6 +158,17 @@ class LayoutJefeDepartamento extends Component{
                 componentRender: {
                     title: 'Dictamen',
                     render: <Dictamen usuario={usuario} departamento={departamento}/>
+                }
+            })
+        }else if(key == 9){
+            // revisión de seguimientos por periodo
+            const {usuario, departamento} = this.state
+            this.setState({
+                visibleCambiarContrasenia: false,
+                visible_add_docente: false,
+                componentRender: {
+                    title: 'Revisión de seguimientos',
+                    render: <RevisionSeguimientos usuario={usuario} carreras={departamento.carreras}/>
                 }
             })
         }
@@ -203,8 +217,12 @@ class LayoutJefeDepartamento extends Component{
                                     <span>Agregar periodo</span>
                                 </Menu.Item>
                                 <Menu.Item key="7" >
-                                    <Icon type="calendar" />
+                                    <Icon type="solution" />
                                     <span>Revisión anteproyectos</span>
+                                </Menu.Item>
+                                <Menu.Item key="9" >
+                                    <Icon type="calendar" />
+                                    <span>Revisión de seguimientos</span>
                                 </Menu.Item>
                                 <Menu.Item key="8" >
                                     <Icon type="schedule" />

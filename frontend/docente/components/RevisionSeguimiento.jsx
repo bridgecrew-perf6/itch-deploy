@@ -54,7 +54,8 @@ export default class RevisionSeguimiento extends Component{
                 id: revision.id,
                 observacion: revision.observacion,
                 solucionado: revision.solucionado,
-                fecha: moment(revision.createdAt).utc().format('LL')
+                fecha: moment(revision.createdAt).utc().format('LL'),
+                docente: revision.docente
             }
         });
         const columnsObservacionesSeguimiento = [
@@ -69,7 +70,21 @@ export default class RevisionSeguimiento extends Component{
                 dataIndex: 'solucionado',
                 key: 'solucionado',
                 render: (text, record) => (
-                    <Switch  onChange={(check) => this.onChangeObservacion(record.id, check)} defaultChecked={record.solucionado} checkedChildren="Solucionado" unCheckedChildren={<Icon type="cross" />} />
+                    <span>
+                        {record.docente.id == usuario.id_docente
+                            ? <Switch  onChange={(check) => this.onChangeObservacion(record.id, check)} defaultChecked={record.solucionado} checkedChildren="Solucionado" unCheckedChildren={<Icon type="cross" />} />
+                            : <p>{record.solucionado? 'Si' : 'No'}</p>
+                        }
+                    </span>
+                )
+            },
+            {
+                className: 'center-text',
+                title: 'Realizada por',
+                dataIndex: 'docente',
+                key: 'docente',
+                render: (text, record) => (
+                    <p>{`${record.docente.titulo} ${record.docente.nombre} ${record.docente.ap_paterno} ${record.docente.ap_materno}`}</p>
                 )
             },
             {
