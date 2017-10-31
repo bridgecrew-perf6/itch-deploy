@@ -135,9 +135,8 @@ class LayoutDocente extends Component{
             console.log('this=>',usuario)
             console.log('this=>', departamento);
             const _usuario = usuario.docente_carrera.find((docente) => docente.rol === 'presidente_academia' || docente.rol === 'jefe_proyecto');
-
-            const carreras = departamento.carreras.filter(carrera => carrera.id === _usuario.id_carrera);
             if(_usuario){
+                const carreras = departamento.carreras.filter(carrera => carrera.id === _usuario.id_carrera);
                 this.setState({
                     componentSelected: key,
                     visibleCambiarContrasenia: false,

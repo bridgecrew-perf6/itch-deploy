@@ -104,6 +104,7 @@ module.exports.getDictamenPDF = (req, res) => {
     res.send(pdf);
 }
 
+
 module.exports.generarDictamen = (req, res) => {
     const id_periodo = req.body.id_periodo;
     // Buscar anteproyectos aprobados

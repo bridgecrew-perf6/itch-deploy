@@ -83,6 +83,9 @@ module.exports =  (app, express, passport) => {
     router.route('/alumno')
         .post(isAuth, alumnoController.add)
 
+    router.route('/alumno/cancelacion')
+        .put(isAuth, alumnoController.cancelacionProyecto);
+
     router.route('/alumno/:id/anteproyecto')
         .get(isAuth, alumnoController.getAnteproyecto)
         .put(isAuth, alumnoController.updateDatosAnteproyecto);

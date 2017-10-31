@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {render} from 'react-dom';
 import PropTypes from 'prop-types';
 
-import { Layout, Menu, Breadcrumb, Icon, Avatar, Modal, Input, Form} from 'antd';
+import { Layout, Menu, Breadcrumb, Icon, Avatar, Modal, Input, Form, Alert} from 'antd';
 const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
 
@@ -86,6 +86,7 @@ export default class LayoutResidente extends Component{
                         this.setState({
                             componentSelected: key,
                             visibleCambiarContrasenia: false,
+                            proyecto: res.data,
                             componentRender: {
                                 title: 'Proyecto de residencia',
                                 render: <ProyectoDeResidencia proyecto={res.data}/>
@@ -135,7 +136,7 @@ export default class LayoutResidente extends Component{
         }
     }
     render(){
-        const {isAuth, componentSelected, componentRender,usuario, visibleCambiarContrasenia} = this.state
+        const {isAuth, componentSelected, componentRender,usuario, visibleCambiarContrasenia, proyecto} = this.state
         // console.log(isAuth)
         return(
             isAuth ? (
@@ -184,6 +185,7 @@ export default class LayoutResidente extends Component{
                         </Header>
                         <Content style={{ margin: '24px 16px', padding: 24, background: '#fff' }}>
                             {componentRender.render}
+                            {proyecto ? null : <Alert message="Residente, usted no tiene proyecto, probablemente hubo una cancelación ó su anteproyecto no fue factible, para mas información preguntar al presidente de academia o jefe de departamento." type="error" showIcon/>}
                         </Content>
                         <Footer style={{ textAlign: 'center' }}>
                             Sistema de Seguimiento de residencias del ITCH ©2017 Francisco Blanco 00fblanco@gmail.com

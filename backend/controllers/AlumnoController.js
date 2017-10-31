@@ -162,6 +162,17 @@ module.exports.getCronogramaPDF = (req, res) => {
     res.send(pdf);
 }
 
+module.exports.cancelacionProyecto = (req, res) => {
+    const id_alumno = req.body.id_alumno;
+    Anteproyecto.destroy({where: {id_alumno}})
+        .then(affectedRows => {
+            res.status(200).json({affectedRows})
+        }).catch(err => {
+            console.log(err)
+            res.status(406).json({err: err})
+        })
+
+}
 module.exports.retryAnteproyecto = (req, res) => {
     const id_alumno = req.body.id_alumno,
         id_periodo = req.body.id_periodo;

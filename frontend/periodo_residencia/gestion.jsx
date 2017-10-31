@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {message, Modal, Row, Col, Select, Table, Button, Avatar, DatePicker, Timeline, Icon} from 'antd';
+import {message, Modal, Row, Col, Select, Table, Button, Avatar, DatePicker, Timeline, Icon, Popconfirm} from 'antd';
 const Option = Select.Option;
 
 import axios from 'axios';
@@ -9,6 +9,7 @@ import uuid from 'uuid';
 // component
 import FormAddAlumno from '../alumno/components/FormAddAlumno.jsx';
 import FormAddSeguimiento from '../periodo_residencia/addSeguimiento.jsx';
+
 
 export default class GestionPeriodoDeResidencia extends Component{
     constructor(props){
@@ -22,20 +23,40 @@ export default class GestionPeriodoDeResidencia extends Component{
             alumnos_rechazados_por_carrera: []
         }
     }
+    handleCancelacion = (id_alumno) => {
+        axios.put('/api/alumno/cancelacion', {
+            id_alumno
+        }).then(res => {
+                if(res.status === 200){
+                    message.success('Se realizado la cancelación del proyecto del alumno!')
+                    this.setState({
+                        visible_add_alumno: false,
+                        visible_add_seguimiento: false,
+                    })
+                }else{
+                    message.error('Ops, hubo un error al realizar la cancelación, favor de reportar al administrador.')
+                }
+            })
+    }
     showListaCandidatosResidente = (id_periodo) => {
         axios.get(`/api/periodo/${id_periodo}/anteproyectos`)
             .then(res => {
                 if(res.status === 200){
                     const candidatos = res.data.map((candidato, index) => {
                         return (
-                                <Timeline.Item key={index} color="green" dot={<Icon type="check-circle-o" style={{ fontSize: '16px' }} />}>
-                                    {`${candidato.nombre} ${candidato.ap_paterno} ${candidato.ap_materno}`}
-                                </Timeline.Item>
+                                <div style={{overflowY: 100}}>
+                                    <Timeline.Item  key={index} color="green" dot={<Icon type="check-circle-o" style={{ fontSize: '16px', marginTop: 10, marginLeft: 10}} />}>
+                                        <p>{`${candidato.nombre} ${candidato.ap_paterno} ${candidato.ap_materno}`}</p>
+                                        <Popconfirm title={(<span><p>¿Esta seguro de realizar la cancelación de proyecto?</p><p>al realizar esta acción, se borrara todo la información relacionada a este alumno</p><p>y se podra agregar al alumno a otro periodo.</p></span>)} onConfirm={() => this.handleCancelacion(candidato.id)} okText="Si" cancelText="Cancelar">
+                                            <Button icon="user-delete" style={{marginTop: 5}} type="danger" >Realizar cancelación</Button>
+                                        </Popconfirm>
+                                    </Timeline.Item>
+                                </div>
                         )
                     })
                     Modal.info({
                         width: 600,
-                        title: 'Lista de candidatos a residente del periodo.',
+                        title: 'Lista residentes del periodo.',
                         content: (
                             <Timeline>
                                 {candidatos}
