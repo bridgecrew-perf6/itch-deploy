@@ -25,7 +25,6 @@ module.exports.findById = (req, res) => {
         }).catch(err => {
             res.status(406).json({err: err})
         })
-
 }
 module.exports.findAll = (req, res) => {
     Departamento.findAll({include: [{model: Carrera, as: 'carreras'}, {model: Docente, as: 'docentes', include: [{model: Usuario, as: 'usuario', attributes: ['rol']}]}]})

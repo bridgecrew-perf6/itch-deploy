@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {render} from 'react-dom';
 import PropTypes from 'prop-types';
 
-import { Layout, Menu, Breadcrumb, Icon, Avatar, Modal, Input, Form} from 'antd';
+import { Layout, Menu, Breadcrumb, Icon, Avatar, Modal, Input, Form, Alert} from 'antd';
 const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
 
@@ -16,8 +16,9 @@ import CambiarContrasenia from '../layoutComponents/CambiarContrasenia.jsx';
 import RevisionAnteproyectos from '../periodo_residencia/revisionAnteproyectos.jsx';
 import AddCandidatoAResidente from '../periodo_residencia/addCandidatoResidente.jsx';
 import RevisionProyectoResidencia from '../docente/components/RevisionProyectoResidencia.jsx';
+import RevisionSeguimientos from '../periodo_residencia/RevisionSeguimientos.jsx';
 
-class LayoutJefeDepartamento extends Component{
+class LayoutDocente extends Component{
     constructor(){
         super();
         this.state = {
@@ -38,6 +39,7 @@ class LayoutJefeDepartamento extends Component{
                 axios.get(`/api/departamento/${usuario.id_departamento}`)
                     .then(res => {
                         if(res.status === 200){
+                            console.warn('departamento', res.data)
                             this.setState({
                                 departamento: res.data,
                                 isAuth: usuario.isAuth,
@@ -85,7 +87,7 @@ class LayoutJefeDepartamento extends Component{
             // console.log('this=>',usuario)
             const presidente_academia = usuario.docente_carrera.find((docente) => docente.rol === 'presidente_academia');
             if(presidente_academia){
-                console.log(presidente_academia);
+                // console.log(presidente_academia);
                 this.setState({
                     componentSelected: key,
                     visibleCambiarContrasenia: false,
@@ -102,7 +104,7 @@ class LayoutJefeDepartamento extends Component{
                     visible_add_docente: false,
                     componentRender: {
                         title: 'Permiso denegado',
-                        render: <p>Permiso denegado, solo el presidente de academia puede realizar esta acción.</p>
+                        render: <Alert message="Permiso denegado, solo el presidente de academia o jefe de departamento puede realizar esta acción." type="warning" showIcon/>
                     }
                 })
             }
@@ -127,6 +129,35 @@ class LayoutJefeDepartamento extends Component{
                         })
                     }
                 })
+        }else if(key == 5){
+            // revision seguimientos
+            const {departamento, usuario} = this.state;
+            console.log('this=>',usuario)
+            console.log('this=>', departamento);
+            const _usuario = usuario.docente_carrera.find((docente) => docente.rol === 'presidente_academia' || docente.rol === 'jefe_proyecto');
+
+            const carreras = departamento.carreras.filter(carrera => carrera.id === _usuario.id_carrera);
+            if(_usuario){
+                this.setState({
+                    componentSelected: key,
+                    visibleCambiarContrasenia: false,
+                    visible_add_docente: false,
+                    componentRender: {
+                        title: 'Revisión de seguimientos',
+                        render: <RevisionSeguimientos carreras={carreras} usuario={_usuario} />
+                    }
+                })
+            }else{
+                this.setState({
+                    componentSelected: key,
+                    visibleCambiarContrasenia: false,
+                    visible_add_docente: false,
+                    componentRender: {
+                        title: 'Permiso denegado',
+                        render: <Alert message="Permiso denegado, solo el presidente de academia, jefe de departamento, jefe de proyecto ó el asesor interno del proyecto puede realizar esta acción." type="warning" showIcon/>
+                    }
+                })
+            }
         }
     }
     render(){
@@ -148,7 +179,7 @@ class LayoutJefeDepartamento extends Component{
                         <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']} onSelect={this.handleMenu}>
                             
                             <Menu.Item key="1" >
-                                <Icon type="calendar" />
+                                <Icon type="solution" />
                                 <span>Revisión anteproyectos</span>
                             </Menu.Item>
                             <Menu.Item key="2" >
@@ -159,6 +190,10 @@ class LayoutJefeDepartamento extends Component{
                             <Menu.Item key="4" >
                                 <Icon type="book"/>
                                 <span>Proyectos de residencia</span>
+                            </Menu.Item>
+                            <Menu.Item key="5" >
+                                <Icon type="calendar"/>
+                                <span>Revisión de seguimientos</span>
                             </Menu.Item>
                             <Menu.Divider/>
                             <SubMenu
@@ -194,4 +229,4 @@ class LayoutJefeDepartamento extends Component{
     }
 }
 
-export default LayoutJefeDepartamento;
+export default LayoutDocente;

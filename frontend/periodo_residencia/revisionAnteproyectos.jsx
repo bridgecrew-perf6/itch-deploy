@@ -26,7 +26,7 @@ export default class revisionAnteproyectos extends Component{
             .then(_res => {
                 if(_res.status === 200 && _res.data.habilitado === true){
                     // ROL DE DOCENTE
-                    if(_res.data.rol === 'docente'){
+                    if(_res.data.rol === 'docente' || _res.data.rol ==='jefe_proyecto'){
                         axios.get(`/api/periodo/${id_periodo}`)
                         .then(res =>{
                             if(res.status === 200){
