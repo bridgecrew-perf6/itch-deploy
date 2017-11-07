@@ -20,6 +20,21 @@ export default class RegistrarAsesoria extends Component{
             visibleRegistrarAsesoria: true
         })
     }
+    showTutorialSubirAsesoria = () => {
+        Modal.info({
+            width: 800,
+            title: 'Tutorial para subir y compartir archivos en google drive',
+            content: (
+                <div>
+                    <video
+                        style={{width: '100%', marginTop: 10}}
+                        controls
+                        src="/video/upload_drive.mp4"
+                    />
+                </div>
+            ), onOk(){}
+        })
+    }
     showSolucionesRecomendadas = (soluciones_recomendadas) => {
         Modal.info({
             width: 600,
@@ -117,8 +132,11 @@ export default class RegistrarAsesoria extends Component{
                     <Col xs={24} lg={24}>
                         <Button icon="plus" type="primary" onClick={this.showAddAsesoria}>Agregar asesoria</Button>
                     </Col>
+                    <Col xs={24} lg={24} style={{marginTop: 10}}>
+                        <Button icon="video-camera" onClick={this.showTutorialSubirAsesoria} >Tutorial para subir archivos y compartir en drive</Button>
+                    </Col>
                     <Col xs={24} lg={24}>
-                        <Table title={()=> 'Lista de asesorias registradas'} columns={columnasAsesoria} dataSource={asesorias} pagination={{ pageSize: 5 }}/>
+                        <Table title={()=> 'Lista de asesorias registradas'} columns={columnasAsesoria} dataSource={asesorias} pagination={{ pageSize: 5 }} scroll={{x: 1200}}/>
                     </Col>
                 </Row>
                 <FormRegistrarAsesoria proyecto={proyecto} visible={visibleRegistrarAsesoria}/>

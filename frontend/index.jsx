@@ -16,6 +16,7 @@ import AppRoutes from './routes.jsx';
 
 import './common.css';
 
+
 render(
     <LocaleProvider locale={esES} className="full-height">
         <Router history={browserHistory}>
