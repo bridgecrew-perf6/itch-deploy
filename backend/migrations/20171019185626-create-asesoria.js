@@ -33,6 +33,12 @@ module.exports = {
         allowNull: false,
         defaultValue: false
       },
+      tipo: {
+        type: Sequelize.ENUM,
+        allowNull: false,
+        values: ['presencial', 'virtual'],
+        defaultValue: 'virtual'
+      },
       fecha: {
         type: Sequelize.DATEONLY,
         allowNull: false

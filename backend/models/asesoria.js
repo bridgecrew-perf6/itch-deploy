@@ -13,6 +13,12 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: false
     },
+    tipo: {
+      type: DataTypes.ENUM,
+      allowNull: false,
+      values: ['presencial', 'virtual'],
+      defaultValue: 'virtual'
+    },
     url_avance: {
       type: DataTypes.STRING,
       allowNull: false,

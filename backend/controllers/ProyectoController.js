@@ -37,6 +37,24 @@ module.exports.getProyectosByAsesorInterno = (req, res) => {
     })
 }
 
+module.exports.updateTipoAsesoria = (req, res) => {
+    const id_asesoria = req.body.id_asesoria,
+        tipo = req.body.tipo;
+    Asesoria.update({tipo}, {where: {id: id_asesoria}})
+        .then((_asesoria)=>{
+            // console.log('success=======>    ', result)
+            res.status(200).json(_asesoria)
+        }).catch(Sequelize.ValidationError, (err) => {
+            var errores = err.errors.map((element) => {
+                return `${element.path}: ${element.message}`
+            })
+            // console.log('==>', errores)
+            res.status(202).json({errores})
+        }).catch((err) => {
+            console.log(err);
+            res.status(406).json({err: err})
+        })
+}
 module.exports.updateAutorizarFormatoAsesoria = (req, res) => {
     const id_asesoria = req.body.id_asesoria,
         permitir_generar_formato = req.body.permitir_generar_formato;

@@ -12,10 +12,6 @@ const rol = {
     JEFE_DEPARTAMENTO: 'jefe_departamento',
     PRESIDENTE_ACADEMIA: 'presidente_academia'
 }
-
-
-
-
 module.exports.findById = (req, res) => {
     Departamento.findOne({
         where: {id: req.params.id},
@@ -61,10 +57,6 @@ module.exports.test = (req, res) => {
             }))
             
         })
-    // Docente.findAll({where: {id_departamento: 1}},{include: [{model: Usuario, required: true, where: {rol: rol.JEFE_DEPARTAMENTO}}]})
-    //     .then(docentes => {
-    //         res.json({docentes})
-    //     });
 }
 module.exports.update = (req, res) => {
     // console.log(req.body);

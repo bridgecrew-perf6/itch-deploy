@@ -86,16 +86,19 @@ export default class GestionPeriodoDeResidencia extends Component{
         console.warn(seguimientos);
         const seguimientos_map = seguimientos.map((seguimiento, key) => {
             return (
-                <p key={key}>{seguimiento.fecha_inicial} - {seguimiento.fecha_final}</p>
+                <Timeline.Item key={key}>
+                    <p><strong>{(key+1)}</strong> - Del {moment(seguimiento.fecha_inicial, 'YYYY-MM-DD').format('LL')} al {moment(seguimiento.fecha_final,'YYYY-MM-DD').format('LL')}</p>
+                </Timeline.Item>
             )
         })
+        
         Modal.info({
             title: 'Seguimientos',
             width: 600,
             content: (
-                <div>
+                <Timeline>
                     {seguimientos_map}
-                </div>
+                </Timeline>
             ),
             onOk(){}
         })

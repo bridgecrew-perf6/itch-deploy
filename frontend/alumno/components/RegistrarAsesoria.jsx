@@ -79,6 +79,12 @@ export default class RegistrarAsesoria extends Component{
                 )
             },
             {
+                className: 'center-text',
+                title: 'Tipo',
+                dataIndex: 'tipo',
+                key: 'tipo'
+            },
+            {
                 width: 300,
                 className: 'center-text',
                 title: 'Formato de asesoria',
@@ -101,7 +107,8 @@ export default class RegistrarAsesoria extends Component{
                 asesoria: asesoria,
                 temas_a_asesorar: asesoria.temas_a_asesorar,
                 url_avance: asesoria.url_avance,
-                soluciones_recomendadas: asesoria.soluciones_recomendadas
+                soluciones_recomendadas: asesoria.soluciones_recomendadas,
+                tipo: asesoria.tipo
             }
         })
         return(

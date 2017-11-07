@@ -158,6 +158,8 @@ module.exports =  (app, express, passport) => {
     router.route('/asesoria/:id_asesoria/generar_formato/')
         .get(isAuth, proyectoController.generarFormatoDeAsesoria)
         
+    router.route('/asesoria/tipo')
+        .put(isAuth, proyectoController.updateTipoAsesoria);
     // ANTEPROYECTO
     router.route('/anteproyectos/:id_periodo')
         .get(isAuth, anteproyectoController.findByPeriodo)

@@ -170,7 +170,7 @@ module.exports = {
                         {text: 'Asesoria número: ', style: 'normal'},
                         {text: `${asesoria.id}`, style: 'normal', decoration: 'underline'},
                         {text: ' Tipo de asesoria: ', style: 'normal'},
-                        {text: `Virtual`, style: 'normal', decoration: 'underline'},
+                        {text: `${asesoria.tipo}`, style: 'normal', decoration: 'underline'},
                     ],                
                 },
                 {

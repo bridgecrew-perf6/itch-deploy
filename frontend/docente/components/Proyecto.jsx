@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Card, Icon, Form, Input, Button, Row, Col, Upload, Modal, Tooltip, Table, Switch, message, Tabs, Alert} from 'antd';
+import {Card, Icon, Form, Input, Button, Row, Col, Upload, Modal, Tooltip, Table, Switch, message, Tabs, Alert, Select} from 'antd';
 import axios from 'axios';
 import moment from 'moment';
 import uuid from 'uuid';
@@ -221,6 +221,18 @@ export default class Proyecto extends Component{
                 }
             })
     }
+    updateTipoAsesoria =(id_asesoria, tipo) => {
+        axios.put('/api/asesoria/tipo', {
+            id_asesoria,
+            tipo
+        }).then(res => {
+                if(res.status === 200){
+                    message.success('El tipo de asesoria se ha actualizado satisfactoriamente!')
+                }else{
+                    message.error('Ops, hemos tenido un problema, favor de reportar al administrador.')
+                }
+            })
+    }
     render(){
         const {proyecto, visibleAddObservacion, tipo_observacion, usuario, observaciones, asesorias, id_asesoria, visibleAddSolucion, seguimientos, renderSeguimiento} = this.state
         // console.warn(usuario);
@@ -295,6 +307,22 @@ export default class Proyecto extends Component{
             },
             {
                 className: 'center-text',
+                title: 'Tipo de asesoria',
+                dataIndex: 'tipo',
+                key: 'tipo',
+                render: (text, record) => (
+                    <Select defaultValue={record.tipo} onChange={(value)=>this.updateTipoAsesoria(record.id, value)} style={{width: '100%'}}>
+                        <Option value="virtual">
+                            Virtual
+                        </Option>
+                        <Option value="presencial">
+                            Presencial
+                        </Option>
+                    </Select>
+                )
+            },
+            {
+                className: 'center-text',
                 title: 'Generar formato',
                 dataIndex: 'permitir_generar_formato',
                 key: 'permitir_generar_formato',
@@ -311,7 +339,8 @@ export default class Proyecto extends Component{
                 temas_a_asesorar: asesoria.temas_a_asesorar,
                 url_avance: asesoria.url_avance,
                 soluciones_recomendadas: 'on',
-                permitir_generar_formato: asesoria.permitir_generar_formato
+                permitir_generar_formato: asesoria.permitir_generar_formato,
+                tipo: asesoria.tipo
             }
         })
         
