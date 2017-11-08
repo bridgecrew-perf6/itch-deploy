@@ -122,38 +122,46 @@ module.exports.generarDictamen = (req, res) => {
                         {model: Anteproyecto, as: 'anteproyectos', include: [{model: Alumno, as: 'alumno', include: [{model: Usuario, as: 'usuario'}]}, {model: asesor_externo, as: 'asesor_externo', include: [{model: Empresa, as: 'empresa'}]}, {model: Docente, as: 'asesor_interno'}], where: {dictamen: 'aprobado'}, required: false}
                     ]
                 }, {transaction: t}).then(_periodo => {
-                    // generamos nuestro dictamen en pdf :D
-                    pdfs.generarDictamen(_periodo);
-                    // eliminanmos anteproyectos no aprobados
-                    return Anteproyecto.destroy({where: {dictamen: 'no aprobado', id_periodo}}, {transaction: t})
-                        .then(affectedRows => {
-                            // actualizamos filename del dictamen
-                            return _periodo.update({filename_dictamen: `${_periodo.periodo}-${_periodo.ciclo}.pdf`}, {transaction: t})
-                                .then(__periodo => {
-                                    // actualizamos las credenciales y mandamos correo
-                                    // console.log('=====>', _periodo.anteproyectos)
-                                    return sequelize.Promise.map(_periodo.anteproyectos, (_anteproyecto) => {
-                                        return _anteproyecto.alumno.usuario.update({rol: 'residente'},{transaction: t})
-                                            .then(_usuario => {
-                                                // enviamos los correos a cada usuario que su proyecto fue aprobado
-                                                const mailOptions = {
-                                                    from: 'seguimientoresidenciasitch@gmail.com',
-                                                    to: _usuario.correo,
-                                                    subject: 'Su proyecto ha sido aprobado',
-                                                    text: `El dictamen se ha realizado y su proyecto fue aprobado, desde ahora sus credenciales de usuario pasaran a ser de residente, puede entrar para seguir con su proceso.`
-                                                }
-                                                transporter.sendMail(mailOptions, (err, info) => {
-                                                    if(err){
-                                                        console.error('EMAIL', err)
-                                                    }else{
-                                                        console.log('EMAIL', 'Dictamen aprobado send!!!!');
-                                                    }
+                    // buscamos al subdirector jeje
+                    return Usuario.findOne({where: {rol: 'subdirector_academico'}}, {transaction: t})
+                        .then(subdirector => {
+                            return Docente.findOne({where: {id_usuario: subdirector ? subdirector.id: null}}, {transaction: t})
+                                .then(_subdirector => {
+                                    // generamos nuestro dictamen en pdf :D
+                                    pdfs.generarDictamen(_periodo,_subdirector);
+                                    // eliminanmos anteproyectos no aprobados
+                                    return Anteproyecto.destroy({where: {dictamen: 'no aprobado', id_periodo}}, {transaction: t})
+                                        .then(affectedRows => {
+                                            // actualizamos filename del dictamen
+                                            return _periodo.update({filename_dictamen: `${_periodo.periodo}-${_periodo.ciclo}.pdf`}, {transaction: t})
+                                                .then(__periodo => {
+                                                    // actualizamos las credenciales y mandamos correo
+                                                    // console.log('=====>', _periodo.anteproyectos)
+                                                    return sequelize.Promise.map(_periodo.anteproyectos, (_anteproyecto) => {
+                                                        return _anteproyecto.alumno.usuario.update({rol: 'residente'},{transaction: t})
+                                                            .then(_usuario => {
+                                                                // enviamos los correos a cada usuario que su proyecto fue aprobado
+                                                                const mailOptions = {
+                                                                    from: 'seguimientoresidenciasitch@gmail.com',
+                                                                    to: _usuario.correo,
+                                                                    subject: 'Su proyecto ha sido aprobado',
+                                                                    text: `El dictamen se ha realizado y su proyecto fue aprobado, desde ahora sus credenciales de usuario pasaran a ser de residente, puede entrar para seguir con su proceso.`
+                                                                }
+                                                                transporter.sendMail(mailOptions, (err, info) => {
+                                                                    if(err){
+                                                                        console.error('EMAIL', err)
+                                                                    }else{
+                                                                        console.log('EMAIL', 'Dictamen aprobado send!!!!');
+                                                                    }
+                                                                })
+                                                                // return sequelize.Promise.resolve();
+                                                            })
+                                                    })
                                                 })
-                                                // return sequelize.Promise.resolve();
-                                            })
-                                    })
+                                        })
                                 })
                         })
+                    
                 })
 
     }).then((___periodo)=>{
@@ -204,7 +212,7 @@ module.exports.findById = (req, res) => {
         where: {id},
         include: [
                     {model: Carrera, as: 'carrera', include: [{model: docente_carreras, as: 'docentes_carreras', include: [{model: Docente, as: 'docente'}]}]},
-                    {model: Anteproyecto, as: 'anteproyectos', include: [{model: revision_anteproyecto, as: 'revisiones', include: [{model: Docente, as:'docente'}]},{model: Alumno, as: 'alumno', include: [{model: Usuario, as: 'usuario'}]}, {model: asesor_externo, as: 'asesor_externo', include: [{model: Empresa, as: 'empresa'}]}, {model: Docente, as: 'asesor_interno'}]}
+                    {model: Anteproyecto, as: 'anteproyectos', include: [{model: revision_anteproyecto, as: 'revisiones', include: [{model: Docente, as:'docente'}]},{model: Alumno, as: 'alumno', include: [{model: Usuario, as: 'usuario'}]}, {model: asesor_externo, as: 'asesor_externo', include: [{model: Usuario, as: 'usuario'},{model: Empresa, as: 'empresa'}]}, {model: Docente, as: 'asesor_interno'}]}
                 ]
     }).then(_periodo => {
         res.status(200).json(_periodo);

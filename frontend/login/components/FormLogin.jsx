@@ -39,7 +39,7 @@ class FormLogin extends Component{
                             this.setState({
                                 successAuth: <Redirect to="/candidato_residente"/>
                             })
-                        }else if(rol === 'docente'){
+                        }else if(rol === 'docente' || rol === 'subdirector_academico'){
                             this.setState({
                                 successAuth: <Redirect to="/docente"/>
                             })

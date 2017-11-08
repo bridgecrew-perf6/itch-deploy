@@ -72,6 +72,10 @@ module.exports =  (app, express, passport) => {
     // DOCENTE
     router.route('/docente')
         .post(isAuth, docenteController.add)
+    router.route('/docentes')
+        .get(isAuth, docenteController.findAll)
+    router.route('/docente/subdirector_academico')
+        .put(isAuth, docenteController.updateSubdirectorAcademico);
 
     // ASESOR EXTERNO
     router.route('/asesor_externo')

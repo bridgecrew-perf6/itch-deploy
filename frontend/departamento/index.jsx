@@ -1,10 +1,12 @@
 // Dependencies
 import React, {Component} from 'react';
 import {render} from 'react-dom';
-import {Row, Col, Card, Layout, Button, Table, Modal} from 'antd';
+import {Row, Col, Card, Layout, Button, Table, Modal, Select, message} from 'antd';
 const {Content, Header} = Layout;
 const { Column, ColumnGroup } = Table;
+const Option = Select.Option;
 import axios from 'axios';
+import uuid from 'uuid';
 
 
 // Components
@@ -12,6 +14,7 @@ import FormDepartamento from './components/FormDepartamento.jsx';
 import FormEditDepartamento from './components/FormEditDepartamento.jsx';
 import FormAddDocente from '../docente/components/FormAddDocente.jsx'
 import FormAddCarrera from './components/FormAddCarrera.jsx';
+import WrappedFormSubdirectorAcademico from './components/FormSubdirectorAcademico.jsx';
 
 class Departamento extends Component{
    constructor(){
@@ -31,7 +34,8 @@ class Departamento extends Component{
                 nombre_departamento: null
             },
             departamento: null,
-            loadTable: true
+            loadTable: true,
+            docentes: []
        }
        
    }
@@ -46,11 +50,24 @@ class Departamento extends Component{
                         return {key: index, id: departamento.id, nombre:departamento.nombre, jefe_departamento: jefe_departamento ? `${jefe_departamento.titulo} ${jefe_departamento.nombre} ${jefe_departamento.ap_paterno} ${jefe_departamento.ap_materno}`:  'no asignado', acciones: 'Editar departamento' }
                    
                     })
-                    this.setState({
-                        data: departamentos,
-                        loadTable: false,
-                        visible_form_edit_departamento: false
-                    })
+                    axios.get('/api/docentes')
+                        .then(res => {
+                            if(res.status === 200){
+                                this.setState({
+                                    docentes: res.data,
+                                    data: departamentos,
+                                    loadTable: false,
+                                    visible_form_edit_departamento: false
+                                })
+                            }else{
+                                this.setState({
+                                    data: departamentos,
+                                    loadTable: false,
+                                    visible_form_edit_departamento: false
+                                })
+                            }
+                        })
+                    
                 }
                 // console.log(res.data);
             });
@@ -110,8 +127,21 @@ class Departamento extends Component{
             }
         })
     }
+    changeSubdirectorAcademico = (id_usuario) => {
+        axios.put('/api/docente/subdirector_academico', {id_usuario: id_usuario ? id_usuario : null})
+            .then(res => {
+                if(res.status === 200){
+                    message.success('Subdirector academico actualizado satisfactoriamente');
+                }else{
+                    message.error('Tuvimos un error al asignar al subdirector academico.')
+                }
+            }).catch(err => {
+                message.error('Error al asignar al subdirector academico');
+            })
+    }
     render(){
-        const { visible_form_edit_departamento,visible_form_departamento, data, departamento, loadTable, visible_add_docente, props_add_docente, visible_add_carrera, props_add_carrera} = this.state;
+        const { visible_form_edit_departamento,visible_form_departamento, docentes,data, departamento, loadTable, visible_add_docente, props_add_docente, visible_add_carrera, props_add_carrera} = this.state;
+        const subdirector_academico = docentes.find(docente => docente.usuario.rol === 'subdirector_academico')
         return(
             <div>
                 <Row type="flex" justify="left" align="middle">
@@ -120,6 +150,32 @@ class Departamento extends Component{
                     </Col>
                     <Col>
                         <Button type="primary" icon="plus" onClick={this.showModalFormDepartamento}>Agregar</Button>
+                    </Col>
+                </Row>
+                <Row style={{marginTop: 20, marginBottom: 20}}>
+                    <Col xs={24} lg={8}>
+                        <h3>Seleccione al subdirector academico</h3>
+                        <Select 
+                            key={uuid.v4()}
+                            style={{width: '100%'}}
+                            showSearch
+                            placeholder="Seleccione al subdirector academico"
+                            optionFilterProp="children"
+                            allowClear
+                            onChange={(id_docente) => this.changeSubdirectorAcademico(id_docente)}
+                            defaultValue={subdirector_academico?`${subdirector_academico.titulo} ${subdirector_academico.nombre} ${subdirector_academico.ap_materno} ${subdirector_academico.ap_paterno}`:null}
+                        >
+                            {docentes.map((docente, index) => {
+                                return (
+                                    <Option 
+                                        key={uuid.v1()} 
+                                        value={`${docente.id_usuario}`}
+                                    >
+                                        {`${docente.titulo} ${docente.nombre} ${docente.ap_materno} ${docente.ap_paterno}`}
+                                    </Option>
+                                )
+                            })}
+                        </Select>
                     </Col>
                 </Row>
                 <Row type="flex" justify="center" align="middle" style={{marginTop: 30}}>

@@ -86,7 +86,7 @@ export default class RevisionDocente extends Component{
                     <p style={{marginTop: 10}} >Puesto:</p>
                     <Input readOnly value={detalles_asesor_externo.puesto}></Input>
                     <p style={{marginTop: 10}} >Correo:</p>
-                    <Input readOnly value={detalles_asesor_externo.correo}></Input>
+                    <Input readOnly value={detalles_asesor_externo.usuario.correo}></Input>
                     <p style={{marginTop: 10}}> Empresa</p>
                     <Input readOnly value={detalles_asesor_externo.empresa.nombre}></Input>
                 </Row>

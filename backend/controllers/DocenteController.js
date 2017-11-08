@@ -7,6 +7,36 @@ const Sequelize = require('../models').Sequelize;
 const generator = require('generate-password');
 const transporter = require('../../config/email');
 
+
+module.exports.updateSubdirectorAcademico = (req, res) => {
+    const id_usuario = req.body.id_usuario;
+    sequelize.transaction(t => {
+        return Usuario.update({rol: 'docente'},{where: {rol: 'subdirector_academico'}}, {transaction: t})
+            .then(affectedRows => {
+                return Usuario.update({rol: 'subdirector_academico'}, {where: {id: id_usuario}}, {transaction:t});
+            })
+    }).then((_usuario)=>{
+        // console.log('success=======>    ', result)
+        res.status(200).json(_usuario)
+    }).catch(Sequelize.ValidationError, (err) => {
+        var errores = err.errors.map((element) => {
+            return `${element.path}: ${element.message}`
+        })
+        // console.log('==>', errores)
+        res.status(202).json({errores})
+    }).catch((err) => {
+        res.status(406).json({err: err})
+    }) 
+}
+module.exports.findAll = (req, res) => {
+    Docente.findAll({
+        include: [{model: Usuario, as: 'usuario'}]
+    }).then(docentes => {
+        res.status(200).json(docentes)
+    }).catch((err) => {
+        res.status(406).json({err: err})
+    })  
+}
 module.exports.add = (req, res) => {
     // console.log(req.body)
     const contrasenia = generator.generate({length: 8});

@@ -198,7 +198,7 @@ export default class RevisionProyecto extends Component{
                 )
             },{
                 className: 'center-text',
-                title: 'Realizad por',
+                title: 'Realizado por',
                 dataIndex: 'docente',
                 key: 'docente',
                 render: (text, record) => (

@@ -236,7 +236,7 @@ module.exports = {
         pdfDoc.pipe(res);
         pdfDoc.end();
     },
-    generarDictamen: (periodo, res) => {
+    generarDictamen: (periodo, subdirector) => {
         var content_table = periodo.anteproyectos.map((anteproyecto, index) => {
             return [
                 {text: `${(index+1)}`, style: 'row_table'},
@@ -339,7 +339,7 @@ module.exports = {
                         },
                         {
                             text: [
-                                {text: '¿ESTE QUIEN ES?',style: 'firma', bold: true },
+                                {text: (subdirector)?`${subdirector.titulo} ${subdirector.nombre} ${subdirector.ap_materno} ${subdirector.ap_paterno}`: '',style: 'firma', bold: true },
                                 {text: '\nNOMBRE Y FIRMA DEL SUBDIRECTOR ACADEMICO \nVo. Bo.', style: 'firma'}
                             ]
                         }

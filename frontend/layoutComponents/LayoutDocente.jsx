@@ -35,7 +35,7 @@ class LayoutDocente extends Component{
     }
     getIsAuth(){
         getIsAuth().then((usuario) => {
-            if(usuario.rol === 'docente'){
+            if(usuario.rol === 'docente' || usuario.rol === 'subdirector_academico'){
                 axios.get(`/api/departamento/${usuario.id_departamento}`)
                     .then(res => {
                         if(res.status === 200){
