@@ -16,7 +16,8 @@ export default class revisionAnteproyectos extends Component{
             usuario: props.usuario,
             carreras: props.carreras,
             renderProyecto: null,
-            periodo: null
+            periodo: null,
+            id_alumno: null
         }
     }
     
@@ -31,19 +32,20 @@ export default class revisionAnteproyectos extends Component{
             })
     }
     handleChangeResidente = (id_alumno) => {
-
         const {usuario} = this.state
         axios.get(`/api/alumno/${id_alumno}/proyecto`)
             .then(res => {
                 if(res.status === 200){
                     this.setState({
-                        renderProyecto: (<RevisionProyecto proyecto={res.data} usuario={usuario}/>)
+                        renderProyecto: (<RevisionProyecto proyecto={res.data} usuario={usuario}/>),
+                        id_alumno
                     })
                 }else{
                     message.warning('Ops, ocurrio un error interno, favor de reportar al administrador.')
                 }
             })
     }
+
     render(){
         const {carreras, renderProyecto, periodo} = this.state
         return (
