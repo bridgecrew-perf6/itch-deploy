@@ -1,13 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   var criterios_evaluacion = sequelize.define('criterio_evaluacion', {
-    criterio: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: {msg: 'El campo debe tener un valor'}
-      }
-    },
     valor_de_evaluacion: {
       type: DataTypes.INTEGER,
       allowNull: false,

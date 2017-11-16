@@ -6,10 +6,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: ''
     },
-    id_proyecto:{
-      type:DataTypes.INTEGER,
-      allowNull: false
-    },
     tipo: {
       type: DataTypes.ENUM,
       values: ['asesor_externo', 'asesor_interno'],

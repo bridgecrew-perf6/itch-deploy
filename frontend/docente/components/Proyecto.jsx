@@ -264,6 +264,18 @@ export default class Proyecto extends Component{
                 }
             })
     }
+    autorizarCartaDeLiberacionAsesorInterno = (check, id_proyecto) => {
+        axios.put('/api/proyecto/autorizar_carta_liberacion/asesor_interno', {
+            id_proyecto,
+            autorizar: check
+        }).then(res => {
+            if(res.status === 200){
+                message.success('Se ha actualizado la autorización de la carta de liberación.')
+            }else{
+                message.warn('Error al autorizar la carta de liberación consultar al administrador.')
+            }
+        })
+    }
     render(){
         const {criterios_evaluacion, visibleEvaluacionAsesorInterno, proyecto, visibleAddObservacion, tipo_observacion, usuario, observaciones, asesorias, id_asesoria, visibleAddSolucion, seguimientos, renderSeguimiento} = this.state
         // console.warn(usuario);
@@ -521,7 +533,8 @@ export default class Proyecto extends Component{
                 </Tabs>
                 <FormAddObservacion updateObservaciones={this.updateObservaciones.bind(this)} id_proyecto={proyecto.id} tipo={tipo_observacion} usuario={usuario} visible={visibleAddObservacion}/>
                 <FormAddSolucion  id_asesoria={id_asesoria}  visible={visibleAddSolucion}/>
-                <FormEvaluacion visible={visibleEvaluacionAsesorInterno} criterios_evaluacion={criterios_evaluacion}/>
+                <FormEvaluacion proyecto={proyecto} visible={visibleEvaluacionAsesorInterno} criterios_evaluacion={criterios_evaluacion}/>
+
 
 
             </div>

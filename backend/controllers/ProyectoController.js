@@ -15,6 +15,8 @@ const seguimiento_proyecto = require('../models').seguimiento_proyecto;
 const revision_seguimiento = require('../models').revision_seguimiento;
 const Seguimiento = require('../models').Seguimiento;
 const criterio = require('../models').criterio;
+const criterio_evaluacion = require('../models').criterio_evaluacion;
+const evaluacion = require('../models').evaluacion;
 
 const Sequelize = require('../models').Sequelize
 const sequelize = require('../models').sequelize
@@ -58,6 +60,7 @@ module.exports.updateTipoAsesoria = (req, res) => {
 module.exports.updateAutorizarFormatoAsesoria = (req, res) => {
     const id_asesoria = req.body.id_asesoria,
         permitir_generar_formato = req.body.permitir_generar_formato;
+
     Asesoria.update({permitir_generar_formato}, {where: {id: id_asesoria}})
         .then((_asesoria)=>{
             // console.log('success=======>    ', result)
@@ -233,6 +236,42 @@ module.exports.updateObservacion = (req, res) => {
     }) 
 }
 
+module.exports.autorizarCartaDeLiberacionAsesorInterno = (req, res) => {
+    const id_proyecto = req.body.id_proyecto,
+        autorizar = req.body.autorizar;
+
+    Proyecto.update({autorizar_carta_liberacion_asesor_interno: autorizar}, {where: {id: id_proyecto}})
+        .then((_proyecto)=>{
+            res.status(200).json(_proyecto);
+        }).catch(Sequelize.ValidationError, (err) => {
+            var errores = err.errors.map((element) => {
+                return `${element.path}: ${element.message}`
+            })
+            // console.log('==>', errores)
+            res.status(202).json({errores})
+        }).catch((err) => {
+            console.log(err)
+            res.status(406).json({err: err})
+        }) 
+}
+module.exports.autorizarCartaDeLiberacionAsesorExterno = (req, res) => {
+    const id_proyecto = req.body.id_proyecto,
+        autorizar = req.body.autorizar;
+
+    Proyecto.update({autorizar_carta_liberacion_asesor_externo: autorizar}, {where: {id: id_proyecto}})
+        .then((_proyecto)=>{
+            res.status(200).json(_proyecto);
+        }).catch(Sequelize.ValidationError, (err) => {
+            var errores = err.errors.map((element) => {
+                return `${element.path}: ${element.message}`
+            })
+            // console.log('==>', errores)
+            res.status(202).json({errores})
+        }).catch((err) => {
+            console.log(err)
+            res.status(406).json({err: err})
+        }) 
+}
 module.exports.addObservacionSeguimiento = (req, res) => {
     const id_seguimiento_proyecto = req.body.id_seguimiento,
         id_docente = req.body.id_docente,
@@ -253,6 +292,63 @@ module.exports.addObservacionSeguimiento = (req, res) => {
         console.log(err)
         res.status(406).json({err: err})
     }) 
+}
+
+module.exports.addEvaluacionAsesorInterno = (req, res) => {
+    const id_proyecto = req.body.id_proyecto,
+        observaciones = req.body.observaciones,
+        criterios_evaluacion = req.body.criterios_evaluacion,
+        criterios = req.body.criterios;
+        // console.log('=>>', criterios_evaluacion )
+        // console.log('=>>', criterios )
+    sequelize.transaction(t => {
+        //Buscar proyecto
+        return Proyecto.findOne({where: {id: id_proyecto}}, {transaction: t})
+            .then(_proyecto => {
+                // verificamos si ya existe una evaluacion
+                if(_proyecto.id_evaluacion_asesor_interno === null){ // no existe, creamos evaluacion 
+                    return evaluacion.create({tipo: 'asesor_interno', observaciones}, {transaction: t})
+                        .then((_evaluacion) => {
+                            // asociamos la evaluación con el proyecto
+                            return _proyecto.update({id_evaluacion_asesor_interno: _evaluacion.id},{transaction: t})
+                            .then(__proyecto => {
+                                // creamos o actualizamos los criterios
+                                return sequelize.Promise.map(criterios, (_criterio) => {
+
+                                    return criterio_evaluacion.create({id_evaluacion: _evaluacion.id, id_criterio: _criterio.id,valor_de_evaluacion: criterios_evaluacion[_criterio.id]}, {transaction: t})
+                                })   
+                            })
+                        })
+                }else{ // ya existe solo actualizamos
+                    return evaluacion.update({observaciones},{where: {id: _proyecto.id_evaluacion_asesor_interno}}, {transaction: t})
+                        .then((updated) => {
+                            return evaluacion.findOne({where: {id: _proyecto.id_evaluacion_asesor_interno}}, {transaction: t})
+                                .then(_evaluacion => {
+                                    // creamos o actualizamos los criterios
+                                    return sequelize.Promise.map(criterios, (_criterio) => {
+                                        return criterio_evaluacion.update({valor_de_evaluacion: criterios_evaluacion[_criterio.id]}, {where: {id_evaluacion: _evaluacion.id, id_criterio: _criterio.id}}, {transaction: t})
+                                    })
+                                })
+                              
+                        })
+                }
+                
+
+            })
+        
+    }).then((evaluacion)=>{
+        // console.log('success=======>    ', result)
+        res.status(200).json(evaluacion)
+    }).catch(Sequelize.ValidationError, (err) => {
+        var errores = err.errors.map((element) => {
+            return `${element.path}: ${element.message}`
+        })
+        // console.log('==>', errores)
+        res.status(202).json({errores})
+    }).catch((err) => {
+        console.log(err);
+        res.status(406).json({err: err})
+    })
 }
 module.exports.addObservacion = (req, res) => {
     // console.log('==========>',req.body)

@@ -11,10 +11,6 @@ module.exports = {
       id_evaluacion: {
         type: Sequelize.INTEGER
       },
-      criterio: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
       valor_de_evaluacion: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -29,7 +25,7 @@ module.exports = {
           as: 'id_evaluacion'
         }
       },
-      id_evaluacion: {
+      id_criterio: {
         type: Sequelize.INTEGER,
         onDelete: 'CASCADE',
         allowNull: false,
