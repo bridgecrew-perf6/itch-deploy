@@ -9,6 +9,7 @@ import axios from 'axios';
 import Proyecto from '../components/Proyecto.jsx'
 
 
+
 export default class RevisionProyectoResidencia extends Component{
     constructor(props){
         super(props);
@@ -37,6 +38,7 @@ export default class RevisionProyectoResidencia extends Component{
                 }
             })
     }
+    
     render(){
         const {proyectos, renderProyecto} = this.state
         // console.warn(')>', proye)

@@ -29,7 +29,7 @@ module.exports = {
       },
       {
         correo: '00fblanco@gmail.com',
-        rol: 'docente',
+        rol: 'jefe_departamento',
         contrasenia: generateHash('123456'),
         createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
         updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')

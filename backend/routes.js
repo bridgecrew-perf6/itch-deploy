@@ -137,8 +137,14 @@ module.exports =  (app, express, passport) => {
         .post(isAuth, proyectoController.addSolucionRecomendada)
         .put(isAuth, proyectoController.updateSolucionRecomendada)
     
+    router.route('/proyecto/evaluacion/criterios/asesor_interno')
+        .get(isAuth, proyectoController.getCriteriosEvaluacionAsesorInterno);
+
+        
     router.route('/proyecto/seguimientos')
         .put(isAuth, proyectoController.findOrCreateSeguimientos)
+        router.route('/proyecto/informe_tecnico')
+        .put(isAuth, proyectoController.updateInformeTecnico)
 
     router.route('/proyecto/:id_proyecto/seguimientos')
         .get(isAuth, proyectoController.findSeguimientos);

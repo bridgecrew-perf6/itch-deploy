@@ -14,7 +14,7 @@ const Docente = require('../models').Docente;
 const seguimiento_proyecto = require('../models').seguimiento_proyecto;
 const revision_seguimiento = require('../models').revision_seguimiento;
 const Seguimiento = require('../models').Seguimiento;
-
+const criterio = require('../models').criterio;
 
 const Sequelize = require('../models').Sequelize
 const sequelize = require('../models').sequelize
@@ -154,6 +154,16 @@ module.exports.findSeguimientos = (req, res) => {
         res.status(406).json({err: err})
     })
 }
+
+module.exports.getCriteriosEvaluacionAsesorInterno = (req, res) => {
+    criterio.findAll({where: {tipo: 'asesor_interno'}})
+        .then(criterios => {
+            res.status(200).json(criterios);
+        }).catch(err => {
+            console.log(err)
+            res.status(406).json({err: err})
+        })
+}
 module.exports.findOrCreateSeguimientos = (req, res) => {
     const id_proyecto = req.body.id_proyecto,
         id_periodo = req.body.id_periodo;
@@ -164,13 +174,13 @@ module.exports.findOrCreateSeguimientos = (req, res) => {
         }, {transaction: t}).then(_seguimientos => {
             // console.log('busca seguimeibtnp', _seguimientos)
             return sequelize.Promise.map(_seguimientos, (_seguimiento) => {
-                console.log('el map')
+                // console.log('el map')
                 return seguimiento_proyecto.findOrCreate({
                     where: {
                         id_seguimiento: _seguimiento.id,
                         id_proyecto: id_proyecto
                     },
-                    include: [{model: revision_seguimiento, as: 'revisiones_seguimiento', include: [{model: Docente, as: 'docente'}]},{model: Seguimiento, as: 'seguimiento'}],
+                    include: [{model: Proyecto, as: 'proyecto', include: [{model: Anteproyecto, as: 'anteproyecto', include: [{model: Periodo, as: 'periodo'}]}]},{model: revision_seguimiento, as: 'revisiones_seguimiento', include: [{model: Docente, as: 'docente'}]},{model: Seguimiento, as: 'seguimiento'}],
                      transaction: t
                 })
             })
@@ -333,6 +343,23 @@ module.exports.updateSeguimiento = (req, res) => {
         console.log(err);
         res.status(406).json({err: err})
     }) 
+}
+module.exports.updateInformeTecnico = (req, res) => {
+    const id_proyecto = req.body.id_proyecto,
+        url_informe_tecnico = req.body.url_informe_tecnico;
+    Proyecto.update({url_informe_tecnico}, {where: {id: id_proyecto}})
+        .then(proyecto => {
+            res.status(200).json(proyecto);
+        }).catch(Sequelize.ValidationError, (err) => {
+            var errores = err.errors.map((element) => {
+                return `${element.path}: ${element.message}`
+            })
+            // console.log('==>', errores)
+            res.status(202).json({errores})
+        }).catch((err) => {
+            console.log(err);
+            res.status(406).json({err: err})
+        })
 }
 module.exports.updateSolucionRecomendada = (req, res) => {
     const id_solucion = req.body.id_solucion,

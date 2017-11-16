@@ -23,6 +23,8 @@ import FormAperturaPeriodoDeResidencia from '../periodo_residencia/add.jsx'
 import RevisionAnteproyectos from '../periodo_residencia/revisionAnteproyectos.jsx';
 import RevisionSeguimientos from '../periodo_residencia/RevisionSeguimientos.jsx';
 import Dictamen from '../periodo_residencia/dictamen.jsx';
+import RevisionProyectoResidencia from '../docente/components/RevisionProyectoResidencia.jsx';
+
 
 
 class LayoutJefeDepartamento extends Component{
@@ -171,6 +173,21 @@ class LayoutJefeDepartamento extends Component{
                     render: <RevisionSeguimientos usuario={usuario} carreras={departamento.carreras}/>
                 }
             })
+        }else if(key == 10){
+            const {usuario} = this.state;
+            axios.get(`/api/proyectos/asesor_interno/${this.state.usuario.id_docente}`)
+            .then(res => {
+                if(res.status === 200){
+                    this.setState({
+                        visibleCambiarContrasenia: false,
+                        visible_add_docente: false,
+                        componentRender: {
+                                title: 'Proyectos de residencia asignados',
+                                render: <RevisionProyectoResidencia proyectos={res.data} usuario={this.state.usuario}/>
+                        }
+                    })
+                }
+            })
         }
     }
     render(){
@@ -219,6 +236,10 @@ class LayoutJefeDepartamento extends Component{
                                 <Menu.Item key="7" >
                                     <Icon type="solution" />
                                     <span>Revisión anteproyectos</span>
+                                </Menu.Item>
+                                <Menu.Item key="10" >
+                                    <Icon type="book" />
+                                    <span>Revisión de proyecto de residencia</span>
                                 </Menu.Item>
                                 <Menu.Item key="9" >
                                     <Icon type="calendar" />

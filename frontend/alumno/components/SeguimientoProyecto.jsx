@@ -7,6 +7,7 @@ import moment from 'moment';
 
 // components
 import WrappedFormSeguimiento from '../components/FormSeguimiento.jsx';
+import WrappedFormSeguimientoFinal from '../components/FormSeguimientoFinal.jsx';
 
 export default class SeguimientoProyecto extends Component{
     constructor(props){
@@ -23,23 +24,41 @@ export default class SeguimientoProyecto extends Component{
         })
     }
     onChangeSeguimiento = (id_seguimiento) => {
-        const {seguimientos} = this.state
-        const seguimiento = seguimientos.find(seg => seg[0].id==id_seguimiento)[0];
-        const currentDate = moment().format('YYYY-MM-DD');
-        if(currentDate >= seguimiento.seguimiento.fecha_inicial && currentDate <= seguimiento.seguimiento.fecha_final){
-            this.setState({
-                renderSeguimiento: <WrappedFormSeguimiento seguimiento={seguimiento}/>
-            })
+        const {seguimientos} = this.state;
+        const currentDate = moment().format('YYYY-MM-DD');        
+        if(id_seguimiento === 'seguimiento_final'){
+            // console.log('aqui', );
+            const periodo = seguimientos[0][0].proyecto.anteproyecto.periodo; // ver si no es diferente la primera y la ultima vez jeje
+            // console.warn('Periodo',periodo.fecha_fin)
+            // el seguimiento final esta habilitado 10 dias antes y 10 dias despues de la fecha final del periodo
+            if(currentDate >= moment(periodo.fecha_fin, 'YYYY-MM-DD').subtract(10, 'days').format('YYYY-MM-DD') && currentDate<= moment(periodo.fecha_fin, 'YYYY-MM-DD').add(10, 'days').format('YYYY-MM-DD')){
+                this.setState({
+                    renderSeguimiento: <WrappedFormSeguimientoFinal proyecto={seguimientos[0][0].proyecto} />
+                })
+            }else{
+                this.setState({
+                    renderSeguimiento: <Alert message={`El seguimiento final no esta disponible,\n Fecha inicial: ${moment(periodo.fecha_fin, 'YYYY-MM-DD').subtract(10, 'days').format('LL')} - Fecha final: ${moment(periodo.fecha_fin, 'YYYY-MM-DD').add(10, 'days').format('LL')}`} type="warning" showIcon />
+                })
+            }
+            
         }else{
-            this.setState({
-                renderSeguimiento: <Alert message={`No puede acceder al seguimiento,\n Fecha inicial: ${moment(seguimiento.seguimiento.fecha_inicial, 'YYYY-MM-DD').format('LL')} - Fecha final: ${moment(seguimiento.seguimiento.fecha_final, 'YYYY-MM-DD').format('LL')}`} type="warning" showIcon />
-            })
+            const seguimiento = seguimientos.find(seg => seg[0].id==id_seguimiento)[0];            
+            if(currentDate >= seguimiento.seguimiento.fecha_inicial && currentDate <= seguimiento.seguimiento.fecha_final){
+                this.setState({
+                    renderSeguimiento: <WrappedFormSeguimiento seguimiento={seguimiento}/>
+                })
+            }else{
+                this.setState({
+                    renderSeguimiento: <Alert message={`No puede acceder al seguimiento,\n Fecha inicial: ${moment(seguimiento.seguimiento.fecha_inicial, 'YYYY-MM-DD').format('LL')} - Fecha final: ${moment(seguimiento.seguimiento.fecha_final, 'YYYY-MM-DD').format('LL')}`} type="warning" showIcon />
+                })
+            }
         }
+        
         
     }
     render(){
         const {seguimientos, renderSeguimiento} = this.state;
-        console.log(seguimientos);
+        // console.log(seguimientos);
         return(
             <div>
                 <Row>
@@ -52,7 +71,11 @@ export default class SeguimientoProyecto extends Component{
                                     </TabPane>
                                 )
                             }))}
+                            <TabPane tab={<span><Icon type="schedule"/>Seguimiento final</span>} key={"seguimiento_final"}>
+
+                            </TabPane>
                         </Tabs>
+
                     </Col>
                     <Col xs={24} lg={20}>
                         {renderSeguimiento}

@@ -120,3 +120,8 @@
   margin-top: 20px;
   padding-top: 10px;
 }
+.border-bottom{
+  border-bottom: 1px solid #d7d9db;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+}

@@ -12,7 +12,7 @@ const TabPane = Tabs.TabPane;
 import FormAddObservacion from '../components/FormAddObservacion.jsx';
 import FormAddSolucion from '../components/FormAddSolucion.jsx';
 import RevisionSeguimiento from '../components/RevisionSeguimiento.jsx'
-
+import FormEvaluacion from '../components/FormEvaluacion.jsx';
 export default class Proyecto extends Component{
 
     constructor(props){
@@ -27,7 +27,9 @@ export default class Proyecto extends Component{
             seguimientos: [],
             visibleAddSolucion: false,
             id_asesoria: null,
-            renderSeguimiento: null
+            renderSeguimiento: null,
+            visibleEvaluacionAsesorInterno: false,
+            criterios_evaluacion: []
         }
     }
     componentWillReceiveProps(nextProps){
@@ -57,6 +59,7 @@ export default class Proyecto extends Component{
                     this.setState({
                         visibleAddObservacion: false,
                         visibleAddSolucion: false,
+                        visibleEvaluacionAsesorInterno: false,
                         observaciones: res.data
                     })
                 }
@@ -68,6 +71,7 @@ export default class Proyecto extends Component{
             tipo_observacion: 'plan_de_trabajo',
             visibleAddObservacion: true,
             visibleAddSolucion: false,
+            visibleEvaluacionAsesorInterno: false,
         })        
     }
     showAgregarObservacionCronograma = () => {
@@ -76,6 +80,7 @@ export default class Proyecto extends Component{
             tipo_observacion: 'cronograma',
             visibleAddObservacion: true,
             visibleAddSolucion: false,
+            visibleEvaluacionAsesorInterno: false
         })        
     }
     onChangeObservacion = (id_observacion, solucionada) => {
@@ -90,18 +95,23 @@ export default class Proyecto extends Component{
             }
         })
     }
+
     onChangeTabSeguimiento = (key) => {
         const {seguimientos, usuario} = this.state;
-        const seguimiento = seguimientos.find(seg => seg.id==key);
         const currentDate = moment().format('YYYY-MM-DD');
-        if(currentDate >= seguimiento.seguimiento.fecha_inicial && currentDate <= seguimiento.seguimiento.fecha_final){
-            this.setState({
-                renderSeguimiento: <RevisionSeguimiento updateSeguimientos={this.updateSeguimientos.bind(this)} usuario={usuario} seguimiento={seguimiento} />
-            })
+        if(key === "seguimiento_final"){
         }else{
-            this.setState({
-                renderSeguimiento: <Alert message={`No puede acceder al seguimiento,\n Fecha inicial: ${moment(seguimiento.seguimiento.fecha_inicial, 'YYYY-MM-DD').format('LL')} - Fecha final: ${moment(seguimiento.seguimiento.fecha_final, 'YYYY-MM-DD').format('LL')}`} type="warning" showIcon />
-            })
+            const seguimiento = seguimientos.find(seg => seg.id==key);
+            
+            if(currentDate >= seguimiento.seguimiento.fecha_inicial && currentDate <= seguimiento.seguimiento.fecha_final){
+                this.setState({
+                    renderSeguimiento: <RevisionSeguimiento updateSeguimientos={this.updateSeguimientos.bind(this)} usuario={usuario} seguimiento={seguimiento} />
+                })
+            }else{
+                this.setState({
+                    renderSeguimiento: <Alert message={`No puede acceder al seguimiento,\n Fecha inicial: ${moment(seguimiento.seguimiento.fecha_inicial, 'YYYY-MM-DD').format('LL')} - Fecha final: ${moment(seguimiento.seguimiento.fecha_final, 'YYYY-MM-DD').format('LL')}`} type="warning" showIcon />
+                })
+            }
         }
     }
     onChangeTab = (key) => {
@@ -113,6 +123,7 @@ export default class Proyecto extends Component{
                         this.setState({
                             visibleAddObservacion: false,
                             visibleAddSolucion: false,
+                            visibleEvaluacionAsesorInterno: false,
                             asesorias: res.data
                         })
                     }
@@ -126,6 +137,7 @@ export default class Proyecto extends Component{
                         this.setState({
                             visibleAddObservacion: false,
                             visibleAddSolucion: false,
+                            visibleEvaluacionAsesorInterno: false,
                             seguimientos: res.data,
                         })
                     }
@@ -143,12 +155,15 @@ export default class Proyecto extends Component{
                     visibleAddObservacion: false,
                     visibleAddSolucion: false,
                     seguimientos: res.data,
+                    visibleEvaluacionAsesorInterno: false
                 })
             }
         })
     }
     showAddSolucion = (id_asesoria) => {
         this.setState({
+            visibleEvaluacionAsesorInterno: false,
+            visibleAddObservacion: false,
             visibleAddSolucion: true,
             id_asesoria
         })
@@ -233,8 +248,24 @@ export default class Proyecto extends Component{
                 }
             })
     }
+    showEvaluacionAsesorInterno = () => {
+        axios.get('/api/proyecto/evaluacion/criterios/asesor_interno')
+            .then(res => {
+                if(res.status === 200){
+                    console.warn('cri', res.data)
+                    this.setState({
+                        criterios_evaluacion: res.data,
+                        visibleEvaluacionAsesorInterno: true,
+                        visibleAddObservacion: false,
+                        visibleAddSolucion: false,
+                    })
+                }else{
+                    message.warn('Error al realizar petición de criterios de evaluación, favor de reportar al administrador.')
+                }
+            })
+    }
     render(){
-        const {proyecto, visibleAddObservacion, tipo_observacion, usuario, observaciones, asesorias, id_asesoria, visibleAddSolucion, seguimientos, renderSeguimiento} = this.state
+        const {criterios_evaluacion, visibleEvaluacionAsesorInterno, proyecto, visibleAddObservacion, tipo_observacion, usuario, observaciones, asesorias, id_asesoria, visibleAddSolucion, seguimientos, renderSeguimiento} = this.state
         // console.warn(usuario);
         const observacionesPlanTrabajo = observaciones.filter(obs => obs.tipo==='plan_de_trabajo').map((observacion) => {
             return {
@@ -346,7 +377,7 @@ export default class Proyecto extends Component{
         
         return (
             <div>
-                <Tabs key=".103." defaultActiveKey="1" onChange={(key) => this.onChangeTab(key) }>
+                <Tabs  animated key=".103." defaultActiveKey="1" onChange={(key) => this.onChangeTab(key) }>
                     <TabPane tab={<span><Icon type="book" />Proyecto</span>} key="proyecto">
                         <Form>
                             <Item label="Título: ">
@@ -437,7 +468,7 @@ export default class Proyecto extends Component{
                         </Row>
                     </TabPane>
                     <TabPane tab={<span><Icon type="calendar" />Seguimientos</span>} key="seguimientos">
-                        <Tabs key="-99" tabPosition="left" defaultActiveKey="-1" onChange={(key) => this.onChangeTabSeguimiento(key)} >
+                        <Tabs animated key="-9kbasñdjboubj·#das9" tabPosition="left" defaultActiveKey="0" onChange={(key) => this.onChangeTabSeguimiento(key)} >
                             {seguimientos.map(((seguimiento, index) => {
                                     // console.log('key', seguimiento.id)
                                     return (
@@ -446,11 +477,51 @@ export default class Proyecto extends Component{
                                         </TabPane>
                                     )
                             }))}
+                            <TabPane tab={<span><Icon type="schedule" />Seguimiento final</span>} key="seguimiento_final">
+                                <Row gutter={20}>
+                                    <Col xs={24} lg={24} style={{marginTop: 20, marginBottom: 30}}>
+                                        {proyecto.url_informe_tecnico ? 
+                                            <div>
+                                                <p>Link del informe técnico: </p>
+                                                <Upload 
+                                                    defaultFileList= {
+                                                        [{
+                                                            uid: -2,
+                                                            name: 'informe_tecnico',
+                                                            status: 'done',
+                                                            url: proyecto.url_informe_tecnico
+                                                        }]
+                                                    }
+                                                />
+                                            </div>
+                                        : 
+                                            <Alert message="El alumno no ha subido su informe técnico" type="warning" showIcon/>
+                                        }
+                                    </Col>
+                                    <Col xs={24} lg={24}>
+                                        {
+                                            proyecto.url_informe_tecnico 
+                                            ?
+                                                <div>
+                                                    <Button style={{marginBottom: 30}} onClick={() => this.showEvaluacionAsesorInterno()} icon="bars" type="primary">Realizar evaluación</Button>
+                                                    <h4 style={{marginBottom: 10}}>Autorizar carta de liberación</h4>
+                                                    <Tooltip title={(proyecto.id_evaluacion_asesor_interno === null)?"Antes de autorizar la carta de liberación debe realizar la evaluación.":""}>
+                                                        <Switch disabled={(proyecto.id_evaluacion_asesor_interno === null)?true:false} defaultChecked={proyecto.autorizar_carta_liberacion_asesor_interno} checkedChildren="Autorizado" onChange={(e) => this.autorizarCartaDeLiberacionAsesorInterno(e, proyecto.id)} unCheckedChildren={<Icon type="cross" />}/>
+                                                    </Tooltip>
+                                                </div>
+                                                
+                                            :
+                                                <Alert message="El alumno debe subir su informe técnico para continuar con el proceso de evaluación" type="warning" showIcon/>
+                                        }
+                                    </Col>
+                                </Row>
+                            </TabPane>
                         </Tabs>
                     </TabPane>
                 </Tabs>
                 <FormAddObservacion updateObservaciones={this.updateObservaciones.bind(this)} id_proyecto={proyecto.id} tipo={tipo_observacion} usuario={usuario} visible={visibleAddObservacion}/>
                 <FormAddSolucion  id_asesoria={id_asesoria}  visible={visibleAddSolucion}/>
+                <FormEvaluacion visible={visibleEvaluacionAsesorInterno} criterios_evaluacion={criterios_evaluacion}/>
 
 
             </div>

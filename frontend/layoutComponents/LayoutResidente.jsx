@@ -123,7 +123,7 @@ export default class LayoutResidente extends Component{
                             visibleCambiarContrasenia: false,
                             componentRender: {
                                 title: 'Seguimientos',
-                                render: <SeguimientoProyecto seguimientos={res.data}/>
+                                render: <SeguimientoProyecto  seguimientos={res.data}/>
                             }
                         })
                     }

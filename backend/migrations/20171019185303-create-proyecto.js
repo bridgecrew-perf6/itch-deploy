@@ -24,6 +24,22 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         defaultValue: false
       },
+      url_informe_tecnico: {
+        type: Sequelize.STRING(300),
+        allowNull: true,
+        defaultValue: null,
+        validate: {
+          isUrl: {msg: 'La url del informe técnico es obligatoria.'}
+        }
+      },
+      autorizar_carta_liberacion_asesor_interno: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
+      autorizar_carta_liberacion_asesor_externo: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
       id_anteproyecto: {
         type: Sequelize.INTEGER,
         onDelete: 'CASCADE',
@@ -34,6 +50,18 @@ module.exports = {
           key: 'id',
           as: 'id_anteproyecto'
         }
+      },
+      id_evaluacion_asesor_interno: {
+        type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        allowNull: true,
+        defaultValue: null,
+      },
+      id_evaluacion_asesor_externo: {
+        type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        allowNull: true,
+        defaultValue: null,
       },
       createdAt: {
         allowNull: false,
