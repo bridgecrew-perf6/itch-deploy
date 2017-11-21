@@ -13,6 +13,7 @@ import {getIsAuth} from '../api.jsx';
 // components
 import CambiarContrasenia from '../layoutComponents/CambiarContrasenia.jsx';
 import RegistrarAnteproyecto from '../alumno/components/RegistrarAnteproyecto.jsx';
+import ProyectosDeResidencia from '../asesor_externo/components/ProyectosDeResidencia.jsx';
 
 export default class LayoutAsesorExterno extends Component{
     constructor(){
@@ -31,12 +32,19 @@ export default class LayoutAsesorExterno extends Component{
     getIsAuth(){
         getIsAuth().then((usuario) => {
             if(usuario.rol === 'asesor_externo'){
-                this.setState({
-                    isAuth: usuario.isAuth,
-                    usuario: usuario,
-                    componentRender: {
-                        title: 'Asesor externo',
-                        render: <p>Layout Asesor externo</p>
+                // console.log('use', usuario)
+                axios.get(`/api/proyectos/asesor_externo/${usuario.id_asesor_externo}`)
+                .then(res => {
+                    if(res.status === 200){
+                        this.setState({
+                            isAuth: usuario.isAuth,
+                            usuario: usuario,
+                            visibleCambiarContrasenia: false,
+                            componentRender: {
+                                    title: 'Proyectos de residencia',
+                                    render: <ProyectosDeResidencia proyectos={res.data} usuario={this.state.usuario}/>
+                            }
+                        })
                     }
                 })
             }else{
@@ -56,7 +64,7 @@ export default class LayoutAsesorExterno extends Component{
     
     handleMenu = ({item, key, selectedKeys}) => {
         if(key == 1){ // 
-            const anteproyecto = this.state;
+            
             this.setState({
                 componentSelected: key,
                 visibleCambiarContrasenia: false,

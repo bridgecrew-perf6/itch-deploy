@@ -95,7 +95,7 @@ module.exports.isAuth = (req, res) => {
 			const id_usuario = req.user.id;
 			AsesorExterno.findOne({where: {id_usuario}})
 				.then(asesor_externo => {
-					res.status(200).json({isAuth: true, rol: req.user.rol, id_asesor_externo: asesor_externo.id, id_empresa: asesor_externo.id_empresa})
+					res.status(200).json({id_usuario,isAuth: true, rol: req.user.rol, id_asesor_externo: asesor_externo.id, id_empresa: asesor_externo.id_empresa})
 				}).catch(err => {
 					res.status(406).json({err: err})
 				})

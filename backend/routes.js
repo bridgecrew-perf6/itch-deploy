@@ -122,6 +122,8 @@ module.exports =  (app, express, passport) => {
     // PROYECTO
     router.route('/proyectos/asesor_interno/:id_asesor_interno')
         .get(isAuth, proyectoController.getProyectosByAsesorInterno)
+    router.route('/proyectos/asesor_externo/:id_asesor_externo')
+        .get(isAuth, proyectoController.getProyectosByAsesorExterno)
     
     router.route('/proyecto/observacion')
         .post(isAuth, proyectoController.addObservacion)
@@ -139,9 +141,15 @@ module.exports =  (app, express, passport) => {
     
     router.route('/proyecto/evaluacion/criterios/asesor_interno')
         .get(isAuth, proyectoController.getCriteriosEvaluacionAsesorInterno);
+    
+    router.route('/proyecto/evaluacion/criterios/asesor_externo')
+        .get(isAuth, proyectoController.getCriteriosEvaluacionAsesorExterno);
 
     router.route('/proyecto/evaluacion/asesor_interno')
         .put(isAuth, proyectoController.addEvaluacionAsesorInterno);
+        
+    router.route('/proyecto/evaluacion/asesor_externo')
+        .put(isAuth, proyectoController.addEvaluacionAsesorExterno);
     
     router.route('/proyecto/autorizar_carta_liberacion/asesor_interno')
         .put(isAuth, proyectoController.autorizarCartaDeLiberacionAsesorInterno);
