@@ -142,7 +142,8 @@ export default class RevisionPresidenteAcademia extends Component{
         }).then(res => {
             if(res.status === 200 ){
                 message.success('Anteproyecto actualizado!')
-                window.location.reload();
+                // window.location.reload();
+                this.props.updatePeriodo();
             }else{
                 Modal.error({
                     title: 'Error al actualizar anteproyecto. Revisar los siguientes campos',

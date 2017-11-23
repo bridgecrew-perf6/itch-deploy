@@ -35,7 +35,7 @@ module.exports = {
         updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       {
-        correo: 'isra_nieto@gmail.com',
+        correo: 'mauricio@gmail.com',
         rol: 'docente',
         contrasenia: generateHash('123456'),
         createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
