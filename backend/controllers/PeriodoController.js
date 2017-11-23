@@ -133,7 +133,7 @@ module.exports.generarDictamen = (req, res) => {
                                     return Anteproyecto.destroy({where: {dictamen: 'no aprobado', id_periodo}}, {transaction: t})
                                         .then(affectedRows => {
                                             // actualizamos filename del dictamen
-                                            return _periodo.update({filename_dictamen: `${_periodo.periodo}-${_periodo.ciclo}.pdf`}, {transaction: t})
+                                            return _periodo.update({filename_dictamen: `${_periodo.id}-${_periodo.periodo}-${_periodo.ciclo}.pdf`}, {transaction: t})
                                                 .then(__periodo => {
                                                     // actualizamos las credenciales y mandamos correo
                                                     // console.log('=====>', _periodo.anteproyectos)
