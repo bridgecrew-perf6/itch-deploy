@@ -155,10 +155,11 @@ module.exports =  (app, express, passport) => {
         .put(isAuth, proyectoController.autorizarCartaDeLiberacionAsesorInterno);
     router.route('/proyecto/autorizar_carta_liberacion/asesor_externo')
         .put(isAuth, proyectoController.autorizarCartaDeLiberacionAsesorExterno);
+    
         
     router.route('/proyecto/seguimientos')
         .put(isAuth, proyectoController.findOrCreateSeguimientos)
-        router.route('/proyecto/informe_tecnico')
+    router.route('/proyecto/informe_tecnico')
         .put(isAuth, proyectoController.updateInformeTecnico)
 
     router.route('/proyecto/:id_proyecto/seguimientos')
@@ -182,7 +183,15 @@ module.exports =  (app, express, passport) => {
         .put(isAuth, proyectoController.updateAutorizarFormatoAsesoria)
     router.route('/asesoria/:id_asesoria/generar_formato/')
         .get(isAuth, proyectoController.generarFormatoDeAsesoria)
-        
+
+    router.route('/proyecto/:id_proyecto/formato_evaluacion')
+        .get(isAuth, proyectoController.generarFormatoDeEvaluacion)
+    
+    router.route('/proyecto/:id_proyecto/carta_liberacion/asesor_externo')
+        .get(proyectoController.generarCartaLiberacionAsesorExterno)
+
+    router.route('/proyecto/:id_proyecto/carta_liberacion/asesor_interno')
+        .get( proyectoController.generarCartaLiberacionAsesorInterno)    
     router.route('/asesoria/tipo')
         .put(isAuth, proyectoController.updateTipoAsesoria);
     // ANTEPROYECTO

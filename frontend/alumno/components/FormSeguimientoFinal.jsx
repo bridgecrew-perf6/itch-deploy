@@ -81,13 +81,30 @@ class FormSeguimientoFinal extends Component{
                 </Row>
                 <Row gutter={20} style={{marginTop: 30}}>
                     <Col xs={24} lg={24} className="border-bottom">
+                        <h3>Formato de evaluación</h3>
+                    </Col >
+                    <Col xs={24} lg={24}>
+                        {
+                            proyecto.id_evaluacion_asesor_interno !== null & proyecto.id_evaluacion_asesor_externo!== null ?
+                            <a target="_blank" href={`/api/proyecto/${proyecto.id}/formato_evaluacion`}>
+                                <Button type="primary" icon="file-pdf">Generar formato</Button></a>
+                            : <Alert message={`${proyecto.id_evaluacion_asesor_interno? 'El asesor interno no ha realizado la evaluación':''}\n${proyecto.id_evaluacion_asesor_externo? 'El asesor externo no ha realizado la evaluación':''}`} type="warning" showIcon></Alert>
+                            
+                        }
+                        
+                    </Col>
+                </Row>
+                <Row gutter={20} style={{marginTop: 30}}>
+                    <Col xs={24} lg={24} className="border-bottom">
                         <h3>Cartas de liberación</h3>
                     </Col >
                     <Col xs={24} lg={12}>
                         <h4>Asesor interno</h4>
                         {proyecto.autorizar_carta_liberacion_asesor_interno 
                             ? 
-                                <p>Generar</p>
+                                <a target="_blank" href={`/api/proyecto/${proyecto.id}/carta_liberacion/asesor_interno`}>
+                                    <Button type="primary" icon="file-pdf">Generar carta de liberación</Button>
+                                </a>
                             :
                             <Alert message={`Tu asesor interno no ha autorizado tu carta de liberación`} type="warning" showIcon />
                         }
@@ -96,7 +113,9 @@ class FormSeguimientoFinal extends Component{
                         <h4>Asesor externo</h4>
                         {proyecto.autorizar_carta_liberacion_asesor_externo
                             ? 
-                                <p>Generar</p>
+                                <a target="_blank" href={`/api/proyecto/${proyecto.id}/carta_liberacion/asesor_externo`}>
+                                    <Button type="primary" icon="file-pdf">Generar carta de liberación</Button>
+                                </a>
                             :
                             <Alert message={`Tu asesor externo no ha autorizado tu carta de liberación`} type="warning" showIcon />
                         }

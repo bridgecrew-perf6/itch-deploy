@@ -9,6 +9,8 @@ import moment from 'moment';
 import WrappedFormSeguimiento from '../components/FormSeguimiento.jsx';
 import WrappedFormSeguimientoFinal from '../components/FormSeguimientoFinal.jsx';
 
+var params = require(__dirname + '/../../../config/params.json');
+
 export default class SeguimientoProyecto extends Component{
     constructor(props){
         super(props);
@@ -31,13 +33,14 @@ export default class SeguimientoProyecto extends Component{
             const periodo = seguimientos[0][0].proyecto.anteproyecto.periodo; // ver si no es diferente la primera y la ultima vez jeje
             // console.warn('Periodo',periodo.fecha_fin)
             // el seguimiento final esta habilitado 10 dias antes y 10 dias despues de la fecha final del periodo
-            if(currentDate >= moment(periodo.fecha_fin, 'YYYY-MM-DD').subtract(10, 'days').format('YYYY-MM-DD') && currentDate<= moment(periodo.fecha_fin, 'YYYY-MM-DD').add(10, 'days').format('YYYY-MM-DD')){
+            console.log('params.days', params.periodo_residencia.dias_habiles_seguimiento_final);
+            if(currentDate >= moment(periodo.fecha_fin, 'YYYY-MM-DD').subtract(params.periodo_residencia.dias_habiles_seguimiento_final, 'days').format('YYYY-MM-DD') && currentDate<= moment(periodo.fecha_fin, 'YYYY-MM-DD').add(params.periodo_residencia.dias_habiles_seguimiento_final, 'days').format('YYYY-MM-DD')){
                 this.setState({
                     renderSeguimiento: <WrappedFormSeguimientoFinal proyecto={seguimientos[0][0].proyecto} />
                 })
             }else{
                 this.setState({
-                    renderSeguimiento: <Alert message={`El seguimiento final no esta disponible,\n Fecha inicial: ${moment(periodo.fecha_fin, 'YYYY-MM-DD').subtract(10, 'days').format('LL')} - Fecha final: ${moment(periodo.fecha_fin, 'YYYY-MM-DD').add(10, 'days').format('LL')}`} type="warning" showIcon />
+                    renderSeguimiento: <Alert message={`El seguimiento final no esta disponible,\n Fecha inicial: ${moment(periodo.fecha_fin, 'YYYY-MM-DD').subtract(params.periodo_residencia.dias_habiles_seguimiento_final, 'days').format('LL')} - Fecha final: ${moment(periodo.fecha_fin, 'YYYY-MM-DD').add(params.periodo_residencia.dias_habiles_seguimiento_final, 'days').format('LL')}`} type="warning" showIcon />
                 })
             }
             
@@ -63,7 +66,7 @@ export default class SeguimientoProyecto extends Component{
             <div>
                 <Row>
                     <Col xs={24} lg={4}>
-                        <Tabs defaultActiveKey="0" tabPosition="left" onChange={(key) => this.onChangeSeguimiento(key)}>
+                        <Tabs defaultActiveKey="-1" tabPosition="left" onChange={(key) => this.onChangeSeguimiento(key)}>
                             {seguimientos.map(((seguimiento, index) => {
                                 console.log('key', seguimiento[0].id)
                                 return (

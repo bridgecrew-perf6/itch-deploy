@@ -66,7 +66,10 @@ export default class Proyecto extends Component{
         return (
             <div>
                 <h2>Proyecto de residencia</h2>
-
+                <p style={{marginTop: 20}}>Nombre: </p>
+                <Input style={{marginTop: 5}} value={`${proyecto.anteproyecto.nombre}`} readOnly />
+                <p style={{marginTop: 20}}>Objetivo general: </p>
+                <Input style={{marginTop: 5}} value={`${proyecto.anteproyecto.objetivo_general}`} readOnly />
                 <h2 style={{marginTop: 20}} className="border-top" >Seguimiento final</h2>
                 <Row gutter={20}>
                     <Col xs={24} lg={24} style={{marginTop: 20, marginBottom: 30}}>

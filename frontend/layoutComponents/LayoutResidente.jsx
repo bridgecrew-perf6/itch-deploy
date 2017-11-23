@@ -111,6 +111,7 @@ export default class LayoutResidente extends Component{
                 }
             })
             
+            
         }else if(key == 4){
             axios.put(`/api/proyecto/seguimientos`, {
                 id_proyecto: proyecto.id,

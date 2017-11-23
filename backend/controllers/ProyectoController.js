@@ -142,6 +142,43 @@ module.exports.generarFormatoDeAsesoria = (req, res) => {
         res.status(406).json({err: err})
     })
 }
+
+module.exports.generarCartaLiberacionAsesorInterno = (req, res) => {
+    const id_proyecto = req.params.id_proyecto;
+    Proyecto.findOne({
+        where: {id: id_proyecto},
+        include: [{model: Anteproyecto, as: 'anteproyecto', include: [{model: Docente, as: 'asesor_interno'},{model: asesor_externo, as: 'asesor_externo'},{model: Alumno, as: 'alumno'},{model: Periodo, as: 'periodo', include: [{model: Carrera, as: 'carrera', include: [{model: Departamento, as: 'departamento', include: [{model: Docente, as: 'docentes', include: [{model: Usuario, as: 'usuario', where: {rol: 'jefe_departamento'} }]  }]}]}]}]}]
+    }).then(_proyecto => {
+        pdfs.generarCartaLiberacionAsesorInterno(_proyecto, res);
+    }).catch(err => {
+        console.log(err)
+        res.status(406).json({err: err})
+    })
+}
+module.exports.generarCartaLiberacionAsesorExterno = (req, res) => {
+    const id_proyecto = req.params.id_proyecto;
+    Proyecto.findOne({
+        where: {id: id_proyecto},
+        include: [{model: Anteproyecto, as: 'anteproyecto', include: [{model: Docente, as: 'asesor_interno'},{model: asesor_externo, as: 'asesor_externo'},{model: Alumno, as: 'alumno'},{model: Periodo, as: 'periodo', include: [{model: Carrera, as: 'carrera', include: [{model: Departamento, as: 'departamento', include: [{model: Docente, as: 'docentes', include: [{model: Usuario, as: 'usuario', where: {rol: 'jefe_departamento'} }]  }]}]}]}]}]
+    }).then(_proyecto => {
+        pdfs.generarCartaLiberacionAsesorExterno(_proyecto, res);
+    }).catch(err => {
+        console.log(err)
+        res.status(406).json({err: err})
+    })
+}
+module.exports.generarFormatoDeEvaluacion = (req, res) => {
+    const id_proyecto = req.params.id_proyecto;
+    Proyecto.findOne({
+        where: {id: id_proyecto},
+        include: [{model: evaluacion, as: 'evaluacion_asesor_externo', include: [{model: criterio_evaluacion, as: 'criterios_de_evaluacion', include: [{model: criterio, as: 'ref_criterio'}]}]},{model: evaluacion, as: 'evaluacion_asesor_interno', include: [{model: criterio_evaluacion, as: 'criterios_de_evaluacion', include: [{model: criterio, as: 'ref_criterio'}]}]},{model: Anteproyecto, as: 'anteproyecto', include: [{model: Docente, as: 'asesor_interno'},{model: asesor_externo, as: 'asesor_externo'},{model: Alumno, as: 'alumno'},{model: Periodo, as: 'periodo', include: [{model: Carrera, as: 'carrera'}]}]}]
+    }).then(_proyecto => {
+        pdfs.generarFormatoEvaluacion(_proyecto, res);
+    }).catch(err => {
+        console.log(err)
+        res.status(406).json({err: err})
+    })
+}
 module.exports.findAsesorias = (req, res) => {
     const id_proyecto = req.params.id_proyecto;
 
