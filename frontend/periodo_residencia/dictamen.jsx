@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {message, Modal, Row, Col, Select, Table, Button, Input, Icon, Popconfirm, Badge} from 'antd';
+import {message, Modal, Row, Col, Select, Table, Button, Input, Icon, Popconfirm, Badge, Alert} from 'antd';
 const {Option, OptGroup}  = Select;
 const ButtonGroup = Button.Group;
 
@@ -179,7 +179,11 @@ export default class Dictamen extends Component{
                                             </ButtonGroup> ;           
                 }
             }else{
-                renderButtonDictamen = <Button type="primary" icon="eye-o"> <a style={{color: 'white'}} target="_blank" href={`/api/dictamen/pdf/${periodo.filename_dictamen}`}>Ver dictamen</a></Button>
+                if(periodo.filename_dictamen === null){
+                    renderButtonDictamen = <Alert message={`No se ha generado el dictamen y solo se puede generar en las fechas ${periodo.fecha_inicio} al ${periodo.fecha_fin}`} type="info" showIcon/>
+                }else{
+                    renderButtonDictamen = <Button type="primary" icon="eye-o"> <a style={{color: 'white'}} target="_blank" href={`/api/dictamen/pdf/${periodo.filename_dictamen}`}>Ver dictamen</a></Button>                    
+                }
             }   
         }
         return (

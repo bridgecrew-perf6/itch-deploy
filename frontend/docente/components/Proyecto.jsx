@@ -43,7 +43,8 @@ export default class Proyecto extends Component{
             visibleAddSolucion: false,
             id_asesoria: null,
             seguimientos: [],
-            renderSeguimiento: null
+            renderSeguimiento: null,
+            visibleEvaluacionAsesorInterno: false,
         })
     }
     componentWillMount(){
@@ -105,11 +106,13 @@ export default class Proyecto extends Component{
             
             if(currentDate >= seguimiento.seguimiento.fecha_inicial && currentDate <= seguimiento.seguimiento.fecha_final){
                 this.setState({
-                    renderSeguimiento: <RevisionSeguimiento updateSeguimientos={this.updateSeguimientos.bind(this)} usuario={usuario} seguimiento={seguimiento} />
+                    renderSeguimiento: <RevisionSeguimiento updateSeguimientos={this.updateSeguimientos.bind(this)} usuario={usuario} seguimiento={seguimiento} />,
+                    visibleEvaluacionAsesorInterno: false,
                 })
             }else{
                 this.setState({
-                    renderSeguimiento: <Alert message={`No puede acceder al seguimiento,\n Fecha inicial: ${moment(seguimiento.seguimiento.fecha_inicial, 'YYYY-MM-DD').format('LL')} - Fecha final: ${moment(seguimiento.seguimiento.fecha_final, 'YYYY-MM-DD').format('LL')}`} type="warning" showIcon />
+                    renderSeguimiento: <Alert message={`No puede acceder al seguimiento,\n Fecha inicial: ${moment(seguimiento.seguimiento.fecha_inicial, 'YYYY-MM-DD').format('LL')} - Fecha final: ${moment(seguimiento.seguimiento.fecha_final, 'YYYY-MM-DD').format('LL')}`} type="warning" showIcon />,
+                    visibleEvaluacionAsesorInterno: false,
                 })
             }
         }

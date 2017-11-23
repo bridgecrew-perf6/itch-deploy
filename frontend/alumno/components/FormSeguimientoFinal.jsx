@@ -88,7 +88,7 @@ class FormSeguimientoFinal extends Component{
                             proyecto.id_evaluacion_asesor_interno !== null & proyecto.id_evaluacion_asesor_externo!== null ?
                             <a target="_blank" href={`/api/proyecto/${proyecto.id}/formato_evaluacion`}>
                                 <Button type="primary" icon="file-pdf">Generar formato</Button></a>
-                            : <Alert message={`${proyecto.id_evaluacion_asesor_interno? 'El asesor interno no ha realizado la evaluación':''}\n${proyecto.id_evaluacion_asesor_externo? 'El asesor externo no ha realizado la evaluación':''}`} type="warning" showIcon></Alert>
+                            : <Alert message={`${proyecto.id_evaluacion_asesor_interno === null? 'El asesor interno no ha realizado la evaluación':''}\n${proyecto.id_evaluacion_asesor_externo===null? ', El asesor externo no ha realizado la evaluación':''}`} type="warning" showIcon></Alert>
                             
                         }
                         

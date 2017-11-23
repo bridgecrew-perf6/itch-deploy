@@ -717,7 +717,7 @@ module.exports = {
             }
         }
         var pdfDoc = printer.createPdfKitDocument(docDefinition);
-        pdfDoc.pipe(fs.createWriteStream(`storeFiles/dictamenes/${_periodo.id}-${periodo.periodo}-${periodo.ciclo}.pdf`));
+        pdfDoc.pipe(fs.createWriteStream(`storeFiles/dictamenes/${periodo.id}-${periodo.periodo}-${periodo.ciclo}.pdf`));
         pdfDoc.end();
     }
 }
