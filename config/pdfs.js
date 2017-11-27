@@ -72,7 +72,7 @@ module.exports = {
                     margin: [0, 50, 0, 0],
                     text: [
                         {text: 'Atentamente', style: 'normal'},
-                        {text: `\n\n\n\n       ${proyecto.anteproyecto.asesor_interno.titulo} ${proyecto.anteproyecto.asesor_interno.nombre} ${proyecto.anteproyecto.asesor_interno.ap_materno} ${proyecto.anteproyecto.asesor_interno.ap_paterno}       `, style: 'normal', decoration: 'overline'},
+                        {text: `\n\n\n\n       ${proyecto.anteproyecto.asesor_interno.titulo} ${proyecto.anteproyecto.asesor_interno.nombre} ${proyecto.anteproyecto.asesor_interno.ap_paterno} ${proyecto.anteproyecto.asesor_interno.ap_materno}       `, style: 'normal', decoration: 'overline'},
                         {text: '\n       Asesor interno       ', style: 'normal'}
                     ]
                 }
@@ -289,7 +289,7 @@ module.exports = {
                         widths: ['*','*'],
                         alignment: 'center',
                         body: [
-                            [{alignment: 'center',style: 'normal', text: `           ${proyecto.anteproyecto.asesor_interno.titulo} ${proyecto.anteproyecto.asesor_interno.nombre} ${proyecto.anteproyecto.asesor_interno.ap_materno} ${proyecto.anteproyecto.asesor_interno.ap_paterno}           `, decoration: 'underline'}, {alignment: 'center',text: `           ${proyecto.anteproyecto.asesor_externo.nombre}           `, style:'normal', decoration: 'underline'}],
+                            [{alignment: 'center',style: 'normal', text: `           ${proyecto.anteproyecto.asesor_interno.titulo} ${proyecto.anteproyecto.asesor_interno.nombre} ${proyecto.anteproyecto.asesor_interno.ap_paterno} ${proyecto.anteproyecto.asesor_interno.ap_materno}           `, decoration: 'underline'}, {alignment: 'center',text: `           ${proyecto.anteproyecto.asesor_externo.nombre}           `, style:'normal', decoration: 'underline'}],
                             [{alignment: 'center',text: 'Nombre y firma del asesor interno', style:'normal'}, {alignment: 'center',text: 'Nombre y firma del asesor externo', style:'normal'}],
                         ]
                     },
