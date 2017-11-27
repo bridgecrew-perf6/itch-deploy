@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {render} from 'react-dom';
 import PropTypes from 'prop-types';
 
-import { Layout, Menu, Breadcrumb, Icon, Avatar, Modal, Input, Form, Alert} from 'antd';
+import { Layout, Menu, Breadcrumb, Icon, Avatar, Modal, Input, Form, Alert, Button} from 'antd';
 const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
 
@@ -30,23 +30,26 @@ export default class LayoutResidente extends Component{
                        render: null
             },
             visibleCambiarContrasenia: false,
-            proyecto: null
+            proyecto: null,
+            cancelacion: null
         }
     }
+
     getIsAuth(){
         getIsAuth().then((usuario) => {
             if(usuario.rol === 'residente'){
-                this.setState({
-                    isAuth: usuario.isAuth,
-                    usuario: usuario,
-                    componentRender: {
+                // this.setState({
+                //     isAuth: usuario.isAuth,
+                //     usuario: usuario,
+                //     componentRender: {
                         
-                    }
-                })
+                //     }
+                // })
                 axios.get(`/api/alumno/${usuario.id_alumno}/proyecto`)
                     .then(res => {
-                        // console.warn(res.data)
+                        // console.warn('CTTTTM')
                         if(res.status === 200){
+                            // console.log('WHYYYYY')
                             this.setState({
                                 proyecto: res.data,
                                 isAuth: usuario.isAuth,
@@ -58,8 +61,18 @@ export default class LayoutResidente extends Component{
                                 }
                             })
                         }else{
+                            // console.log('ALLLLVVVV')
                             this.setState({isAuth: false})
                         }
+                    }).catch(err => {
+                        axios.get(`/api/alumnos/${usuario.id_alumno}/cancelacion`)
+                            .then(res => {
+                                if(res.status === 200){
+                                    this.setState({
+                                        cancelacion: res.data
+                                    })
+                                }
+                            })
                     })
             }else{
                 this.setState({isAuth: false})
@@ -137,7 +150,7 @@ export default class LayoutResidente extends Component{
         }
     }
     render(){
-        const {isAuth, componentSelected, componentRender,usuario, visibleCambiarContrasenia, proyecto} = this.state
+        const {cancelacion, isAuth, componentSelected, componentRender,usuario, visibleCambiarContrasenia, proyecto} = this.state
         // console.log(isAuth)
         return(
             isAuth ? (
@@ -186,7 +199,14 @@ export default class LayoutResidente extends Component{
                         </Header>
                         <Content style={{ margin: '24px 16px', padding: 24, background: '#fff' }}>
                             {componentRender.render}
-                            {proyecto ? null : <Alert message="Residente, usted no tiene proyecto, probablemente hubo una cancelación ó su anteproyecto no fue factible, para mas información preguntar al presidente de academia o jefe de departamento." type="error" showIcon/>}
+                            {proyecto ? null : <div>
+                                                    <Alert message="Residente, usted no tiene proyecto, probablemente hubo una cancelación ó su anteproyecto no fue factible, para mas información preguntar al presidente de academia o jefe de departamento." type="error" showIcon/>
+                                                    {cancelacion === null ? null: 
+                                                        <Button style={{marginTop: 20}} type="primary" icon="file-pdf">
+                                                            Generar formato de cancelación
+                                                        </Button>
+                                                    }
+                                                </div>}
                         </Content>
                         <Footer style={{ textAlign: 'center' }}>
                             Sistema de Seguimiento de residencias del ITCH ©2017 Francisco Blanco 00fblanco@gmail.com

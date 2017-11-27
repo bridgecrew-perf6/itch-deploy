@@ -89,14 +89,15 @@ module.exports =  (app, express, passport) => {
 
     router.route('/alumno/cancelacion')
         .put(isAuth, alumnoController.cancelacionProyecto);
-
+    router.route('/alumno/:id_alumno/cancelacion')
+        .get(isAuth, alumnoController.getCancelacionProyecto);
+    
     router.route('/alumno/:id/anteproyecto')
         .get(isAuth, alumnoController.getAnteproyecto)
         .put(isAuth, alumnoController.updateDatosAnteproyecto);
         
     router.route('/alumno/:id/proyecto')
         .get(isAuth, alumnoController.getProyecto)
-        // .put(isAuth, )
 
     router.route('/alumno/file_anteproyecto/:id_anteproyecto')
         .post(isAuth,alumnoController.addFileAnteproyecto);
@@ -188,10 +189,10 @@ module.exports =  (app, express, passport) => {
         .get(isAuth, proyectoController.generarFormatoDeEvaluacion)
     
     router.route('/proyecto/:id_proyecto/carta_liberacion/asesor_externo')
-        .get(proyectoController.generarCartaLiberacionAsesorExterno)
+        .get(isAuth, proyectoController.generarCartaLiberacionAsesorExterno)
 
     router.route('/proyecto/:id_proyecto/carta_liberacion/asesor_interno')
-        .get( proyectoController.generarCartaLiberacionAsesorInterno)    
+        .get(isAuth, proyectoController.generarCartaLiberacionAsesorInterno)    
     router.route('/asesoria/tipo')
         .put(isAuth, proyectoController.updateTipoAsesoria);
     // ANTEPROYECTO

@@ -22,7 +22,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isAlpha: {msg: 'Debe contener solo letras'},
         notEmpty: {msg: 'El campo no debe estar vacio'},
       }
     },
@@ -31,7 +30,6 @@ module.exports = (sequelize, DataTypes) => {
 
       allowNull: false,
       validate: {
-        isAlpha: {msg: 'Debe contener solo letras'},
         notEmpty: {msg: 'El campo no debe estar vacio'},
       }
     },

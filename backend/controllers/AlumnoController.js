@@ -20,6 +20,7 @@ const transporter = require('../../config/email');
 const criterio = require('../models').criterio;
 const criterio_evaluacion = require('../models').criterio_evaluacion;
 const evaluacion = require('../models').evaluacion;
+const cancelacion_proyecto = require('../models').cancelacion_proyecto;
 
 const fs = require('fs');
 const path = require('path');
@@ -168,13 +169,30 @@ module.exports.getCronogramaPDF = (req, res) => {
 
 module.exports.cancelacionProyecto = (req, res) => {
     const id_alumno = req.body.id_alumno;
-    Anteproyecto.destroy({where: {id_alumno}})
-        .then(affectedRows => {
-            res.status(200).json({affectedRows})
-        }).catch(err => {
-            console.log(err)
-            res.status(406).json({err: err})
+    sequelize.transaction(t => {
+        return Anteproyecto.findOne({where: {id_alumno}},{transaction: t})
+            .then(_anteproyecto => {
+                return cancelacion_proyecto.create({
+                    id_alumno,
+                    id_asesor_interno: _anteproyecto.id_asesor_interno,
+                    id_periodo: _anteproyecto.id_periodo,
+                    nombre_proyecto: _anteproyecto.nombre
+                }, {transaction: t}).then(_cancelacion => {
+                    return Anteproyecto.destroy({where: {id_alumno}}, {transaction: t})
+                })
+            })
+    }).then((_anteproyecto)=>{
+        res.status(200).json(_anteproyecto);
+    }).catch(Sequelize.ValidationError, (err) => {
+        var errores = err.errors.map((element) => {
+            return `${element.path}: ${element.message}`
         })
+        // console.log('==>', errores)
+        res.status(202).json({errores})
+    }).catch((err) => {
+        console.log(err)
+        res.status(406).json({err: err})
+    }) 
 
 }
 module.exports.retryAnteproyecto = (req, res) => {
@@ -273,6 +291,16 @@ module.exports.getAnteproyecto = (req, res) => {
 }
 //                     include: [{model: Anteproyecto, as: 'anteproyecto', include: [{model: revision_anteproyecto, as: 'revisiones', include: [{model: Docente, as: 'docente'}]},{model: Alumno, as: 'alumno'}, {model: Periodo, as: 'periodo'}, {model: asesor_externo, as: 'asesor_externo'}] }]
 
+module.exports.getCancelacionProyecto = (req, res) => {
+    const id_alumno = req.params.id_alumno;
+    cancelacion_proyecto.findOne({where: {id_alumno}, include: [{model: Alumno, as: 'alumno',}, {model: Docente, as: 'asesor_interno'}, {model: Periodo, as: 'periodo'}]})
+        .then(_cancelacion => {
+            res.status(200).json(_cancelacion)
+        }).catch((err) => {
+            console.log(err)
+            res.status(406).json({err: err})
+        })
+}
 module.exports.getProyecto = (req, res) => {
     const id_alumno = req.params.id;
     sequelize.transaction( t => {

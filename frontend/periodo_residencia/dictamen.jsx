@@ -15,7 +15,7 @@ export default class Dictamen extends Component{
             usuario: props.usuario,
             departamento: props.departamento,
             periodo: null,
-            dictamen_anteproyectos: null
+            dictamen_anteproyectos: null,
         }
     }
     handleChangePeriodo = (id_periodo) => {
@@ -53,6 +53,40 @@ export default class Dictamen extends Component{
         })
         
     }
+    updatePeriodo = () => {
+        axios.get(`/api/periodo/${this.state.periodo.id}/dictamen`)
+        .then(res =>{
+            if(res.status === 200){
+                console.log(res)
+                if(res.data.anteproyectos != null){
+                    const dictamen_anteproyectos = res.data.anteproyectos.map((anteproyecto, index) => {
+                        return {
+                            key: (index + 1),
+                            id: anteproyecto.id,
+                            no_control_alumno: anteproyecto.alumno.no_control,
+                            nombre_alumno: `${anteproyecto.alumno.nombre} ${anteproyecto.alumno.ap_paterno} ${anteproyecto.alumno.ap_materno}`,
+                            sexo_alumno: anteproyecto.alumno.sexo,
+                            nombre_anteproyecto: anteproyecto.nombre,
+                            nombre_titular_empresa: `${anteproyecto.asesor_externo.empresa.nombre_titular} \n ${anteproyecto.asesor_externo.empresa.puesto_titular}` ,
+                            asesor_interno: `${anteproyecto.asesor_interno.titulo} ${anteproyecto.asesor_interno.nombre} ${anteproyecto.asesor_interno.ap_paterno} ${anteproyecto.asesor_interno.ap_materno}`,
+                            asesor_externo: anteproyecto.asesor_externo.nombre,
+                            dictamen: anteproyecto.dictamen.toUpperCase(),
+                            fecha_dictamen: anteproyecto.updatedAt
+                        }
+                    })
+                    this.setState({
+                        periodo: res.data,
+                        dictamen_anteproyectos
+                    })
+                }else{
+                    this.setState({
+                        periodo: res.data,
+                        dictamen_anteproyectos: null
+                    })
+                }
+            }
+        })
+    }
     handleGenerarDictamen = () => {
         // generar dictamen abrir una ventana con el pdf y actualizar la pagina del sitio jeje
         const {periodo} = this.state
@@ -61,8 +95,9 @@ export default class Dictamen extends Component{
         }).then((res) => {
             if(res.status === 200){
                 // form.resetFields();
-                console.log(res.data)
+                // console.log(res.data)
                 message.success("Dictamen generado satisfactoriamente!")
+                this.updatePeriodo()
             }else{
                 Modal.error({
                     title: 'Error al intentar generar el dictamen',
