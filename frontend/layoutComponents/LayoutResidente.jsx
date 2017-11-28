@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import { Layout, Menu, Breadcrumb, Icon, Avatar, Modal, Input, Form, Alert, Button} from 'antd';
 const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
+const ButtonGroup = Button.Group;
+
 
 import {Redirect, Link} from 'react-router-dom';
 import axios from 'axios';
@@ -14,6 +16,7 @@ import {getIsAuth} from '../api.jsx';
 
 // components
 import CambiarContrasenia from '../layoutComponents/CambiarContrasenia.jsx';
+import FormJustificacionCancelacion from '../layoutComponents/FormJustificacionCancelacion.jsx';
 import ProyectoDeResidencia from '../alumno/components/ProyectoDeResidencia.jsx';
 import RegistrarAsesoria from '../alumno/components/RegistrarAsesoria.jsx'
 import SeguimientoProyecto from '../alumno/components/SeguimientoProyecto.jsx';
@@ -31,7 +34,8 @@ export default class LayoutResidente extends Component{
             },
             visibleCambiarContrasenia: false,
             proyecto: null,
-            cancelacion: null
+            cancelacion: null,
+            visibleCancelacion: false
         }
     }
 
@@ -65,7 +69,7 @@ export default class LayoutResidente extends Component{
                             this.setState({isAuth: false})
                         }
                     }).catch(err => {
-                        axios.get(`/api/alumnos/${usuario.id_alumno}/cancelacion`)
+                        axios.get(`/api/alumno/${usuario.id_alumno}/cancelacion`)
                             .then(res => {
                                 if(res.status === 200){
                                     this.setState({
@@ -85,7 +89,8 @@ export default class LayoutResidente extends Component{
     toggle = () => {
         this.setState({
             collapsed: !this.state.collapsed,
-            visibleCambiarContrasenia: false
+            visibleCambiarContrasenia: false,
+            visibleCancelacion: false,
         });
     }
     
@@ -99,6 +104,7 @@ export default class LayoutResidente extends Component{
                         this.setState({
                             componentSelected: key,
                             visibleCambiarContrasenia: false,
+                            visibleCancelacion: false,
                             proyecto: res.data,
                             componentRender: {
                                 title: 'Proyecto de residencia',
@@ -116,6 +122,7 @@ export default class LayoutResidente extends Component{
                     this.setState({
                         componentSelected: key,
                         visibleCambiarContrasenia: false,
+                        visibleCancelacion: false,
                         componentRender: {
                             title: 'Asesorias',
                             render: <RegistrarAsesoria usuario={usuario} proyecto={res.data}/>
@@ -135,6 +142,7 @@ export default class LayoutResidente extends Component{
                         this.setState({
                             componentSelected: key,
                             visibleCambiarContrasenia: false,
+                            visibleCancelacion: false,
                             componentRender: {
                                 title: 'Seguimientos',
                                 render: <SeguimientoProyecto  seguimientos={res.data}/>
@@ -146,11 +154,18 @@ export default class LayoutResidente extends Component{
         }else if(key == 3){ // modal cambiar contraseña
             this.setState({
                 visibleCambiarContrasenia: true,
+                visibleCancelacion: false,
             })
         }
     }
+    showFormCancelacion = () => {
+        this.setState({
+            visibleCambiarContrasenia: false, 
+            visibleCancelacion: true
+        })
+    }
     render(){
-        const {cancelacion, isAuth, componentSelected, componentRender,usuario, visibleCambiarContrasenia, proyecto} = this.state
+        const {visibleCancelacion, cancelacion, isAuth, componentSelected, componentRender,usuario, visibleCambiarContrasenia, proyecto} = this.state
         // console.log(isAuth)
         return(
             isAuth ? (
@@ -202,9 +217,20 @@ export default class LayoutResidente extends Component{
                             {proyecto ? null : <div>
                                                     <Alert message="Residente, usted no tiene proyecto, probablemente hubo una cancelación ó su anteproyecto no fue factible, para mas información preguntar al presidente de academia o jefe de departamento." type="error" showIcon/>
                                                     {cancelacion === null ? null: 
-                                                        <Button style={{marginTop: 20}} type="primary" icon="file-pdf">
-                                                            Generar formato de cancelación
-                                                        </Button>
+                                                        <div>
+                                                            <ButtonGroup>
+                                                                <Button onClick={() => this.showFormCancelacion()} style={{marginTop: 20}} icon="plus">
+                                                                    Agregar justificación de cancelación de residencia
+                                                                </Button>
+                                                                <Button type="primary" icon="file-pdf">
+                                                                    <a style={{color: 'white'}} href={`/api/alumno/${cancelacion.id}/generarFormatoDeCancelacion`} target="_blank">
+                                                                          Generar formato
+                                                                    </a>
+                                                                </Button>
+                                                                
+                                                            </ButtonGroup>
+                                                            <FormJustificacionCancelacion cancelacion={cancelacion} visible={visibleCancelacion}/>
+                                                        </div>
                                                     }
                                                 </div>}
                         </Content>

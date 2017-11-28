@@ -33,7 +33,7 @@ export default class SeguimientoProyecto extends Component{
             const periodo = seguimientos[0][0].proyecto.anteproyecto.periodo; // ver si no es diferente la primera y la ultima vez jeje
             // console.warn('Periodo',periodo.fecha_fin)
             // el seguimiento final esta habilitado 10 dias antes y 10 dias despues de la fecha final del periodo
-            console.log('params.days', params.periodo_residencia.dias_habiles_seguimiento_final);
+            // console.log('params.days', params.periodo_residencia.dias_habiles_seguimiento_final);
             if(currentDate >= moment(periodo.fecha_fin, 'YYYY-MM-DD').subtract(params.periodo_residencia.dias_habiles_seguimiento_final, 'days').format('YYYY-MM-DD') && currentDate<= moment(periodo.fecha_fin, 'YYYY-MM-DD').add(params.periodo_residencia.dias_habiles_seguimiento_final, 'days').format('YYYY-MM-DD')){
                 this.setState({
                     renderSeguimiento: <WrappedFormSeguimientoFinal proyecto={seguimientos[0][0].proyecto} />

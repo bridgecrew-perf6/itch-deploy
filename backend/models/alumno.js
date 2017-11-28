@@ -73,7 +73,8 @@ module.exports = (sequelize, DataTypes) => {
     });
     Alumno.belongsTo(models.Carrera, {
       foreignKey: 'id_carrera',
-      onDelete: 'CASCADE'
+      onDelete: 'CASCADE',
+      as: 'carrera'
     })
   }
   return Alumno;

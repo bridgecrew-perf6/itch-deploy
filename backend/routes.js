@@ -92,6 +92,10 @@ module.exports =  (app, express, passport) => {
     router.route('/alumno/:id_alumno/cancelacion')
         .get(isAuth, alumnoController.getCancelacionProyecto);
     
+    router.route('/alumno/cancelacion_justificacion')
+        .put(isAuth, alumnoController.justificacionCancelacionProyecto);
+    router.route('/alumno/:id_cancelacion/generarFormatoDeCancelacion')
+        .get(isAuth, alumnoController.generarFormatoDeCancelacion);
     router.route('/alumno/:id/anteproyecto')
         .get(isAuth, alumnoController.getAnteproyecto)
         .put(isAuth, alumnoController.updateDatosAnteproyecto);

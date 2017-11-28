@@ -4,6 +4,8 @@ const Carrera = require('../models').Carrera;
 const asesor_externo = require('../models').asesor_externo;
 const Usuario = require('../models').Usuario;
 const Docente = require('../models').Docente;
+
+const Departamento = require('../models').Departamento;
 const Anteproyecto = require('../models').Anteproyecto;
 const Proyecto = require('../models').Proyecto;
 const seguimiento_proyecto = require('../models').seguimiento_proyecto;
@@ -22,6 +24,7 @@ const criterio_evaluacion = require('../models').criterio_evaluacion;
 const evaluacion = require('../models').evaluacion;
 const cancelacion_proyecto = require('../models').cancelacion_proyecto;
 
+const pdfs = require('../../config/pdfs');
 const fs = require('fs');
 const path = require('path');
 
@@ -167,6 +170,23 @@ module.exports.getCronogramaPDF = (req, res) => {
     res.send(pdf);
 }
 
+module.exports.justificacionCancelacionProyecto = (req, res) => {
+    const id_cancelacion = req.body.id_cancelacion,
+        justificacion = req.body.justificacion;
+    cancelacion_proyecto.update({justificacion},{where: {id: id_cancelacion}})
+        .then((_cancelacion)=>{
+            res.status(200).json(_cancelacion);
+        }).catch(Sequelize.ValidationError, (err) => {
+            var errores = err.errors.map((element) => {
+                return `${element.path}: ${element.message}`
+            })
+            // console.log('==>', errores)
+            res.status(202).json({errores})
+        }).catch((err) => {
+            console.log(err)
+            res.status(406).json({err: err})
+        })
+}
 module.exports.cancelacionProyecto = (req, res) => {
     const id_alumno = req.body.id_alumno;
     sequelize.transaction(t => {
@@ -296,6 +316,16 @@ module.exports.getCancelacionProyecto = (req, res) => {
     cancelacion_proyecto.findOne({where: {id_alumno}, include: [{model: Alumno, as: 'alumno',}, {model: Docente, as: 'asesor_interno'}, {model: Periodo, as: 'periodo'}]})
         .then(_cancelacion => {
             res.status(200).json(_cancelacion)
+        }).catch((err) => {
+            console.log(err)
+            res.status(406).json({err: err})
+        })
+}
+module.exports.generarFormatoDeCancelacion = (req, res) => {
+    const id_cancelacion = req.params.id_cancelacion;
+    cancelacion_proyecto.findOne({where: {id: id_cancelacion}, include: [{model: Alumno, as: 'alumno', include: [{model: Carrera, as: 'carrera', include: [{model: Departamento, as: 'departamento', include: [{model: Docente, as: 'docentes', include: [{model: Usuario, as: 'usuario', where: {rol: 'jefe_departamento'} }]}]}]}]}, {model: Docente, as: 'asesor_interno'}, {model: Periodo, as: 'periodo'}]})
+        .then(_cancelacion => {
+            pdfs.generarFormatoDeCancelacion(_cancelacion, res);
         }).catch((err) => {
             console.log(err)
             res.status(406).json({err: err})

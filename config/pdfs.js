@@ -34,6 +34,88 @@ function nivelDeDesempenio(calificacion_final) {
 
 
 module.exports = {
+    generarFormatoDeCancelacion: (cancelacion, res) => {
+        // console.log(cancelacion.alumno.carrera.departamento.docentes[0].nombre)
+        var docDefinition = {
+            pageSize: 'LETTER',
+            pageMargins: [40, 40, 40, 50],
+            content: [
+                {
+                    alignment: 'right',
+                    width: '*',
+                    text: [
+                        {text: 'Asunto: ', style: 'normal'},
+                        {text: 'Cancelación de proyecto de residencia y nueva \nasignación de anteproyecto de residencia profesional', style: 'normal', bold: true}
+                    ]   
+                },
+                {
+                    margin: [0, 30, 0, 0],
+                    alignment: 'right',
+                    width: '*',
+                    text: `Chilpancingo, Gro., ${moment().format('LL')}.`,
+                    style: 'normal'   
+                },
+                {
+                    margin: [0, 30, 0, 0],
+                    alignment: 'left',
+                    width: '*',
+                    text: `${cancelacion.alumno.carrera.departamento.docentes[0].titulo} ${cancelacion.alumno.carrera.departamento.docentes[0].nombre} ${cancelacion.alumno.carrera.departamento.docentes[0].ap_paterno} ${cancelacion.alumno.carrera.departamento.docentes[0].ap_materno} \nJefe de departamento de ${cancelacion.alumno.carrera.departamento.nombre}\nPRESENTE`,
+                    style: 'normal',
+                    bold: true
+                },
+                {
+                    margin: [0, 20, 0, 0],
+                    alignment: 'justify',
+                    width: '*',
+                    text: [
+                        {text: `El que subscribe `, style: 'normal'},
+                        {text: `${cancelacion.asesor_interno.titulo} ${cancelacion.asesor_interno.nombre} ${cancelacion.asesor_interno.ap_paterno} ${cancelacion.asesor_interno.ap_materno}`, style: 'normal', bold: true},
+                        {text: `, catedrático de este instituto y asesor interno ${cancelacion.alumno.sexo==='H'?'del': 'de la'} estudiante residente `, style: 'normal'},
+                        {text: `C. ${cancelacion.alumno.nombre} ${cancelacion.alumno.ap_paterno} ${cancelacion.alumno.ap_materno} `, style: 'normal', bold: true},
+                        {text: `con numero de control `, style: 'normal'},
+                        {text: `${cancelacion.alumno.no_control}`, style: 'normal', bold: true},
+                        {text: `, de la carrera `, style: 'normal'},
+                        {text: `${cancelacion.alumno.carrera.nombre} `, style: 'normal', bold: true},
+                        {text: `quien tiene asignado el proyecto denominado: `, style: 'normal'},
+                        {text: `"${cancelacion.nombre_proyecto}",`, style: 'normal', bold: true},
+                        {text: ` en el periodo `, style: 'normal'},
+                        {text: `${cancelacion.periodo.periodo} ${cancelacion.periodo.ciclo}.`, style: 'normal', bold: true},
+                        {text: `\n\nCon base en ello; me permito notificar y solicitar a usted. Que el estudiante ya citado no podrá concluir su residencia profesional en el periodo que le correspondió, debido a que le se le presentaron los siguientes percances:`, style: 'normal', bold: true},
+                        {text: `\n\t- ${cancelacion.justificacion}`, style: 'normal'},
+                        {text: `\n\nPor lo que solicito a usted de no existir inconveniente alguno, el gestionar ante el comité académico en coordinación con el departamento de la división de estudio profesionales, la cancelación de la residencia descrita y la autorización de un nuevo anteproyecto de residencia profesional para que pueda concluir su carrera satisfactoriamente.`, style: 'normal', bold: true},
+                        {text: `\n\nEn base a lo antes expuesto y esperando contar con su apoyo para llevar a cabo la cancelación y asignación de residencia profesional, quedo de usted.`, style: 'normal'},
+                    ]
+                },
+                {
+                    margin: [0, 30, 0, 0],
+                    alignment: 'center',
+                    width: '*',
+                    text: `Atentamente`,
+                    style: 'normal'
+                },
+                {
+                    margin: [0, 0, 0, 0],
+                    alignment: 'center',
+                    width: '*',
+                    text: [
+                        {text: `\n\n       ${cancelacion.asesor_interno.titulo} ${cancelacion.asesor_interno.nombre} ${cancelacion.asesor_interno.ap_paterno} ${cancelacion.asesor_interno.ap_materno}       `, style: 'normal', decoration: 'overline'},
+                        {text: '\n       Asesor interno       ', style: 'normal'}
+                    ]
+
+                }
+            ],
+            styles: {
+                normal: {
+                    fontSize: 12,
+                    lineHeight: 1.5
+                }
+            }
+
+        }
+        var pdfDoc = printer.createPdfKitDocument(docDefinition);
+        pdfDoc.pipe(res);
+        pdfDoc.end();
+    },
     generarCartaLiberacionAsesorInterno: (proyecto, res) => {
         // console.log('ALV', proyecto.anteproyecto.periodo.carrera.departamento.docentes[0].nombre)
         var docDefinition = {
@@ -59,7 +141,7 @@ module.exports = {
                 {
                     alignment: 'justify',
                     width: '*',
-                    margin: [0, 50, 0, 0],
+                    margin: [0, 20, 0, 0],
                     text: [
                         {text: `Por este medio comunico a usted, que el Proyecto de Residencia Profesional denominado "${proyecto.anteproyecto.nombre}", realizado por ${proyecto.anteproyecto.alumno.sexo==='H'?'el': 'la'} estudiante ${proyecto.anteproyecto.alumno.nombre} ${proyecto.anteproyecto.alumno.ap_paterno} ${proyecto.anteproyecto.alumno.ap_materno} , No. control ${proyecto.anteproyecto.alumno.no_control}, del programa educativo de ${proyecto.anteproyecto.periodo.carrera.nombre}, del que fungí como Asesor interno; fue desarrollado en tiempo y forma de acuerdo a lo establecido en su programa de actividades.`, style: 'normal'},
                          {text: `\nPor lo anterior, una vez que ha sido revisado y avalado en informe técnico final del proyecto de residencia profesional mencionado, se da por concluido el proyecto quedando liberado ${proyecto.anteproyecto.alumno.sexo==='H'?'el': 'la'} estudiante que en el intervino.`, style: 'normal'},
@@ -69,7 +151,7 @@ module.exports = {
                 {
                     alignment: 'center',
                     width: '*',
-                    margin: [0, 50, 0, 0],
+                    margin: [0, 20, 0, 0],
                     text: [
                         {text: 'Atentamente', style: 'normal'},
                         {text: `\n\n\n\n       ${proyecto.anteproyecto.asesor_interno.titulo} ${proyecto.anteproyecto.asesor_interno.nombre} ${proyecto.anteproyecto.asesor_interno.ap_paterno} ${proyecto.anteproyecto.asesor_interno.ap_materno}       `, style: 'normal', decoration: 'overline'},
