@@ -65,7 +65,7 @@ module.exports = {
         descripcion: 'Demuestra liderezgo en su actuar',
         valor_max: 10,
         valor_min: 1,
-        tipo: 'asesor_interno',
+        tipo: 'asesor_externo',
         createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
         updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
       },
@@ -73,7 +73,7 @@ module.exports = {
         descripcion: 'Demuestra conocimiento en el área de su especialidad',
         valor_max: 20,
         valor_min: 1,
-        tipo: 'asesor_interno',
+        tipo: 'asesor_externo',
         createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
         updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
       },
@@ -81,7 +81,7 @@ module.exports = {
         descripcion: 'Demuestra su comportamiento ético (es diciplinado, acata órdenes, respeta a sus compañeros de trabajo, entre otros)',
         valor_max: 10,
         valor_min: 1,
-        tipo: 'asesor_interno',
+        tipo: 'asesor_externo',
         createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
         updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
       },
