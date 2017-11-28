@@ -52,6 +52,7 @@ export default class LayoutAsesorExterno extends Component{
             }
         })
     }
+    
     componentWillMount(){
         this.getIsAuth()
     }
@@ -65,14 +66,14 @@ export default class LayoutAsesorExterno extends Component{
     handleMenu = ({item, key, selectedKeys}) => {
         if(key == 1){ // 
             
-            this.setState({
-                componentSelected: key,
-                visibleCambiarContrasenia: false,
-                componentRender: {
-                    title: 'Registrar anteproyecto',
-                    render: <RegistrarAnteproyecto anteproyecto={anteproyecto}/>
-                }
-            })
+            // this.setState({
+            //     componentSelected: key,
+            //     visibleCambiarContrasenia: false,
+            //     componentRender: {
+            //         title: 'Registrar anteproyecto',
+            //         render: <RegistrarAnteproyecto anteproyecto={anteproyecto}/>
+            //     }
+            // })
         }
         if(key == 3){ // modal cambiar contraseña
             this.setState({

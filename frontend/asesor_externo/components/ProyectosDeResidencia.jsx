@@ -14,14 +14,16 @@ export default class ProyectosDeResidencia extends Component{
         this.state = {
             proyectos: props.proyectos,
             usuario: props.usuario,
-            renderProyecto: null
+            renderProyecto: null,
+            id_alumno: null
         }
     }
     componentWillReceiveProps(nextProps){
         this.setState({
             proyectos: nextProps.proyectos,
             usuario: props.usuario,
-            renderProyecto: null
+            renderProyecto: null,
+            id_alumno: null
         })
     }
 
@@ -31,12 +33,24 @@ export default class ProyectosDeResidencia extends Component{
                 if(res.status === 200){
                     // console.warn('proyecto', res.data)
                     this.setState({
-                        renderProyecto:(<Proyecto proyecto={res.data} usuario={this.state.usuario}/>)
+                        renderProyecto:(<Proyecto updateProyecto={this.updateProyecto.bind(this)} proyecto={res.data} usuario={this.state.usuario}/>),
+                        id_alumno
                     })
                 }
             })
     }
-    
+    updateProyecto = () => {
+        axios.get(`/api/alumno/${this.state.id_alumno}/proyecto`)
+        .then((res) => {
+            if(res.status === 200){
+                // console.warn('proyecto', res.data)
+                this.setState({
+                    renderProyecto:(<Proyecto updateProyecto={this.updateProyecto.bind(this)} proyecto={res.data} usuario={this.state.usuario}/>)
+                })
+            }
+        })
+    }
+
     render(){
         const {proyectos, renderProyecto} = this.state
         // console.warn(')>', proye)

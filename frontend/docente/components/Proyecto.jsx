@@ -101,6 +101,7 @@ export default class Proyecto extends Component{
         const {seguimientos, usuario} = this.state;
         const currentDate = moment().format('YYYY-MM-DD');
         if(key === "seguimiento_final"){
+
         }else{
             const seguimiento = seguimientos.find(seg => seg.id==key);
             
@@ -278,6 +279,9 @@ export default class Proyecto extends Component{
                 message.warn('Error al autorizar la carta de liberación consultar al administrador.')
             }
         })
+    }
+    updateProyecto = () => {
+        this.props.updateProyecto();
     }
     render(){
         const {criterios_evaluacion, visibleEvaluacionAsesorInterno, proyecto, visibleAddObservacion, tipo_observacion, usuario, observaciones, asesorias, id_asesoria, visibleAddSolucion, seguimientos, renderSeguimiento} = this.state
@@ -536,9 +540,7 @@ export default class Proyecto extends Component{
                 </Tabs>
                 <FormAddObservacion updateObservaciones={this.updateObservaciones.bind(this)} id_proyecto={proyecto.id} tipo={tipo_observacion} usuario={usuario} visible={visibleAddObservacion}/>
                 <FormAddSolucion  id_asesoria={id_asesoria}  visible={visibleAddSolucion}/>
-                <FormEvaluacion proyecto={proyecto} visible={visibleEvaluacionAsesorInterno} criterios_evaluacion={criterios_evaluacion}/>
-
-
+                <FormEvaluacion updateProyecto={this.updateProyecto.bind(this)} proyecto={proyecto} visible={visibleEvaluacionAsesorInterno} criterios_evaluacion={criterios_evaluacion}/>
 
             </div>
         )

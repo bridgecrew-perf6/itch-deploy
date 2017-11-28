@@ -190,7 +190,7 @@ module.exports =  (app, express, passport) => {
         .get(isAuth, proyectoController.generarFormatoDeAsesoria)
 
     router.route('/proyecto/:id_proyecto/formato_evaluacion')
-        .get(isAuth, proyectoController.generarFormatoDeEvaluacion)
+        .get(proyectoController.generarFormatoDeEvaluacion)
     
     router.route('/proyecto/:id_proyecto/carta_liberacion/asesor_externo')
         .get(isAuth, proyectoController.generarCartaLiberacionAsesorExterno)

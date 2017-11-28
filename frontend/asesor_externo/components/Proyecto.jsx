@@ -59,6 +59,9 @@ export default class Proyecto extends Component{
             }
         })
     }
+    updateProyecto = () => {
+        this.props.updateProyecto();
+    }
     render(){
         const {criterios_evaluacion, visibleEvaluacionAsesorExterno, proyecto, usuario, renderSeguimiento} = this.state
         // console.warn(usuario);
@@ -108,7 +111,7 @@ export default class Proyecto extends Component{
                         }
                     </Col>
                 </Row>
-                <FormEvaluacion proyecto={proyecto} visible={visibleEvaluacionAsesorExterno} criterios_evaluacion={criterios_evaluacion}/>
+                <FormEvaluacion updateProyecto={this.updateProyecto.bind(this)} proyecto={proyecto} visible={visibleEvaluacionAsesorExterno} criterios_evaluacion={criterios_evaluacion}/>
 
             </div>
         )

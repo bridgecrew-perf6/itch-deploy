@@ -99,6 +99,7 @@ export default class FormEvaluacion extends Component{
             }).then((res) => {
                 if(res.status === 200){
                     message.success("Evaluación guardada!")
+                    this.props.updateProyecto();
                     this.setState({ visible: false });
                     form.resetFields();
                 }else{

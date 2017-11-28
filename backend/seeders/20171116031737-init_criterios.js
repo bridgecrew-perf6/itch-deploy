@@ -22,7 +22,7 @@ module.exports = {
         updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       {
-        descripcion: 'Trabajo en equipo',
+        descripcion: 'Trabajo en equipo y se comunica de forma efectiva (oral y escrita)',
         valor_max: 10,
         valor_min: 1,
         tipo: 'asesor_externo',
@@ -30,15 +30,7 @@ module.exports = {
         updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       {
-        descripcion: 'Tiene iniciativa para ayudar en las actividades encomendadas',
-        valor_max: 10,
-        valor_min: 1,
-        tipo: 'asesor_externo',
-        createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
-        updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
-      },
-      {
-        descripcion: 'Organiza su tiempo y trabaja sin necesidad de una superación estrecha',
+        descripcion: 'Tiene iniciativa para colaborar',
         valor_max: 5,
         valor_min: 1,
         tipo: 'asesor_externo',
@@ -46,7 +38,7 @@ module.exports = {
         updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       {
-        descripcion: 'Realiza mejoras al proyecto',
+        descripcion: 'Propone mejoras al proyecto',
         valor_max: 10,
         valor_min: 1,
         tipo: 'asesor_externo',
@@ -55,23 +47,22 @@ module.exports = {
       },
       {
         descripcion: 'Cumple con los objetivos correspondientes al proyecto',
-        valor_max: 10,
+        valor_max: 15,
         valor_min: 1,
         tipo: 'asesor_externo',
         createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
         updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
       },
-      
       {
-        descripcion: 'Mostró responsabilidad y compromiso en la residencia profesional',
-        valor_max: 5,
+        descripcion: 'Es ordenado y cumple satisfactoriamente con las actividades encomendadas en los tiempos establecidos del cronograma',
+        valor_max: 15,
         valor_min: 1,
-        tipo: 'asesor_interno',
+        tipo: 'asesor_externo',
         createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
         updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       {
-        descripcion: 'Realizó un trabajo innovador en su área de desempeño',
+        descripcion: 'Demuestra liderezgo en su actuar',
         valor_max: 10,
         valor_min: 1,
         tipo: 'asesor_interno',
@@ -79,7 +70,15 @@ module.exports = {
         updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       {
-        descripcion: 'Aplica las competencias para la realización del proyecto',
+        descripcion: 'Demuestra conocimiento en el área de su especialidad',
+        valor_max: 20,
+        valor_min: 1,
+        tipo: 'asesor_interno',
+        createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
+        updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
+      {
+        descripcion: 'Demuestra su comportamiento ético (es diciplinado, acata órdenes, respeta a sus compañeros de trabajo, entre otros)',
         valor_max: 10,
         valor_min: 1,
         tipo: 'asesor_interno',
@@ -87,7 +86,7 @@ module.exports = {
         updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       {
-        descripcion: 'Es dedicado y proactivo en los trabajos encomendados',
+        descripcion: 'Asistió puntualmente a las reuniones de asesoría ',
         valor_max: 10,
         valor_min: 1,
         tipo: 'asesor_interno',
@@ -95,16 +94,40 @@ module.exports = {
         updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       {
-        descripcion: 'Cumple con los objetivos correspondiente al proyecto',
-        valor_max: 10,
+        descripcion: 'Demuestra conocimiento en el área de su especialidad',
+        valor_max: 20,
         valor_min: 1,
         tipo: 'asesor_interno',
         createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
         updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       {
-        descripcion: 'Entrega en tiempo y forma el informe técnico',
-        valor_max: 5,
+        descripcion: 'Trabaja en equipo y se comunica de forma efectiva (oral y escrita)',
+        valor_max: 15,
+        valor_min: 1,
+        tipo: 'asesor_interno',
+        createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
+        updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
+      {
+        descripcion: 'Es dedicado y proactivo en las actividades encomendadas',
+        valor_max: 20,
+        valor_min: 1,
+        tipo: 'asesor_interno',
+        createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
+        updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
+      {
+        descripcion: 'Es ordenado y cumple satisfactoriamente con las actividades encomendadas en los tiempos establecidos en el cronograma',
+        valor_max: 20,
+        valor_min: 1,
+        tipo: 'asesor_interno',
+        createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
+        updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
+      {
+        descripcion: 'Propone mejoras al proyecto',
+        valor_max: 15,
         valor_min: 1,
         tipo: 'asesor_interno',
         createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),

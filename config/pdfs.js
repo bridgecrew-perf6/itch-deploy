@@ -1,4 +1,3 @@
-
 const path = require('path');
 const fs = require('fs');
 const moment = require('moment');
@@ -230,52 +229,59 @@ module.exports = {
         pdfDoc.pipe(res);
         pdfDoc.end();
     },
+
     generarFormatoEvaluacion: (proyecto, res) => {
         // evaluacion asesor externo
-        var content_table = [];
+        var evaluacion_asesor_interno = [], evaluacion_asesor_externo = [];
         var calificacion_final = 0;
+        var calificacion_total = 0;
+        var promedio = 0;
         proyecto.evaluacion_asesor_externo.criterios_de_evaluacion.map((criterio_evaluacion, index) => {
-            content_table.push([ 
+            evaluacion_asesor_externo.push([ 
                 {text: `${(index+1)}.- ${criterio_evaluacion.ref_criterio.descripcion}`, style: 'normal', alignment: 'left'},
                 {text: `${criterio_evaluacion.ref_criterio.valor_max}`, style: 'normal', alignment: 'center'},
                 {text: `${criterio_evaluacion.valor_de_evaluacion}`, style: 'normal', alignment: 'center'}
             ])
+            calificacion_total += criterio_evaluacion.ref_criterio.valor_max;
             calificacion_final += criterio_evaluacion.valor_de_evaluacion;
         })
-        content_table.unshift([{text: 'Criterios a evaluar', style: 'normal', alignment: 'center', bold: true},{text: 'A\nValor', style: 'normal', alignment: 'center'},{text: 'B\nEvaluación', style: 'normal', alignment: 'center'}])
-        content_table.unshift([{fillColor: '#d7d9db', text: 'Evaluación asesor externo', style: 'normal', bold: true, alignment: 'center', colSpan: 3}, '', ''])        
-        content_table.unshift([{text: 'En qué medida el Residente cumple con lo siguiente:', style: 'normal', alignment: 'center', bold: true, colSpan: 3}, '', ''])
-        content_table.push([{text: [
-            {text: 'OBSERVACIONES:\n', style: 'normal', bold: true},
-            {text: `${proyecto.evaluacion_asesor_externo.observaciones}`, style: 'normal', alignment: 'left'}
-        ], colSpan: 3}, '', ''])
+        evaluacion_asesor_externo.unshift([{text: 'Criterios a evaluar', style: 'normal', alignment: 'center', bold: true},{text: 'Valor', style: 'normal', alignment: 'center'},{text: 'Evaluación', style: 'normal', alignment: 'center'}])
+        evaluacion_asesor_externo.unshift([{text: 'En qué medida el Residente cumple con lo siguiente', style: 'normal', alignment: 'center', bold: true, colSpan: 3}, '', ''])
+        evaluacion_asesor_externo.unshift([{fillColor: '#d7d9db', text: 'Evaluación asesor externo', style: 'normal', bold: true, alignment: 'center', colSpan: 3}, '', ''])                        
+        evaluacion_asesor_externo.push([{text: 'Calificación total\n', style: 'normal', bold: true, alignment: 'right'}, {text: `${calificacion_total}`, style: 'normal', alignment: 'center'}, {text: `${calificacion_final}`, style: 'normal', alignment: 'center'}])
 
         // evaluacion asesor interno
-        content_table.push([{fillColor: '#d7d9db', text: 'Evaluación asesor interno', style: 'normal', bold: true, alignment: 'center', colSpan: 3}, '', ''])        
+        promedio += calificacion_final;
+        calificacion_final = 0;
+        calificacion_total = 0;
+        evaluacion_asesor_interno.push([{fillColor: '#d7d9db', text: 'Evaluación asesor interno', style: 'normal', bold: true, alignment: 'center', colSpan: 3}, '', ''])                
+        evaluacion_asesor_interno.push([{text: 'En qué medida el Residente cumple con lo siguiente', style: 'normal', alignment: 'center', bold: true, colSpan: 3}, '', ''])
+        evaluacion_asesor_interno.push([{text: 'Criterios a evaluar', style: 'normal', alignment: 'center', bold: true},{text: 'Valor', style: 'normal', alignment: 'center'},{text: 'Evaluación', style: 'normal', alignment: 'center'}]);
         
         proyecto.evaluacion_asesor_interno.criterios_de_evaluacion.map((criterio_evaluacion, index) => {
-            content_table.push([
+            evaluacion_asesor_interno.push([
                 {text: `${(index+1)}.- ${criterio_evaluacion.ref_criterio.descripcion}`, style: 'normal', alignment: 'left'},
                 {text: `${criterio_evaluacion.ref_criterio.valor_max}`, style: 'normal', alignment: 'center'},
                 {text: `${criterio_evaluacion.valor_de_evaluacion}`, style: 'normal', alignment: 'center'}
             ])
             calificacion_final += criterio_evaluacion.valor_de_evaluacion;
+            calificacion_total += criterio_evaluacion.ref_criterio.valor_max;
         })
-        content_table.push([{text: [
-            {text: 'OBSERVACIONES:\n', style: 'normal', bold: true},
-            {text: `${proyecto.evaluacion_asesor_interno.observaciones}`, style: 'normal', alignment: 'left'}
-        ], colSpan: 3}, '', ''])
+        evaluacion_asesor_interno.push([{text: 'Calificación total\n', style: 'normal', bold: true, alignment: 'right'}, {text: `${calificacion_total}`, style: 'normal', alignment: 'center'}, {text: `${calificacion_final}`, style: 'normal', alignment: 'center'}])
+        promedio += calificacion_final;
+        promedio = (promedio / 2);
 
-        content_table.push([{text: 'CALIFICACIÓN FINAL\n', style: 'normal', bold: true, colSpan: 2, alignment: 'center'}, '', {text: `${calificacion_final}`, style: 'normal', alignment: 'center'}])
-        content_table.push([{text: [
-            {text: 'NIVEL DE DESEMPEÑO:\n', style: 'normal', bold: true, alignment: 'center'},
-            {text: `${nivelDeDesempenio(calificacion_final)}`, style: 'normal', alignment: 'center'}
-        ], colSpan: 3}, '', ''])
+        // evaluacion_asesor_interno.push([{text: 'CALIFICACIÓN FINAL\n', style: 'normal', bold: true, colSpan: 2, alignment: 'center'}, '', {text: `${calificacion_final}`, style: 'normal', alignment: 'center'}])
+        
+        // evaluacion_asesor_interno.push([{text: [
+        //     {text: 'NIVEL DE DESEMPEÑO:\n', style: 'normal', bold: true, alignment: 'center'},
+        //     {text: `${nivelDeDesempenio(calificacion_final)}`, style: 'normal', alignment: 'center'}
+        // ], colSpan: 3}, '', ''])
         
         
         var docDefinition = {
-            pageSize: 'A4',
-            pageMargins: [40, 120, 40, 100],
+            pageSize: 'LETTER',
+            pageMargins: [40, 110, 40, 80],
             background: [
                 {
                     margin: [0,250,0,0],
@@ -310,25 +316,19 @@ module.exports = {
                     alignment: 'center',
                     width: '*',
                     bold: true,
-                    text: `Anexo III \n Formato de evaluación`
+                    text: `ANEXO XXIX. FORMATO DE EVALUACIÓN Y SEGUIMIENTO DE RESIDENCIA PROFESIONAL`,
+                    style: 'normal'
                 },
                 {
-                    alignment: 'left',
+                    alignment: 'jusfity',
                     width: '*',
-                    margin: [0, 50, 0,0],
+                    margin: [0, 20, 0,0],
                     text: [
                         {text: `Nombre del residente: `, style: 'normal'},
                         {text: `${proyecto.anteproyecto.alumno.nombre}  ${proyecto.anteproyecto.alumno.ap_paterno}  ${proyecto.anteproyecto.alumno.ap_materno}`, style: 'normal', decoration: 'underline'},
-                        
-                    ]
-                },
-                {
-                    alignment: 'left',
-                    width: '*',
-                    margin: [0, 10, 0,0],
-                    text: [
-                        {text: `Número de control: `, style: 'normal'},
+                        {text: ` Número de control: `, style: 'normal'},
                         {text: `${proyecto.anteproyecto.alumno.no_control}`, style: 'normal', decoration: 'underline'},
+                        
                     ]
                 },
                 {
@@ -345,7 +345,7 @@ module.exports = {
                     width: '*',
                     margin: [0, 10, 0,0],
                     text: [
-                        {text: `Carrera: `, style: 'normal'},
+                        {text: `Programa educativo: `, style: 'normal'},
                         {text: `${proyecto.anteproyecto.periodo.carrera.nombre}`, style: 'normal', decoration: 'underline'},
                     ]
                 },
@@ -359,24 +359,64 @@ module.exports = {
                     ]
                 },
                 {
+                    alignment: 'left',
+                    width: '*',
+                    margin: [0, 10, 0,0],
+                    text: [
+                        {text: `Calificación parcial (promedio de ambas evaluaciones): `, style: 'normal'},
+                        {text: `${promedio}`, style: 'normal', decoration: 'underline'},
+                    ]
+                },
+                {
                     margin: [0, 20, 0, 0],
                     table: {
                         widths: ['*', 'auto', 'auto'],
-                        body: content_table
+                        body: evaluacion_asesor_externo
                     }
                 },
                 {
-                    margin: [0,20, 0,0],
-                    table: {
-                        widths: ['*','*'],
-                        alignment: 'center',
-                        body: [
-                            [{alignment: 'center',style: 'normal', text: `           ${proyecto.anteproyecto.asesor_interno.titulo} ${proyecto.anteproyecto.asesor_interno.nombre} ${proyecto.anteproyecto.asesor_interno.ap_paterno} ${proyecto.anteproyecto.asesor_interno.ap_materno}           `, decoration: 'underline'}, {alignment: 'center',text: `           ${proyecto.anteproyecto.asesor_externo.nombre}           `, style:'normal', decoration: 'underline'}],
-                            [{alignment: 'center',text: 'Nombre y firma del asesor interno', style:'normal'}, {alignment: 'center',text: 'Nombre y firma del asesor externo', style:'normal'}],
-                        ]
-                    },
-                    layout: 'noBorders'              
+                    alignment: 'left',
+                    width: '*',
+                    margin: [0, 10, 0, 0],
+                    text: [
+                        {text: `Observaciones: `, style: 'normal', bold: true},
+                        {text: `${proyecto.evaluacion_asesor_externo.observaciones}`, style: 'normal', decoration: 'underline'}
+                    ]
                 },
+                {
+                    margin: [0, 15, 0, 0],
+                    table: {
+                        widths: ['*', '*', '*'],
+                        body: [
+                            [{text: [{text: `\n   ${proyecto.anteproyecto.asesor_externo.nombre}    `, style: 'normal', decoration: 'underline'},{text: `\nNombre y firma del asesor externo`, style: 'normal'}], style: 'normal', alignment: 'center'}, {text: `Sello de la empresa, organismo o dependencia`, style: 'normal',alignment: 'center'}, {text: `Fecha de evaluación\n ${moment(proyecto.evaluacion_asesor_externo.createdAt).utc().format('LL')}`, style: 'normal', alignment: 'center'}]
+                        ]
+                    }
+                },
+                {
+                    margin: [0, 20, 0, 0],
+                    table: {
+                        widths: ['*', 'auto', 'auto'],
+                        body: evaluacion_asesor_interno
+                    }
+                },
+                {
+                    alignment: 'left',
+                    width: '*',
+                    margin: [0, 10, 0, 0],
+                    text: [
+                        {text: `Observaciones: `, style: 'normal', bold: true},
+                        {text: `${proyecto.evaluacion_asesor_interno.observaciones}`, style: 'normal', decoration: 'underline'}
+                    ]
+                },
+                {
+                    margin: [0, 15, 0, 0],
+                    table: {
+                        widths: ['*', '*', '*'],
+                        body: [
+                            [{text: [{text: `\n   ${proyecto.anteproyecto.asesor_interno.titulo} ${proyecto.anteproyecto.asesor_interno.nombre} ${proyecto.anteproyecto.asesor_interno.ap_paterno} ${proyecto.anteproyecto.asesor_interno.ap_materno}   `, style: 'normal', decoration: 'underline'},{text: `\nNombre y firma del asesor interno`, style: 'normal'}], style: 'normal', alignment: 'center'}, {text: `Sello de la empresa, organismo o dependencia`, style: 'normal',alignment: 'center'}, {text: `Fecha de evaluación\n ${moment(proyecto.evaluacion_asesor_interno.createdAt).utc().format('LL')}`, style: 'normal', alignment: 'center'}]
+                        ]
+                    }
+                }
             ],
             footer: (currentPage, pageCount) => {
                 return {
@@ -416,7 +456,7 @@ module.exports = {
             },
             styles: {
                 normal: {
-                    fontSize: 10
+                    fontSize: 8
                 },
                 header_tecnm: {
                     color: '#bababa',

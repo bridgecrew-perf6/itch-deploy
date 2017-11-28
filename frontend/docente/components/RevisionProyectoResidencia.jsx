@@ -4,7 +4,7 @@ import {Select, Row, Col} from 'antd';
 const {Option} = Select
 
 import axios from 'axios';
-
+import uuid from 'uuid';
 // Components
 import Proyecto from '../components/Proyecto.jsx'
 
@@ -16,14 +16,16 @@ export default class RevisionProyectoResidencia extends Component{
         this.state = {
             proyectos: props.proyectos,
             usuario: props.usuario,
-            renderProyecto: null
+            renderProyecto: null,
+            id_alumno: null
         }
     }
     componentWillReceiveProps(nextProps){
         this.setState({
             proyectos: nextProps.proyectos,
             usuario: props.usuario,
-            renderProyecto: null
+            renderProyecto: null,
+            id_alumno: null
         })
     }
 
@@ -33,11 +35,26 @@ export default class RevisionProyectoResidencia extends Component{
                 if(res.status === 200){
                     // console.warn('proyecto', res.data)
                     this.setState({
-                        renderProyecto:(<Proyecto proyecto={res.data} usuario={this.state.usuario}/>)
+                        renderProyecto:(<Proyecto key={uuid.v1()} updateProyecto={this.updateProyectoResidente.bind(this)} proyecto={res.data} usuario={this.state.usuario}/>),
+                        id_alumno
                     })
                 }
             })
     }
+
+    updateProyectoResidente = () => {
+        axios.get(`/api/alumno/${this.state.id_alumno}/proyecto`)
+        .then((res) => {
+            if(res.status === 200){
+                // console.warn('proyecto', res.data)
+                this.setState({
+                    renderProyecto:(<Proyecto key={uuid.v1()} updateProyecto={this.updateProyectoResidente.bind(this)} proyecto={res.data} usuario={this.state.usuario}/>),
+                    id_alumno: this.state.id_alumno
+                })
+            }
+        })
+    }
+
     
     render(){
         const {proyectos, renderProyecto} = this.state
