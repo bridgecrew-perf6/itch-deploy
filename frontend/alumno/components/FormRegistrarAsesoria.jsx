@@ -49,7 +49,7 @@ const CreateFormRegistrarAsesoria = Form.create()(
                     </FormItem>
                     <FormItem label="URL del avance de google drive">
                         {getFieldDecorator('url_avance', {
-                            rules: [{required: true, message: 'El url del archivo es necesario para la revisión.'}, {pattern: '^https:\/\/drive.google.com\/[^\s]*$', message: 'La URL esta mal formada ejemplo: https://drive.google.com/open?id=0B-agd1bGfOTYcHZNWmtFZ1BINzQ'}]
+                            rules: [{required: true, message: 'El url del archivo es necesario para la revisión.'}, {pattern: '^https:\/\/drive.google.com\/.*$', message: 'La URL esta mal formada ejemplo: https://drive.google.com/open?id=0B-agd1bGfOTYcHZNWmtFZ1BINzQ'}]
                         })(
                             <Input prefix={<Icon type="global" style={{ fontSize: 13 }} />} placeholder="URL del sitio donde esta almacenado el archivo del avance ejemplo: https://drive.google.com/open?id=0B-agd1bGfOTYcHZNWmtFZ1BINzQ"/>
                         )
@@ -107,6 +107,7 @@ export default class FormRegistrarAsesoria extends Component{
                     message.success("Asesoria registrada satisfactoriamente")
                     this.setState({ visible: false });
                     form.resetFields();
+                    this.props.updateAsesorias();
                 }else{
                     Modal.error({
                         title: 'Error al registrar asesoria. Revisar los siguientes campos',

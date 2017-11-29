@@ -49,6 +49,7 @@ export default class revisionAnteproyectos extends Component{
                                         revision: anteproyecto.revisiones.find((revision) => revision.id_docente === this.state.usuario.id_docente)
                                     }
                                 })
+                                
                                 this.setState({
                                     renderRevision: <RevisionDocente periodo={res.data} usuario={this.state.usuario} anteproyectos={anteproyectos}/>
                                 })

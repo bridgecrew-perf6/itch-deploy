@@ -88,7 +88,7 @@ class FormLogin extends Component{
                     {getFieldDecorator('contrasenia', {
                         rules: [{ required: true, message: 'Necesita su contraseña para autentificarse en el sistema.' }],
                     })(
-                        <Input prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" placeholder="Password" />
+                        <Input prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" placeholder="Intruduca su contraseña" />
                     )}
                 </FormItem> 
                 <Button icon="login" type="primary" htmlType="submit" style={{maxWidth:100, marginTop: 20, marginBottom: 20}}>

@@ -10,6 +10,7 @@ const ButtonGroup = Button.Group;
 
 import {Redirect, Link} from 'react-router-dom';
 import axios from 'axios';
+import uuid from 'uuid';
 
 import {getIsAuth} from '../api.jsx';
 
@@ -93,6 +94,23 @@ export default class LayoutResidente extends Component{
             visibleCancelacion: false,
         });
     }
+    updateAsesorias = () => {
+        const {usuario} = this.state;
+        axios.get(`/api/alumno/${usuario.id_alumno}/proyecto`)
+        .then(res => {
+            // console.warn(res.data)
+            if(res.status === 200){
+                this.setState({
+                    visibleCambiarContrasenia: false,
+                    visibleCancelacion: false,
+                    componentRender: {
+                        title: 'Asesorias',
+                        render: <RegistrarAsesoria key={uuid.v1()} updateAsesorias={this.updateAsesorias.bind(this)} usuario={usuario} proyecto={res.data}/>
+                    }
+                })
+            }
+        })
+    }
     
     handleMenu = ({item, key, selectedKeys}) => {
         const {usuario, proyecto} = this.state;
@@ -125,7 +143,7 @@ export default class LayoutResidente extends Component{
                         visibleCancelacion: false,
                         componentRender: {
                             title: 'Asesorias',
-                            render: <RegistrarAsesoria usuario={usuario} proyecto={res.data}/>
+                            render: <RegistrarAsesoria key={uuid.v1()} updateAsesorias={this.updateAsesorias.bind(this)} usuario={usuario} proyecto={res.data}/>
                         }
                     })
                 }

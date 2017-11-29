@@ -322,7 +322,7 @@ module.exports = {
                 {
                     alignment: 'jusfity',
                     width: '*',
-                    margin: [0, 20, 0,0],
+                    margin: [0, 15, 0,0],
                     text: [
                         {text: `Nombre del residente: `, style: 'normal'},
                         {text: `${proyecto.anteproyecto.alumno.nombre}  ${proyecto.anteproyecto.alumno.ap_paterno}  ${proyecto.anteproyecto.alumno.ap_materno}`, style: 'normal', decoration: 'underline'},
@@ -368,7 +368,7 @@ module.exports = {
                     ]
                 },
                 {
-                    margin: [0, 20, 0, 0],
+                    margin: [0, 15, 0, 0],
                     table: {
                         widths: ['*', 'auto', 'auto'],
                         body: evaluacion_asesor_externo
@@ -377,14 +377,14 @@ module.exports = {
                 {
                     alignment: 'left',
                     width: '*',
-                    margin: [0, 10, 0, 0],
+                    margin: [0, 5, 0, 0],
                     text: [
                         {text: `Observaciones: `, style: 'normal', bold: true},
                         {text: `${proyecto.evaluacion_asesor_externo.observaciones}`, style: 'normal', decoration: 'underline'}
                     ]
                 },
                 {
-                    margin: [0, 15, 0, 0],
+                    margin: [0, 10, 0, 0],
                     table: {
                         widths: ['*', '*', '*'],
                         body: [

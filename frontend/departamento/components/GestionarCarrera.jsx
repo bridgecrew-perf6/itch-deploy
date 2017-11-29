@@ -74,7 +74,7 @@ export default class GestionarCarrera extends Component{
                 acciones: 'assign'
             }
         });
-        console.log('constructor', props.docentesAsignados)
+        // console.log('constructor', props.docentesAsignados)
 
         this.state = {
             carrera: props.carrera,
@@ -96,7 +96,7 @@ export default class GestionarCarrera extends Component{
                 asignacion: 'assign'
             }
         });
-        console.log('update', nextProps.docentesAsignados)
+        // console.log('update', nextProps.docentesAsignados)
 
         this.setState({
             carrera: nextProps.carrera,

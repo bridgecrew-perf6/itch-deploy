@@ -80,6 +80,7 @@ export default class FormAddObservacionSeguimiento extends Component{
                     this.setState({ visible: false });
                     form.resetFields();
                     this.props.updateSeguimientos();
+                    this.props.updateProyecto();
                 }else{
                     Modal.error({
                         title: 'Error al agregar la observación. Revisar los siguientes campos',

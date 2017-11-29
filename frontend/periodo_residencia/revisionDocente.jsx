@@ -138,7 +138,7 @@ export default class RevisionDocente extends Component{
             esFactible: checked ? 'factible' : 'no_factible'
         }).then(res => {
             if(res.status === 200 ){
-                message.success('Anteproyecto marcado como no factible !')
+                message.success('Anteproyecto actualizado !')
             }else{
                 Modal.error({
                     title: 'Error al actualizar anteproyecto. Revisar los siguientes campos',
@@ -247,7 +247,7 @@ export default class RevisionDocente extends Component{
             <div>
             <Row type="flex" justify="center" align="middle" style={{marginTop: 20}}>
                 <Col xs={24} lg={24}>
-                    <Table bordered title={() => 'Anteproyectos registrados'} dataSource={filterAnteproyectos} className="full-width" columns={columns} pagination={{ pageSize: 8 }}  scroll={{ x: 1500 }} />
+                    <Table bordered title={() => 'Anteproyectos registrados'} dataSource={filterAnteproyectos} className="full-width" columns={columns} pagination={{ pageSize: 8 }}  scroll={{ x: 2500 }} />
                 </Col>
             </Row>
             <FormCorreccion visible={this.state.visible_correcciones} id_docente={this.state.props_correcciones.id_docente} id_anteproyecto={this.state.props_correcciones.id_anteproyecto} correo_alumno={this.state.props_correcciones.correo_alumno}/> 

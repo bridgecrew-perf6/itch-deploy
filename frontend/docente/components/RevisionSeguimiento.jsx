@@ -45,6 +45,9 @@ export default class RevisionSeguimiento extends Component{
             }
         })
     }
+    updateProyecto = () => {
+        this.props.updateProyecto();
+    }
     render(){
         const {seguimiento, usuario, visible_observacion} = this.state
         // console.warn('se', seguimiento)
@@ -119,7 +122,7 @@ export default class RevisionSeguimiento extends Component{
                     <Button type="primary" icon="plus" onClick={() => this.showAddObservacionSeguimiento()}>Agregar observación</Button>
                     <Table title={() => 'Observaciones del seguimiento'} columns={columnsObservacionesSeguimiento} dataSource={observacionesSeguimiento} pagination={{ pageSize: 4 }} />
                 </Col>
-                <FormAddObservacionSeguimiento updateSeguimientos={this.updateSeguimientos.bind(this)} usuario={usuario} visible={visible_observacion} id_seguimiento={seguimiento.id}/>
+                <FormAddObservacionSeguimiento updateProyecto={this.updateProyecto.bind(this)} updateSeguimientos={this.updateSeguimientos.bind(this)} usuario={usuario} visible={visible_observacion} id_seguimiento={seguimiento.id}/>
             </Row>
         )
     }

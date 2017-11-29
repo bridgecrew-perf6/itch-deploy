@@ -37,7 +37,21 @@ export default class revisionAnteproyectos extends Component{
             .then(res => {
                 if(res.status === 200){
                     this.setState({
-                        renderProyecto: (<RevisionProyecto proyecto={res.data} usuario={usuario}/>),
+                        renderProyecto: (<RevisionProyecto key={uuid.v1()} updateProyecto={this.updateProyecto.bind(this)} proyecto={res.data} usuario={usuario}/>),
+                        id_alumno
+                    })
+                }else{
+                    message.warning('Ops, ocurrio un error interno, favor de reportar al administrador.')
+                }
+            })
+    }
+    updateProyecto = () => {
+        const {usuario, id_alumno} = this.state
+        axios.get(`/api/alumno/${id_alumno}/proyecto`)
+            .then(res => {
+                if(res.status === 200){
+                    this.setState({
+                        renderProyecto: (<RevisionProyecto key={uuid.v1()} updateProyecto={this.updateProyecto.bind(this)} proyecto={res.data} usuario={usuario}/>),
                         id_alumno
                     })
                 }else{

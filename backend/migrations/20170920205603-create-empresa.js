@@ -22,10 +22,10 @@ module.exports = {
         type: Sequelize.STRING(13),
       },
       domicilio: {
-        type: Sequelize.STRING(30)
+        type: Sequelize.STRING(50)
       },
       colonia: {
-        type: Sequelize.STRING(30)
+        type: Sequelize.STRING(50)
       },
       codigo_postal: {
         type: Sequelize.STRING(5)

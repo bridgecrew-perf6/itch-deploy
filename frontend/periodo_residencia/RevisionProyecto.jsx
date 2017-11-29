@@ -27,6 +27,9 @@ export default class RevisionProyecto extends Component{
             visible_observacion: false
         })
     }
+    updateProyecto = () => {
+        this.props.updateProyecto();
+    }
     showSoluciones = (soluciones_recomendadas) => {
         
         const columnsSolucionesRecomendadas = [
@@ -333,7 +336,7 @@ export default class RevisionProyecto extends Component{
                                                     <Button type="primary" icon="plus" onClick={() => this.showAddObservacionSeguimiento()}>Agregar observación</Button>
                                                     <Table title={() => 'Observaciones del seguimiento'} columns={columnsObservacionesSeguimiento} dataSource={observacionesSeguimiento} pagination={{ pageSize: 4 }} />
                                                 </Col>
-                                                <FormAddObservacionSeguimiento updateSeguimientos={() => console.log('()')} usuario={usuario} visible={visible_observacion} id_seguimiento={id_seguimiento}/>
+                                                <FormAddObservacionSeguimiento updateProyecto={this.updateProyecto.bind(this)}  updateSeguimientos={() => console.log('()')} usuario={usuario} visible={visible_observacion} id_seguimiento={id_seguimiento}/>
                                             </Row>
                                             :
                                             <Alert message={`No puede acceder al seguimiento,\n Fecha inicial: ${moment(seguimiento.seguimiento.fecha_inicial, 'YYYY-MM-DD').format('LL')} - Fecha final: ${moment(seguimiento.seguimiento.fecha_final, 'YYYY-MM-DD').format('LL')}`} type="warning" showIcon />

@@ -10,6 +10,7 @@ import Proyecto from '../components/Proyecto.jsx'
 
 
 
+
 export default class RevisionProyectoResidencia extends Component{
     constructor(props){
         super(props);
@@ -42,6 +43,7 @@ export default class RevisionProyectoResidencia extends Component{
             })
     }
 
+    
     updateProyectoResidente = () => {
         axios.get(`/api/alumno/${this.state.id_alumno}/proyecto`)
         .then((res) => {

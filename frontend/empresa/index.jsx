@@ -195,7 +195,9 @@ class Empresa extends Component{
                 onFilterDropdownVisibleChange: (visible) => {
                     this.setState({
                         filterDropdownVisible: visible,
-                        visible: false
+                        visible: false,
+                        visibleFormAddAsesorExterno: false,
+                        visibleFormEditEmpresa: false,
                     }, () => this.searchInput.focus())
                 }
             },

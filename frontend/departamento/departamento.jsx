@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import { Select, Row, Col, message} from 'antd';
 const Option = Select.Option;
 import axios from 'axios';
-
+import uuid from 'uuid';
 // components
 import GestionarCarrera from './components/GestionarCarrera.jsx';
 
@@ -33,7 +33,7 @@ export default class Departamento extends Component{
                 if(res.status === 200){
                     console.log('alv',res.data)
                     this.setState({
-                        carrera: <GestionarCarrera carrera={carrera} docentes={departamento.docentes} docentesAsignados={res.data}/>,
+                        carrera: <GestionarCarrera key={uuid.v4()} carrera={carrera} docentes={departamento.docentes} docentesAsignados={res.data}/>,
                     })
                 }else{
                     message.warning('Verificar los docentes asignados.')

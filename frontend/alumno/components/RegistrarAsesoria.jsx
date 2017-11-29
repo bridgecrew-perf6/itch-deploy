@@ -35,6 +35,9 @@ export default class RegistrarAsesoria extends Component{
             ), onOk(){}
         })
     }
+    updateAsesorias = () => {
+        this.props.updateAsesorias();
+    }
     showSolucionesRecomendadas = (soluciones_recomendadas) => {
         Modal.info({
             width: 600,
@@ -139,7 +142,7 @@ export default class RegistrarAsesoria extends Component{
                         <Table title={()=> 'Lista de asesorias registradas'} columns={columnasAsesoria} dataSource={asesorias} pagination={{ pageSize: 5 }} scroll={{x: 1200}}/>
                     </Col>
                 </Row>
-                <FormRegistrarAsesoria proyecto={proyecto} visible={visibleRegistrarAsesoria}/>
+                <FormRegistrarAsesoria updateAsesorias={this.updateAsesorias.bind(this)} proyecto={proyecto} visible={visibleRegistrarAsesoria}/>
             </div>
         )
     }

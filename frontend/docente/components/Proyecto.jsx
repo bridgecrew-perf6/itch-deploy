@@ -107,7 +107,7 @@ export default class Proyecto extends Component{
             
             if(currentDate >= seguimiento.seguimiento.fecha_inicial && currentDate <= seguimiento.seguimiento.fecha_final){
                 this.setState({
-                    renderSeguimiento: <RevisionSeguimiento updateSeguimientos={this.updateSeguimientos.bind(this)} usuario={usuario} seguimiento={seguimiento} />,
+                    renderSeguimiento: <RevisionSeguimiento updateProyecto={this.updateProyecto.bind(this)} updateSeguimientos={this.updateSeguimientos.bind(this)} usuario={usuario} seguimiento={seguimiento} />,
                     visibleEvaluacionAsesorInterno: false,
                 })
             }else{

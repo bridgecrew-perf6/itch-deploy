@@ -19,6 +19,7 @@ const CreateFormEditEmpresa = Form.create()(
               <Option value="DR.">DR.</Option>
               <Option value="DRA.">DRA.</Option>
               <Option value="MTRO.">MTRO.</Option>
+              <Option value="M.A.">M.A.</Option>
               <Option value="DIR.">DIR.</Option>
               <Option value="DIRA.">DIRA.</Option>
               <Option value="LIC.">LIC.</Option>
@@ -40,6 +41,7 @@ const CreateFormEditEmpresa = Form.create()(
               <Option value="DR.">DR.</Option>
               <Option value="DRA.">DRA.</Option>
               <Option value="MTRO.">MTRO.</Option>
+              <Option value="M.A.">M.A.</Option>
               <Option value="DIR.">DIR.</Option>
               <Option value="DIRA.">DIRA.</Option>
               <Option value="LIC.">LIC.</Option>
@@ -101,14 +103,14 @@ const CreateFormEditEmpresa = Form.create()(
                         <Col xs={24} lg={12}>
                             <FormItem label="Domicilio" hasFeedback>
                                 {getFieldDecorator('domicilio', {
-                                    rules: [{max: 30, message: 'El domicilio solo debe tener 30 caracteres'}]
+                                    rules: [{max: 50, message: 'El domicilio solo debe tener 50 caracteres'}]
                                 })(<Input placeholder="Domicilio de la empresa"/>)}
                             </FormItem>
                         </Col>
                         <Col xs={24} lg={12}>
                             <FormItem label="Colonia" hasFeedback>
                                 {getFieldDecorator('colonia', {
-                                    rules: [{max: 30, message: 'La colonia solo debe tener 30 caracteres'}]
+                                    rules: [{max: 50, message: 'La colonia solo debe tener 50 caracteres'}]
                                 })(<Input placeholder="Colonia de la empresa"/>)}
                             </FormItem>
                         </Col>

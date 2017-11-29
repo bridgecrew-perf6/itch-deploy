@@ -287,7 +287,7 @@ export default class RevisionPresidenteAcademia extends Component{
         return (
             <Row type="flex" justify="center" align="middle" style={{marginTop: 20}}>
                 <Col xs={24} lg={24}>
-                    <Table bordered title={() => 'Registro de dictamen y selección de asesores internos'} dataSource={filterAnteproyectos} className="full-width" columns={columns} pagination={{ pageSize: 8 }}  scroll={{ x: 1500 }} />
+                    <Table bordered title={() => 'Registro de dictamen y selección de asesores internos'} dataSource={filterAnteproyectos} className="full-width" columns={columns} pagination={{ pageSize: 8 }}  scroll={{ x: 2500 }} />
                 </Col>
             </Row> 
         )
