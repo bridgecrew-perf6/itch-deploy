@@ -16,6 +16,12 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
+      origen: {
+        type: Sequelize.ENUM,
+        values: ['Banco de proyectos', 'Propuesta propia', 'Trabajador'],
+        allowNull: true,
+        defaultValue: null
+      },
       dictamen:{
         type: Sequelize.ENUM,
         values: ['aprobado','no aprobado'],

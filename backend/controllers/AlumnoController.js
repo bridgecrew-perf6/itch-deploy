@@ -6,6 +6,8 @@ const Usuario = require('../models').Usuario;
 const Docente = require('../models').Docente;
 
 const Departamento = require('../models').Departamento;
+const tipo_seguro = require('../models').tipo_seguro;
+const Empresa = require('../models').Empresa;
 const Anteproyecto = require('../models').Anteproyecto;
 const Proyecto = require('../models').Proyecto;
 const seguimiento_proyecto = require('../models').seguimiento_proyecto;
@@ -281,8 +283,9 @@ module.exports.updateDatosAnteproyecto = (req, res) => {
     const id_anteproyecto = req.params.id,
             id_asesor_externo = req.body.id_asesor_externo,
             nombre = req.body.nombre,
+            origen = req.body.origen,
             objetivo_general = req.body.objetivo_general;
-    Anteproyecto.update({id_asesor_externo, nombre, objetivo_general}, {where: {id: id_anteproyecto}})
+    Anteproyecto.update({id_asesor_externo, nombre, objetivo_general, origen}, {where: {id: id_anteproyecto}})
         .then((anteproyecto)=>{
             // console.log('success=======>    ', result)
             res.status(200).json(anteproyecto)
@@ -331,6 +334,19 @@ module.exports.generarFormatoDeCancelacion = (req, res) => {
             res.status(406).json({err: err})
         })
 }
+
+module.exports.generarSolicitudDeResidencia = (req, res) => {
+    const id_alumno = req.params.id_alumno;
+    Anteproyecto.findOne({where: {id_alumno}, include: [{model: asesor_externo, as: 'asesor_externo', include: [{model: Empresa, as: 'empresa'}]},{model: Periodo, as: 'periodo'},{model: Alumno, as: 'alumno', include: [{model: tipo_seguro, as: 'seguro'},{model: Usuario, as: 'usuario'},{model: Carrera, as: 'carrera'}]}]})
+        .then(_anteproyecto => {
+            // console.log('=>',_anteproyecto)
+            // res.status(200).json(_anteproyecto)
+            pdfs.generarSolicitudDeResidencia(_anteproyecto, res);
+        }).catch(err => {
+            console.log(err);
+            res.status(406).json({err: err});
+        })
+}
 module.exports.getProyecto = (req, res) => {
     const id_alumno = req.params.id;
     sequelize.transaction( t => {
@@ -375,7 +391,12 @@ module.exports.add = (req, res) => {
         id_carrera = req.body.id_carrera,
         correo = req.body.correo,
         sexo = req.body.sexo,
-        id_periodo = req.body.id_periodo;
+        numero_celular = req.body.numero_celular,
+        id_periodo = req.body.id_periodo,
+        domicilio = req.body.domicilio,
+        ciudad = req.body.ciudad,
+        no_seguro = req.body.no_seguro,
+        id_tipo_seguro = req.body.id_tipo_seguro;
 
     const contrasenia = generator.generate({length: 8});
 
@@ -392,6 +413,11 @@ module.exports.add = (req, res) => {
                 ap_materno,
                 id_carrera,
                 sexo,
+                domicilio,
+                ciudad,
+                numero_celular,
+                no_seguro,
+                id_tipo_seguro,
                 id_usuario: usuario.id
             }, {transaction: t}).then(alumno => {
                 return Anteproyecto.create({

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {TreeSelect, Form, Tooltip, Select, Row, Col, Icon, Input, Upload, message, Button, Modal, Badge, Collapse} from 'antd';
+import {TreeSelect, Form, Tooltip, Select, Row, Col, Icon, Input, Upload, message, Button, Modal, Badge, Collapse, Alert} from 'antd';
 const TreeNode = TreeSelect.TreeNode;
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -47,6 +47,21 @@ const CreateRegistrarProyecto = Form.create()(
                         initialValue: anteproyecto.objetivo_general ? anteproyecto.objetivo_general : ''
                     })(
                         <Input.TextArea placeholder="Escriba aqui el objetivo general" type="text" autosize={{ minRows: 2, maxRows: 6 }}/>
+                    )}
+                </FormItem>
+                <FormItem 
+                    label="Origen del proyecto"
+                    hasFeedback
+                >
+                    {getFieldDecorator('origen', {
+                        rules: [{required: true, message: 'Debe indicar el origen del anteproyecto.'}],
+                        initialValue: anteproyecto.origen ? anteproyecto.origen : ''
+                    })(
+                        <Select placeholder="Seleccione el origen de su proyecto">
+                            <Option value="Banco de proyectos">Banco de proyectos</Option>
+                            <Option value="Propuesta propia">Propuesta propia</Option>
+                            <Option value="Trabajador">Trabajador</Option>
+                        </Select>
                     )}
                 </FormItem>
                 <FormItem 
@@ -118,6 +133,16 @@ const CreateRegistrarProyecto = Form.create()(
                 <Button size="large" icon="save" type="primary" htmlType="submit" style={{marginTop: 40, marginBottom: 20}}>
                     Guardar cambios
                 </Button>
+                <Row>
+                    <Col lg={24} xs={24}>
+                    {
+                        (anteproyecto.nombre != null & anteproyecto.origen != null & anteproyecto.id_asesor_externo != null)
+                            ?   <Button icon="file-pdf"><a href={`/api/alumno/${anteproyecto.id_alumno}/solicitud_residencia`} target="_blank">Generar solicitud de residencia</a></Button>
+                            : <Alert type="info" message="Faltan algunos datos para poder generar su solicitud de residencia" showIcon/>
+
+                    }
+                    </Col>
+                </Row>
 
             </Form>
         )
@@ -178,12 +203,14 @@ export default class RegistrarAnteproyecto extends Component{
             // console.log('Received values of form: ', values);
             const id_asesor_externo = values.id_asesor_externo,
                 nombre = values.nombre,
+                origen = values.origen,
                 objetivo_general = values.objetivo_general;
             // crear post al servidor
             axios.put(`/api/alumno/${anteproyecto.id}/anteproyecto`, {
                 id_asesor_externo,
                 nombre,
-                objetivo_general
+                objetivo_general,
+                origen
             }).then((res) => {
                 // console.log(res)
                 if(res.status === 200){

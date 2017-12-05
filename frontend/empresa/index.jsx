@@ -82,6 +82,7 @@ class Empresa extends Component{
                                 colonia: empresa.colonia,
                                 codigo_postal: empresa.codigo_postal,
                                 fax: empresa.fax,
+                                mision: empresa.mision,
                                 puesto_titular: empresa.puesto_titular,
                                 nombre_titular: empresa.nombre_titular,
                                 puesto_firma_acuerdo: empresa.puesto_firma_acuerdo,

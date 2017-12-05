@@ -41,13 +41,15 @@ module.exports = (sequelize, DataTypes) => {
     domicilio: {
       type: DataTypes.STRING
     },
+    ciudad: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: ''
+    },
     colonia: {
       type: DataTypes.STRING
     },
     codigo_postal: {
-      type: DataTypes.STRING
-    },
-    ciudad: {
       type: DataTypes.STRING
     },
     no_seguro: {
@@ -69,7 +71,8 @@ module.exports = (sequelize, DataTypes) => {
     });
     Alumno.belongsTo(models.tipo_seguro, {
       foreignKey: 'id_tipo_seguro',
-      onDelete: 'CASCADE'
+      onDelete: 'CASCADE',
+      as: 'seguro'
     });
     Alumno.belongsTo(models.Carrera, {
       foreignKey: 'id_carrera',

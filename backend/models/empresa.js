@@ -14,6 +14,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       values: ['industrial','servicios','público','privado','otro']
     },
+    mision: {
+      type: DataTypes.STRING(500),
+      allowNull: false,
+      defaultValue: ''
+    },
     rfc: {
       type: DataTypes.STRING,
     },

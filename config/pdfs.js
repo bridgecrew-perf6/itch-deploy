@@ -33,6 +33,249 @@ function nivelDeDesempenio(calificacion_final) {
 
 
 module.exports = {
+    generarSolicitudDeResidencia: (anteproyecto, res) => {
+        var docDefinition = {
+            pageSize: 'LETTER',
+            pageMargins: [40, 125, 40, 50],
+            header: (currentPage, pageCount) => {
+                return {
+                        margin: [40, 45, 40, 20],
+                        columns: [
+                            {
+                                table: {
+                                    widths: [100, '*', '*', 100],
+                                    body: [
+                                        [{image: __dirname+'/../public/img/tecnologicos.png', width: 80, height: 45, alignment: 'center', rowSpan: 2}, {text: 'Solicitud de Residencias Profesionales ', style: 'titulo', alignment: 'center', bold: true, colSpan: 2},'', {image: __dirname+'/../public/img/tec_Logo.png', width: 45, height: 45, alignment: 'center', rowSpan: 2}],
+                                        ['',{text: 'Referencia a la Norma ISO 9001:2008  7.5.1', alignment: 'center', colSpan: 2, style: 'subtitulo'},'',''],
+                                        [{text: 'Revisión 2', alignment: 'center', style: 'min'}, {text: 'Código: ITCHILPO-AC-PO-007-01', alignment: 'center', bold:true,style: 'min'}, {text: 'Fecha de aplicación: 16-junio-2011', alignment: 'center', style: 'min'}, {text: `Página ${currentPage} de ${pageCount}`, alignment: 'center', style: 'min'}]
+                                    ]
+                                }
+                            }
+                            
+                        ]
+                    }
+                
+            },
+            content: [
+                {
+                    alignment: 'center',
+                    width: '*',
+                    text: [
+                        {text: 'INSTITUTO TECNOLÓGICO DE CHILPANCINGO\nDIVISIÓN DE ESTUDIOS PROFESIONALES\nRESIDENCIAS PROFESIONALES ', style: 'normal', bold: true}
+                    ]   
+                },
+                {
+                    alignment: 'justify',
+                    width: '*',
+                    margin: [0, 20, 0, 0],
+                    columns: [
+                        {
+                            alignment: 'justify',
+                            text: [
+                                {text: 'Lugar     ', style: 'subtitulo'},
+                                {text: 'Chilpancingo de los Bravo, Guerrero', style: 'subtitulo', decoration: 'underline'},
+                                {text: '            Fecha     ', style: 'subtitulo'},
+                                {text: `           ${moment().format('LL')}          `, style: 'subtitulo', decoration: 'underline'}
+                            ]
+                        }
+                    ]
+                },
+                {
+                    margin: [0, 20, 0, 0],
+                    columns: [
+                        {
+                            alignment: 'justify',
+                            text: [
+                                {text: 'C.', style: 'subtitulo'},
+                                {text: 'M.C. TOLEDO RODRIGUEZ CORONA', style: 'titulo', decoration: 'underline', bold: true},
+                                {text: '\nJefe de la Div. de Estudios Profesionales', style: 'titulo'},
+                            ]
+                        },
+                        {
+                            alignment: 'justify',
+                            text: [
+                                {text: `AT'N: C.` , style: 'subtitulo'},
+                                {text: 'M.C. TOLEDO RODRIGUEZ CORONA', style: 'titulo', decoration: 'underline', bold: true},
+                                {text: `Coord. de la Carrera de  `, style: 'titulo'},
+                                {text: `${anteproyecto.alumno.carrera.nombre}`, style: 'titulo', decoration: 'underline', bold: true}
+                            ]
+                        }
+                    ]   
+                },
+                {
+                    margin: [0, 20, 0, 0],
+                    alignment: 'left',
+                    columns: [
+                        {
+                            width: 200,
+                            table: {
+                                widths: [180],
+                                body: [
+                                    [{text: 'NOMBRE DEL PROYECTO:', alignment: 'center', style: 'titulo', bold: true, fillColor: '#e3e3e3'}]
+                                ]
+                            }
+                        },
+                        {
+                            width: 323,
+                            table: {
+                                widths: [323],
+                                body: [
+                                    [{text: `${anteproyecto.nombre}`, style: 'titulo', alignment: 'justify'}]
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    margin: [0, 20, 0, 0],
+                    columns: [
+                        {
+                            width: 140,
+                            table: {
+                                widths: [120],
+                                body: [
+                                    [{text: 'OPCIÓN ELEGIDA:', alignment: 'center', style: 'titulo', bold: true, fillColor: '#e3e3e3'}]
+                                ]
+                            }
+                        },
+                        {
+                            columns: [
+                                {
+                                    margin: [5, 0, 5, 0],
+                                    table: {
+                                        widths: ['*', 10],
+                                        body: [
+                                            [{text: `Banco de proyectos`, style: 'min', alignment: 'center'}, {text:`${anteproyecto.origen == 'Banco de proyectos' ? 'X' : ''}` , bold: true, style: 'min'}]
+                                        ]
+                                    }
+                                },
+                                {
+                                    margin: [5, 0, 5, 0],
+                                    table: {
+                                        
+                                        widths: ['*', 10],
+                                        body: [
+                                            [{text: `Propuesta propia`, style: 'min', alignment: 'center'}, {text:`${anteproyecto.origen == 'Propuesta propia' ? 'X' : ''}` , bold: true, style: 'min'}]
+                                        ]
+                                    }
+                                },
+                                {
+                                    margin: [5, 0, 0, 0],
+                                    table: {
+                                        widths: ['*', 10],
+                                        body: [
+                                            [{text: `Trabajador`, style: 'min', alignment: 'center'}, {text:`${anteproyecto.origen == 'Trabajador' ? 'X' : ''}` , bold: true, style: 'min'}]
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    margin: [0, 20, 0, 0],
+                    columns: [
+                        {
+                            width: 200,
+                            table: {
+                                widths: [180],
+                                body: [
+                                    [{text: 'PERIODO PROYECTADO:', alignment: 'center', style: 'titulo', bold: true, fillColor: '#e3e3e3'}]
+                                ]
+                            }
+                        },
+                        {
+                            width: ['*'],
+                            table: {
+                                widths: [200, 95, 10],
+                                body: [
+                                    [{text: `${anteproyecto.periodo.periodo} ${anteproyecto.periodo.ciclo}`, style: 'min', alignment: 'left'}, {text: 'Número de residentes', style: 'min'}, {text: '1', style: 'min'}]
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    margin: [0, 20, 0, 0],
+                    text: 'Datos de la empresa',
+                    style: 'subtitulo',
+                    bold: true
+                },
+                {
+                    table: {
+                        widths: [100, '*', '*', '*', '*', '*'],
+                        body: [
+                            [{text: 'Nombre:', style: 'subtitulo'}, {text: `${anteproyecto.asesor_externo.empresa.nombre}`, style: 'subtitulo',colSpan: 5}, '', '', '', ''],
+                            [{text: 'Giro, Ramo o Sector:', style: 'subtitulo'}, {text: `Industrial (${anteproyecto.asesor_externo.empresa.clasificacion=='industrial'?'X':' '})  Servicios (${anteproyecto.asesor_externo.empresa.clasificacion=='servicios'?'X':' '})  Otro (${anteproyecto.asesor_externo.empresa.clasificacion=='otro'?'X':' '})  \nPúblico (${anteproyecto.asesor_externo.empresa.clasificacion=='público'?'X':' '})  Privado (${anteproyecto.asesor_externo.empresa.clasificacion=='privado'?'X':''})`, style: 'min',colSpan: 3, alignment: 'center'},'', '',{text: 'R.F.C.', style: 'subtitulo'}, {text: `${anteproyecto.asesor_externo.empresa.rfc}`, style: 'min'}],
+                            [{text: 'Domicilio:', style: 'subtitulo'}, {text: `${anteproyecto.asesor_externo.empresa.domicilio}`, style: 'subtitulo',colSpan: 5}, '', '', '', ''],
+                            [{text: 'Colonia:', style: 'subtitulo'}, {text: `${anteproyecto.asesor_externo.empresa.colonia}`, style: 'subtitulo'},{text: `C.P.`, style: 'subtitulo'} , {text: `${anteproyecto.asesor_externo.empresa.codigo_postal}`, style: 'subtitulo'}, {text: `Fax`, style: 'subtitulo'}, {text: `${anteproyecto.asesor_externo.empresa.fax}`, style: 'subtitulo'}],
+                            [{text: 'Misión de la empresa:\n\n\n', style: 'subtitulo'}, {text: `${anteproyecto.asesor_externo.empresa.mision}`, style: 'subtitulo',colSpan: 5}, '', '', '', ''],
+                            [{text: 'Nombre del titular\n de la empresa:', style: 'subtitulo'}, {text: `${anteproyecto.asesor_externo.empresa.nombre_titular}`, style: 'subtitulo', colSpan: 2},'', {text: 'Puesto:', style: 'subtitulo'}, {text: `${anteproyecto.asesor_externo.empresa.puesto_titular}`, style: 'subtitulo',colSpan: 2}, ''],
+                            [{text: 'Nombre del Asesor\n Externo:', style: 'subtitulo'}, {text: `${anteproyecto.asesor_externo.nombre}`, style: 'subtitulo', colSpan: 2},'', {text: 'Puesto:', style: 'subtitulo'}, {text: `${anteproyecto.asesor_externo.puesto}`, style: 'subtitulo',colSpan: 2}, ''],
+                            [{text: 'Nombre de la persona que\n firmará el acuerdo de trabajo.\nEstudiante-Escuela-Empresa:', style: 'subtitulo', colSpan: 2},'', {text: `${anteproyecto.asesor_externo.empresa.nombre_firma_acuerdo}`, style: 'subtitulo',}, {text: 'Puesto:', style: 'subtitulo'}, {text: `${anteproyecto.asesor_externo.empresa.puesto_firma_acuerdo}`, style: 'subtitulo',colSpan: 2}, ''],
+                        ]
+                    }
+                },
+                {
+                    margin: [0, 20, 0, 0],
+                    text: 'Datos del Residente',
+                    style: 'subtitulo',
+                    bold: true,
+                    pageBreak: 'before'
+                },
+                {
+                    table: {
+                        widths: [100, '*', '*', '*', '*'],
+                        body: [
+                            [{text: 'Nombre:', style: 'subtitulo'}, {text: `${anteproyecto.alumno.nombre} ${anteproyecto.alumno.ap_paterno} ${anteproyecto.alumno.ap_materno}`, style: 'subtitulo',colSpan: 4}, '', '', ''],
+                            [{text: 'Carrera:', style: 'subtitulo'}, {text: `${anteproyecto.alumno.carrera.nombre}`, style: 'subtitulo',colSpan: 2}, '', {text: 'No. de\n control:', style: 'subtitulo', fillColor: '#e3e3e3'}, {text: `${anteproyecto.alumno.no_control}`, style: 'subtitulo'}],
+                            [{text: 'Domicilio:', style: 'subtitulo'}, {text: `${anteproyecto.alumno.domicilio}`, style: 'subtitulo',colSpan: 4}, '', '', ''],
+                            [{text: 'E-mail:', style: 'subtitulo', rowSpan: 2}, {text: `${anteproyecto.alumno.usuario.correo}`, style: 'subtitulo', colSpan: 2, rowSpan: 2},{text: '', rowSpan: 2}, {text: 'Para Seguridad\n Social acudir', style: 'subtitulo', rowSpan: 2}, {text: `${anteproyecto.alumno.seguro.nombre}(X)`, style: 'subtitulo', fillColor: '#e3e3e3'}],                          
+                            ['', '', '', '', {text: `No. : ${anteproyecto.alumno.no_seguro}`, style: 'subtitulo'}],
+                            [{text: 'Ciudad:', style: 'subtitulo'}, {text: `${anteproyecto.alumno.ciudad}`, style: 'subtitulo',colSpan: 2}, '', {text: 'Teléfono\n (no. celular):', style: 'subtitulo', fillColor: '#e3e3e3'}, {text: `${anteproyecto.alumno.numero_celular}`, style: 'subtitulo'}],
+                            
+
+                        ]
+                    }
+                },
+                {
+                    margin: [0, 100, 0, 0],
+                    alignment: 'center',
+                    text: `                             Firma del estudiante                             `,
+                    decoration: 'overline'
+                }
+            ],
+            styles:{
+                titulo: {
+                    fontSize: 12,
+                },
+                subititulo: {
+                    fontSize: 10,
+                },
+                min:{
+                    fontSize: 9
+                },
+                header_table:{
+                    fontSize: 10,
+                    bold: true
+                },
+                row_table: {
+                    fontSize: 9,
+                    alignment: 'center'                    
+                },
+                firma: {
+                    fontSize: 10,
+                    color: '#505962',
+                    alignment: 'center'
+                }
+
+
+            }
+        }
+        var pdfDoc = printer.createPdfKitDocument(docDefinition);
+        pdfDoc.pipe(res);
+        pdfDoc.end();
+    },
     generarFormatoDeCancelacion: (cancelacion, res) => {
         // console.log(cancelacion.alumno.carrera.departamento.docentes[0].nombre)
         var docDefinition = {

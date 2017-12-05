@@ -17,6 +17,12 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: {msg: 'El antrpoyecto debe tener un nombre'}
       }
     },
+    origen: {
+      type: DataTypes.ENUM,
+      values: ['Banco de proyectos', 'Propuesta propia', 'Trabajador'],
+      allowNull: true,
+      defaultValue: null
+    },
     dictamen:{
       type: DataTypes.ENUM,
       values: ['aprobado','no aprobado'],

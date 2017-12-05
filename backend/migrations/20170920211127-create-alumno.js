@@ -30,7 +30,7 @@ module.exports = {
         values: ['H', 'M']
       },
       domicilio: {
-        type: Sequelize.STRING(30)
+        type: Sequelize.STRING(200)
       },
       colonia: {
         type: Sequelize.STRING(30)
@@ -38,15 +38,17 @@ module.exports = {
       codigo_postal: {
         type: Sequelize.STRING(5)
       },
-      ciudad: {
-        type: Sequelize.STRING(30)
-      },
       no_seguro: {
         type: Sequelize.STRING(20), 
         allowNull: true
       },
       numero_celular: {
         type: Sequelize.STRING(20)
+      },
+      ciudad: {
+        type: Sequelize.STRING(150),
+        allowNull: false,
+        defaultValue: ''
       },
       id_tipo_seguro: {
         type: Sequelize.INTEGER,

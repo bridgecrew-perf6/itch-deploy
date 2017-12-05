@@ -32,7 +32,13 @@ module.exports = {
         nombre: 'INBURSA',
         createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
         updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
+      {
+        nombre: 'OTRO',
+        createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
+        updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
       }
+
     ], {});
   },
 

@@ -27,6 +27,11 @@ module.exports = {
       colonia: {
         type: Sequelize.STRING(50)
       },
+      mision: {
+        type: Sequelize.STRING(500),
+        allowNull: false,
+        defaultValue: ''
+      },
       codigo_postal: {
         type: Sequelize.STRING(5)
       },

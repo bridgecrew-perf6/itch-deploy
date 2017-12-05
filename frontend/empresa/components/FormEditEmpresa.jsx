@@ -106,6 +106,14 @@ const CreateFormEditEmpresa = Form.create()(
                             })(<Input placeholder="Fax de la empresa"/>)}
                         </FormItem>
                         </Col>
+                        <Col lg={24} xs={24} >
+                            <FormItem label="Misión de la empresa" hasFeedback>
+                                {getFieldDecorator('mision', {
+                                    rules: [{max: 500, message: 'La misión debe tener como maximo 500 caracteres'}],
+                                    initialValue: empresa.detalles ? empresa.detalles.mision : '' 
+                                })(<Input.TextArea placeholder="Misión de la empresa" autosize={{ minRows: 2, maxRows: 6 }}/>)}
+                            </FormItem>
+                        </Col>
                     </Row>
                     <Row gutter={16}>
                         <Col xs={6} lg={6}>
@@ -191,6 +199,7 @@ export default class FormEditEmpresa extends Component{
                 colonia: values.colonia || '',
                 codigo_postal: values.codigo_postal || '',
                 fax: values.fax || '',
+                mision: values.mision || '',
                 puesto_titular: values.puesto_titular,
                 nombre_titular: `${values.titulo_titular} ${values.nombre_titular}`,
                 puesto_firma_acuerdo: values.puesto_firma_acuerdo,
