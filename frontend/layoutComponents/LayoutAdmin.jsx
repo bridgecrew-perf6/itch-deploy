@@ -114,7 +114,9 @@ class LayoutAdmin extends Component{
                                 type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
                                 onClick={this.toggle}
                             />
-                            {component.title}
+                            <div style={{float: 'right'}} >
+                                {component.title}
+                            </div>
                         </Header>
                         <Content style={{ margin: '24px 16px', padding: 24, background: '#fff' }}>
                         {component.render}

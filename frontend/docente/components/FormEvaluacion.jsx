@@ -27,7 +27,7 @@ const CreateFormEvaluacion = Form.create()(
                         criterios !== null ? 
                         criterios.map((criterio, index) => {
                             return (
-                                <FormItem key={index} label={`${(index+1)}.- ${criterio.descripcion}`} style={{width: '100%'}}>
+                                <FormItem key={index} label={`${(index+1)}. ${criterio.descripcion}`} style={{width: '100%'}}>
                                     {getFieldDecorator(`${criterio.id}`, {
                                         rules: [{required: true, message: 'La pregunta debe tener un valor de evaluación.'}],
                                         initialValue: proyecto.evaluacion_asesor_interno !== null?proyecto.evaluacion_asesor_interno.criterios_de_evaluacion.find(_eval => _eval.id_criterio == criterio.id).valor_de_evaluacion:null
