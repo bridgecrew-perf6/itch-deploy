@@ -33,6 +33,18 @@ module.exports = {
           as: 'id_proyecto'
         }
       },
+      id_evaluacion_asesor_interno: {
+        type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        allowNull: true,
+        defaultValue: null
+      },
+      id_evaluacion_asesor_externo: {
+        type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        allowNull: true,
+        defaultValue: null
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

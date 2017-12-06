@@ -6,8 +6,6 @@ import uuid from 'uuid';
 const { Item } = Form;
 const TabPane = Tabs.TabPane;
 
-
-
 // Components
 import FormAddObservacion from '../components/FormAddObservacion.jsx';
 import FormAddSolucion from '../components/FormAddSolucion.jsx';
@@ -137,7 +135,7 @@ export default class Proyecto extends Component{
             axios.get(`/api/proyecto/${proyecto.id}/seguimientos`)
                 .then( res => {
                     if(res.status === 200){
-                        console.warn('a>', res.data);
+                        // console.warn('a>', res.data);
                         this.setState({
                             visibleAddObservacion: false,
                             visibleAddSolucion: false,
@@ -252,11 +250,27 @@ export default class Proyecto extends Component{
                 }
             })
     }
-    showEvaluacionAsesorInterno = () => {
-        axios.get('/api/proyecto/evaluacion/criterios/asesor_interno')
+    showEvaluacionAsesorInterno = (alumno) => {
+        if(alumno.plan_estudios === '2009-2010'){
+            axios.get('/api/proyecto/evaluacionAnexoIII/criterios/asesor_interno/')
+                .then(res => {
+                    if(res.status === 200){
+                        // console.warn('cri', res.data)
+                        this.setState({
+                            criterios_evaluacion: res.data,
+                            visibleEvaluacionAsesorInterno: true,
+                            visibleAddObservacion: false,
+                            visibleAddSolucion: false,
+                        })
+                    }else{
+                        message.warn('Error al realizar petición de criterios de evaluación, favor de reportar al administrador.')
+                    }
+                })
+        }else if(alumno.plan_estudios === '2015-2016'){
+            axios.get('/api/proyecto/evaluacionAnexoXXX/criterios/asesor_interno/')
             .then(res => {
                 if(res.status === 200){
-                    console.warn('cri', res.data)
+                    // console.warn('cri', res.data)
                     this.setState({
                         criterios_evaluacion: res.data,
                         visibleEvaluacionAsesorInterno: true,
@@ -267,6 +281,8 @@ export default class Proyecto extends Component{
                     message.warn('Error al realizar petición de criterios de evaluación, favor de reportar al administrador.')
                 }
             })
+        }
+        
     }
     autorizarCartaDeLiberacionAsesorInterno = (check, id_proyecto) => {
         axios.put('/api/proyecto/autorizar_carta_liberacion/asesor_interno', {
@@ -522,7 +538,7 @@ export default class Proyecto extends Component{
                                             proyecto.url_informe_tecnico 
                                             ?
                                                 <div>
-                                                    <Button style={{marginBottom: 30}} onClick={() => this.showEvaluacionAsesorInterno()} icon="bars" type="primary">Realizar evaluación</Button>
+                                                    <Button style={{marginBottom: 30}} onClick={() => this.showEvaluacionAsesorInterno(proyecto.anteproyecto.alumno)} icon="bars" type="primary">Realizar evaluación</Button>
                                                     <h4 style={{marginBottom: 10}}>Autorizar carta de liberación</h4>
                                                     <Tooltip title={(proyecto.id_evaluacion_asesor_interno === null)?"Antes de autorizar la carta de liberación debe realizar la evaluación.":""}>
                                                         <Switch disabled={(proyecto.id_evaluacion_asesor_interno === null)?true:false} defaultChecked={proyecto.autorizar_carta_liberacion_asesor_interno} checkedChildren="Autorizado" onChange={(e) => this.autorizarCartaDeLiberacionAsesorInterno(e, proyecto.id)} unCheckedChildren={<Icon type="cross" />}/>

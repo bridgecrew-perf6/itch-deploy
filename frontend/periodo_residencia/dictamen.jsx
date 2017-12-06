@@ -16,13 +16,14 @@ export default class Dictamen extends Component{
             departamento: props.departamento,
             periodo: null,
             dictamen_anteproyectos: null,
+            docentes: null
         }
     }
     handleChangePeriodo = (id_periodo) => {
         axios.get(`/api/periodo/${id_periodo}/dictamen`)
         .then(res =>{
             if(res.status === 200){
-                console.log(res)
+                // console.log(res)
                 if(res.data.anteproyectos != null){
                     const dictamen_anteproyectos = res.data.anteproyectos.map((anteproyecto, index) => {
                         return {
@@ -34,6 +35,7 @@ export default class Dictamen extends Component{
                             nombre_anteproyecto: anteproyecto.nombre,
                             nombre_titular_empresa: `${anteproyecto.asesor_externo.empresa.nombre_titular} \n ${anteproyecto.asesor_externo.empresa.puesto_titular}` ,
                             asesor_interno: `${anteproyecto.asesor_interno.titulo} ${anteproyecto.asesor_interno.nombre} ${anteproyecto.asesor_interno.ap_paterno} ${anteproyecto.asesor_interno.ap_materno}`,
+                            id_asesor_interno: anteproyecto.asesor_interno.id,
                             asesor_externo: anteproyecto.asesor_externo.nombre,
                             dictamen: anteproyecto.dictamen.toUpperCase(),
                             fecha_dictamen: anteproyecto.updatedAt
@@ -53,11 +55,31 @@ export default class Dictamen extends Component{
         })
         
     }
+    handleAsesorInterno = (id_asesor_interno, id_anteproyecto) => {
+        axios.put('/api/anteproyecto/set_asesor_interno', {
+            id_asesor_interno, id_anteproyecto
+        }).then(res => {
+            if(res.status === 200 ){
+                message.success('Anteproyecto actualizado!')
+                // window.location.reload();
+                // this.props.updatePeriodo();
+            }else{
+                Modal.error({
+                    title: 'Error al actualizar anteproyecto. Revisar los siguientes campos',
+                    content:(
+                        <div>
+                            {res.data.errores}
+                        </div>
+                    ), onOk(){}, 
+                })
+            }
+        })
+    }
     updatePeriodo = () => {
         axios.get(`/api/periodo/${this.state.periodo.id}/dictamen`)
         .then(res =>{
             if(res.status === 200){
-                console.log(res)
+                // console.log(res.data)
                 if(res.data.anteproyectos != null){
                     const dictamen_anteproyectos = res.data.anteproyectos.map((anteproyecto, index) => {
                         return {
@@ -69,9 +91,10 @@ export default class Dictamen extends Component{
                             nombre_anteproyecto: anteproyecto.nombre,
                             nombre_titular_empresa: `${anteproyecto.asesor_externo.empresa.nombre_titular} \n ${anteproyecto.asesor_externo.empresa.puesto_titular}` ,
                             asesor_interno: `${anteproyecto.asesor_interno.titulo} ${anteproyecto.asesor_interno.nombre} ${anteproyecto.asesor_interno.ap_paterno} ${anteproyecto.asesor_interno.ap_materno}`,
+                            id_asesor_interno: anteproyecto.asesor_interno.id,
                             asesor_externo: anteproyecto.asesor_externo.nombre,
                             dictamen: anteproyecto.dictamen.toUpperCase(),
-                            fecha_dictamen: anteproyecto.updatedAt
+                            fecha_dictamen: anteproyecto.updatedAt,
                         }
                     })
                     this.setState({
@@ -115,7 +138,7 @@ export default class Dictamen extends Component{
     render(){
         const {departamento, dictamen_anteproyectos, periodo} = this.state;
         const currentDate = moment().format('YYYY-MM-DD');
-
+        // console.log('=>>>', dictamen_anteproyectos);
         const columns = [
             {
                 width: 50,
@@ -163,10 +186,23 @@ export default class Dictamen extends Component{
                 title: 'ASESORES',
                 children: [
                     {
+                        width: 300,
                         className: 'center-text',
                         title: 'INTERNO',
                         dataIndex: 'asesor_interno',
-                        key: 'asesor_interno'
+                        key: 'asesor_interno',
+                        render: (text, record) => (
+                            <Select
+                                placeholder="Seleccione al asesor interno"
+                                style={{ width: '100%' }}
+                                onChange={(id_asesor_interno) => this.handleAsesorInterno(id_asesor_interno, record.id)}
+                                defaultValue={record.id_asesor_interno ? `${record.id_asesor_interno}` : null}
+                                >
+                                    {periodo !== null ? periodo.carrera.docentes_carreras.map((_docente, index) => {
+                                        return <Option key={index} value={`${_docente.docente.id}`}>{`${_docente.docente.titulo} ${_docente.docente.nombre} ${_docente.docente.ap_paterno} ${_docente.docente.ap_materno}`}</Option>
+                                    }) : null}
+                            </Select>
+                        )
                     },
                     {
                         className: 'center-text',

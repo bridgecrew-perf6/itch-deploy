@@ -42,11 +42,26 @@ const CreateFormAddAlumno = Form.create()(
                         <Form layout="vertical">
                             <Row >
                             <Col xs={24} lg={24}>
-                                <FormItem label="Número de control">
-                                    {getFieldDecorator('no_control', {
-                                        rules: [{required: true, message: 'El número de control es obligatorio.'},{len: 8, message: 'El numero de control contiene 8 digitos'}]
-                                    })(<Input  style={{ width: '100%' }} placeholder="Ingrese el número de control del alumno"/>)}
-                                </FormItem>
+                                <Row gutter={16}>
+                                    <Col xs={24} lg={12}>
+                                        <FormItem label="Número de control">
+                                            {getFieldDecorator('no_control', {
+                                                rules: [{required: true, message: 'El número de control es obligatorio.'},{len: 8, message: 'El numero de control contiene 8 digitos'}]
+                                            })(<Input  style={{ width: '100%' }} placeholder="Ingrese el número de control del alumno"/>)}
+
+                                        </FormItem>
+                                    </Col>
+                                    <Col xs={24} lg={12}>
+                                        <FormItem label="Plan de estudios">
+                                            {getFieldDecorator('plan_estudios', {
+                                                rules: [{required: true, message: 'El plan de estudio es obligatorio.'}]
+                                            })(<Select>
+                                                    <Option key="2009-2010" value="2009-2010">2009-2010</Option>
+                                                    <Option key="2015-2016" value="2015-2016">2015-2016</Option>
+                                                </Select>)}
+                                        </FormItem>
+                                    </Col>
+                                </Row>
                             </Col>
                             <Col xs={24} lg={24}>
                             <FormItem label="Nombre">
@@ -69,23 +84,26 @@ const CreateFormAddAlumno = Form.create()(
                                 })(<Input placeholder="Ingrese el apellido materno del alumno"/>)}
                             </FormItem>
                             </Col>
-                            
-                            <Col xs={24} lg={12} style={{paddingLeft: 3, paddingRight: 3}}>
-                                <FormItem label="Sexo">
-                                    {getFieldDecorator('sexo', {
-                                        rules: [{required: true, message: 'El alumno debe indicar su sexo.'}]
-                                    })(<Select placeholder="Seleccione una opción">
-                                            <Option key="H" value="H">Hombre</Option>
-                                            <Option key="M" value="M">Mujer</Option>
-                                        </Select>)}
-                                </FormItem>
-                            </Col>
-                            <Col xs={24} lg={12} style={{paddingLeft: 3, paddingRight: 3}}>
-                                <FormItem label="Seguridad social">
-                                    {getFieldDecorator('no_seguro', {
-                                        rules: [{required: true, message: 'Debe indicar el número de seguro del alumno.'}]
-                                    })(<Input addonBefore={TipoDeSeguro} style={{ width: '100%' }} placeholder="Número de seguro"/>)}
-                                </FormItem>
+                            <Col xs={24} lg={24}>
+                                <Row gutter={16}>
+                                    <Col xs={24} lg={12}>
+                                        <FormItem label="Sexo">
+                                            {getFieldDecorator('sexo', {
+                                                rules: [{required: true, message: 'El alumno debe indicar su sexo.'}]
+                                            })(<Select placeholder="Seleccione una opción">
+                                                    <Option key="H" value="H">Hombre</Option>
+                                                    <Option key="M" value="M">Mujer</Option>
+                                                </Select>)}
+                                        </FormItem>
+                                    </Col>
+                                    <Col xs={24} lg={12} >
+                                        <FormItem label="Seguridad social">
+                                            {getFieldDecorator('no_seguro', {
+                                                rules: [{required: true, message: 'Debe indicar el número de seguro del alumno.'}]
+                                            })(<Input addonBefore={TipoDeSeguro} style={{ width: '100%' }} placeholder="Número de seguro"/>)}
+                                        </FormItem>
+                                    </Col>
+                                </Row>
                             </Col>
 
                             <Col xs={24} lg={24}>
@@ -212,7 +230,8 @@ export default class FormAddAlumno extends Component{
                 ciudad: values.ciudad,
                 numero_celular: values.numero_celular,
                 no_seguro: values.no_seguro,
-                id_tipo_seguro: values.id_tipo_seguro
+                id_tipo_seguro: values.id_tipo_seguro,
+                plan_estudios: values.plan_estudios
             }).then((res) => {
                 // console.log(res)
                 if(res.status === 200){

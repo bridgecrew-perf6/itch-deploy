@@ -9,6 +9,8 @@ import axios from 'axios';
 
 // components
 import FormAddObservacionSeguimiento from '../components/FormAddObservacionSeguimiento.jsx';
+import FormEvaluacionSeguimiento from '../components/FormEvaluacionSeguimiento.jsx';
+
 export default class RevisionSeguimiento extends Component{
     constructor(props){
         super(props);
@@ -16,18 +18,23 @@ export default class RevisionSeguimiento extends Component{
             seguimiento: props.seguimiento,
             visible_observacion: false,
             usuario: props.usuario,
+            visibleEvaluacionAsesorInterno: false,
+            criterios_evaluacion: []
         }
     }
     componentWillReceiveProps(nextProps){
         this.setState({
             seguimiento: nextProps.seguimiento,
             visible_observacion: false,
-            usuario: nextProps.usuario
+            usuario: nextProps.usuario,
+            visibleEvaluacionAsesorInterno: false,
+            criterios_evaluacion: []
         })
     }
     showAddObservacionSeguimiento(){
         this.setState({
-            visible_observacion: true
+            visible_observacion: true,
+            visibleEvaluacionAsesorInterno: false,
         })
     }
     updateSeguimientos = () => {
@@ -48,8 +55,23 @@ export default class RevisionSeguimiento extends Component{
     updateProyecto = () => {
         this.props.updateProyecto();
     }
+    showEvaluacionAsesorInterno = (alumno) => {
+        axios.get('/api/proyecto/evaluacionAnexoXXIX/criterios/asesor_interno/')
+            .then(res => {
+                if(res.status === 200){
+                    // console.warn('cri', res.data)
+                    this.setState({
+                        criterios_evaluacion: res.data,
+                        visible_observacion: false,
+                        visibleEvaluacionAsesorInterno: true
+                    })
+                }else{
+                    message.warn('Error al realizar petición de criterios de evaluación, favor de reportar al administrador.')
+                }
+            })
+    }
     render(){
-        const {seguimiento, usuario, visible_observacion} = this.state
+        const {seguimiento, usuario, visible_observacion, visibleEvaluacionAsesorInterno, criterios_evaluacion} = this.state
         // console.warn('se', seguimiento)
         const observacionesSeguimiento = seguimiento.revisiones_seguimiento.map((revision, index) => {
             return{
@@ -118,7 +140,27 @@ export default class RevisionSeguimiento extends Component{
                         <Alert message="El alumno no ha subido su seguimiento" type="warning" showIcon/>
                     }
                 </Col>
-                <Col xs={24} lg={24} >
+                {
+                    seguimiento.proyecto.anteproyecto.alumno.plan_estudios === '2015-2016' &&
+                    <div>
+                        <Col className="border-top" xs={24} lg={24}>
+                            <h3>Evaluación del seguimiento de residencia</h3>
+                            {
+                                seguimiento.url_seguimiento 
+                                ?
+                                    <div>
+                                        <Button style={{marginBottom: 30}} onClick={() => this.showEvaluacionAsesorInterno(seguimiento.proyecto.anteproyecto.alumno)} icon="bars" type="primary">Realizar evaluación</Button>
+                                        <FormEvaluacionSeguimiento seguimiento={seguimiento} visible={visibleEvaluacionAsesorInterno} criterios_evaluacion={criterios_evaluacion}/>
+                                    </div>
+                                    
+                                :
+                                    <Alert message="El alumno debe subir el avance de su seguimiento para continuar con el proceso de evaluación" type="warning" showIcon/>
+                            }
+                        </Col>
+                    </div>
+                }
+                
+                <Col className="border-top" xs={24} lg={24} >
                     <Button type="primary" icon="plus" onClick={() => this.showAddObservacionSeguimiento()}>Agregar observación</Button>
                     <Table title={() => 'Observaciones del seguimiento'} columns={columnsObservacionesSeguimiento} dataSource={observacionesSeguimiento} pagination={{ pageSize: 4 }} />
                 </Col>

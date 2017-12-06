@@ -167,13 +167,38 @@ module.exports.generarCartaLiberacionAsesorExterno = (req, res) => {
         res.status(406).json({err: err})
     })
 }
-module.exports.generarFormatoDeEvaluacion = (req, res) => {
+module.exports.generarFormatoDeEvaluacionAnexoIII = (req, res) => {
     const id_proyecto = req.params.id_proyecto;
     Proyecto.findOne({
         where: {id: id_proyecto},
         include: [{model: evaluacion, as: 'evaluacion_asesor_externo', include: [{model: criterio_evaluacion, as: 'criterios_de_evaluacion', include: [{model: criterio, as: 'ref_criterio'}]}]},{model: evaluacion, as: 'evaluacion_asesor_interno', include: [{model: criterio_evaluacion, as: 'criterios_de_evaluacion', include: [{model: criterio, as: 'ref_criterio'}]}]},{model: Anteproyecto, as: 'anteproyecto', include: [{model: Docente, as: 'asesor_interno'},{model: asesor_externo, as: 'asesor_externo'},{model: Alumno, as: 'alumno'},{model: Periodo, as: 'periodo', include: [{model: Carrera, as: 'carrera'}]}]}]
     }).then(_proyecto => {
-        pdfs.generarFormatoEvaluacion(_proyecto, res);
+        pdfs.generarFormatoEvaluacionAnexoIII(_proyecto, res);
+    }).catch(err => {
+        console.log(err)
+        res.status(406).json({err: err})
+    })
+}
+
+module.exports.generarFormatoDeEvaluacionAnexoXXX = (req, res) => {
+    const id_proyecto = req.params.id_proyecto;
+    Proyecto.findOne({
+        where: {id: id_proyecto},
+        include: [{model: evaluacion, as: 'evaluacion_asesor_externo', include: [{model: criterio_evaluacion, as: 'criterios_de_evaluacion', include: [{model: criterio, as: 'ref_criterio'}]}]},{model: evaluacion, as: 'evaluacion_asesor_interno', include: [{model: criterio_evaluacion, as: 'criterios_de_evaluacion', include: [{model: criterio, as: 'ref_criterio'}]}]},{model: Anteproyecto, as: 'anteproyecto', include: [{model: Docente, as: 'asesor_interno'},{model: asesor_externo, as: 'asesor_externo'},{model: Alumno, as: 'alumno'},{model: Periodo, as: 'periodo', include: [{model: Carrera, as: 'carrera'}]}]}]
+    }).then(_proyecto => {
+        pdfs.generarFormatoDeEvaluacionDeResidenciaAnexoXXX(_proyecto, res);
+    }).catch(err => {
+        console.log(err)
+        res.status(406).json({err: err})
+    })
+}
+module.exports.generarFormatoDeEvaluacionAnexoXXIX = (req, res) => {
+    const id_seguimiento = req.params.id_seguimiento;
+    seguimiento_proyecto.findOne({
+        where: {id: id_seguimiento},
+        include: [{model: evaluacion, as: 'evaluacion_asesor_interno', include: [{model: criterio_evaluacion, as: 'criterios_de_evaluacion', include: [{model: criterio, as: 'ref_criterio'}]}]},{model: evaluacion, as: 'evaluacion_asesor_externo', include: [{model: criterio_evaluacion, as: 'criterios_de_evaluacion', include: [{model: criterio, as: 'ref_criterio'}]}]},{model: Proyecto, as: 'proyecto', include: [{model: Anteproyecto, as: 'anteproyecto', include: [{model: asesor_externo, as: 'asesor_externo'},{model: Docente, as: 'asesor_interno'},{model: Alumno, as: 'alumno'}, {model: Periodo, as: 'periodo', include: [{model: Carrera, as: 'carrera'}]}]}]}]
+    }).then(_seguimiento => {
+        pdfs.generarFormatoEvaluacionDeSeguimientoAnexoXXIX(_seguimiento, res);
     }).catch(err => {
         console.log(err)
         res.status(406).json({err: err})
@@ -197,7 +222,7 @@ module.exports.findSeguimientos = (req, res) => {
     const id_proyecto = req.params.id_proyecto;
     seguimiento_proyecto.findAll({
         where: {id_proyecto},
-        include: [{model: revision_seguimiento, as: 'revisiones_seguimiento', include: [{model: Docente, as: 'docente'}]},{model: Seguimiento, as: 'seguimiento'}],
+        include: [{model: evaluacion, as: 'evaluacion_asesor_externo', include: [{model: criterio_evaluacion, as: 'criterios_de_evaluacion', include: [{model: criterio, as: 'ref_criterio'}]}]},{model: evaluacion, as: 'evaluacion_asesor_interno', include: [{model: criterio_evaluacion, as: 'criterios_de_evaluacion', include: [{model: criterio, as: 'ref_criterio'}]}]},{model: Proyecto, as: 'proyecto', include: [{model: Anteproyecto, as: 'anteproyecto', include: [{model: Alumno, as: 'alumno'}]}]},{model: revision_seguimiento, as: 'revisiones_seguimiento', include: [{model: Docente, as: 'docente'}]},{model: Seguimiento, as: 'seguimiento'}],
     }).then(seguimientos_proyecto => {
         res.status(200).json(seguimientos_proyecto);
     }).catch(err => {
@@ -206,8 +231,8 @@ module.exports.findSeguimientos = (req, res) => {
     })
 }
 
-module.exports.getCriteriosEvaluacionAsesorInterno = (req, res) => {
-    criterio.findAll({where: {tipo: 'asesor_interno'}})
+module.exports.getCriteriosEvaluacionAnexoIIIAsesorInterno = (req, res) => {
+    criterio.findAll({where: {tipo: 'asesor_interno', anexo: 'III'}})
         .then(criterios => {
             res.status(200).json(criterios);
         }).catch(err => {
@@ -215,8 +240,44 @@ module.exports.getCriteriosEvaluacionAsesorInterno = (req, res) => {
             res.status(406).json({err: err})
         })
 }
-module.exports.getCriteriosEvaluacionAsesorExterno = (req, res) => {
-    criterio.findAll({where: {tipo: 'asesor_externo'}})
+module.exports.getCriteriosEvaluacionAnexoIIIAsesorExterno = (req, res) => {
+    criterio.findAll({where: {tipo: 'asesor_externo', anexo: 'III'}})
+        .then(criterios => {
+            res.status(200).json(criterios);
+        }).catch(err => {
+            console.log(err)
+            res.status(406).json({err: err})
+        })
+}
+module.exports.getCriteriosEvaluacionAnexoXXXAsesorExterno = (req, res) => {
+    criterio.findAll({where: {tipo: 'asesor_externo', anexo: 'XXX'}})
+        .then(criterios => {
+            res.status(200).json(criterios);
+        }).catch(err => {
+            console.log(err)
+            res.status(406).json({err: err})
+        })
+}
+module.exports.getCriteriosEvaluacionAnexoXXXAsesorInterno = (req, res) => {
+    criterio.findAll({where: {tipo: 'asesor_interno', anexo: 'XXX'}})
+        .then(criterios => {
+            res.status(200).json(criterios);
+        }).catch(err => {
+            console.log(err)
+            res.status(406).json({err: err})
+        })
+}
+module.exports.getCriteriosEvaluacionAnexoXXIXAsesorExterno = (req, res) => {
+    criterio.findAll({where: {tipo: 'asesor_externo', anexo: 'XXIX'}})
+        .then(criterios => {
+            res.status(200).json(criterios);
+        }).catch(err => {
+            console.log(err)
+            res.status(406).json({err: err})
+        })
+}
+module.exports.getCriteriosEvaluacionAnexoXXIXAsesorInterno = (req, res) => {
+    criterio.findAll({where: {tipo: 'asesor_interno', anexo: 'XXIX'}})
         .then(criterios => {
             res.status(200).json(criterios);
         }).catch(err => {
@@ -240,7 +301,7 @@ module.exports.findOrCreateSeguimientos = (req, res) => {
                         id_seguimiento: _seguimiento.id,
                         id_proyecto: id_proyecto
                     },
-                    include: [{model: Proyecto, as: 'proyecto', include: [{model: Anteproyecto, as: 'anteproyecto', include: [{model: Periodo, as: 'periodo'}]}]},{model: revision_seguimiento, as: 'revisiones_seguimiento', include: [{model: Docente, as: 'docente'}]},{model: Seguimiento, as: 'seguimiento'}],
+                    include: [{model: Proyecto, as: 'proyecto', include: [{model: Anteproyecto, as: 'anteproyecto', include: [{model: Alumno, as: 'alumno'}, {model: Periodo, as: 'periodo'}]}]},{model: revision_seguimiento, as: 'revisiones_seguimiento', include: [{model: Docente, as: 'docente'}]},{model: Seguimiento, as: 'seguimiento'}],
                      transaction: t
                 })
             })
@@ -462,6 +523,118 @@ module.exports.addEvaluacionAsesorInterno = (req, res) => {
         res.status(406).json({err: err})
     })
 }
+
+module.exports.addEvaluacionSeguimientoAsesorInterno = (req, res) => {
+    const id_seguimiento = req.body.id_seguimiento,
+        observaciones = req.body.observaciones,
+        criterios_evaluacion = req.body.criterios_evaluacion,
+        criterios = req.body.criterios;
+        // console.log('=>>', criterios_evaluacion )
+        // console.log('=>>', criterios )
+    sequelize.transaction(t => {
+        //Buscar proyecto
+        return seguimiento_proyecto.findOne({where: {id: id_seguimiento}}, {transaction: t})
+            .then(_seguimiento => {
+                // verificamos si ya existe una evaluacion
+                if(_seguimiento.id_evaluacion_asesor_interno === null){ // no existe, creamos evaluacion 
+                    return evaluacion.create({tipo: 'asesor_interno', observaciones}, {transaction: t})
+                        .then((_evaluacion) => {
+                            // asociamos la evaluación con el proyecto
+                            return _seguimiento.update({id_evaluacion_asesor_interno: _evaluacion.id},{transaction: t})
+                            .then(__seguimiento => {
+                                // creamos o actualizamos los criterios
+                                return sequelize.Promise.map(criterios, (_criterio) => {
+                                    return criterio_evaluacion.create({id_evaluacion: _evaluacion.id, id_criterio: _criterio.id,valor_de_evaluacion: criterios_evaluacion[_criterio.id]}, {transaction: t})
+                                })   
+                            })
+                        })
+                }else{ // ya existe solo actualizamos
+                    return evaluacion.update({observaciones},{where: {id: _seguimiento.id_evaluacion_asesor_interno}}, {transaction: t})
+                        .then((updated) => {
+                            return evaluacion.findOne({where: {id: _seguimiento.id_evaluacion_asesor_interno}}, {transaction: t})
+                                .then(_evaluacion => {
+                                    // creamos o actualizamos los criterios
+                                    return sequelize.Promise.map(criterios, (_criterio) => {
+                                        return criterio_evaluacion.update({valor_de_evaluacion: criterios_evaluacion[_criterio.id]}, {where: {id_evaluacion: _evaluacion.id, id_criterio: _criterio.id}}, {transaction: t})
+                                    })
+                                })
+                              
+                        })
+                }
+                
+
+            })
+        
+    }).then((evaluacion)=>{
+        // console.log('success=======>    ', result)
+        res.status(200).json(evaluacion)
+    }).catch(Sequelize.ValidationError, (err) => {
+        var errores = err.errors.map((element) => {
+            return `${element.path}: ${element.message}`
+        })
+        // console.log('==>', errores)
+        res.status(202).json({errores})
+    }).catch((err) => {
+        console.log(err);
+        res.status(406).json({err: err})
+    })
+}
+module.exports.addEvaluacionSeguimientoAsesorExterno = (req, res) => {
+    const id_seguimiento = req.body.id_seguimiento,
+        observaciones = req.body.observaciones,
+        criterios_evaluacion = req.body.criterios_evaluacion,
+        criterios = req.body.criterios;
+        // console.log('=>>', criterios_evaluacion )
+        // console.log('=>>', criterios )
+    sequelize.transaction(t => {
+        //Buscar proyecto
+        return seguimiento_proyecto.findOne({where: {id: id_seguimiento}}, {transaction: t})
+            .then(_seguimiento => {
+                // verificamos si ya existe una evaluacion
+                if(_seguimiento.id_evaluacion_asesor_externo === null){ // no existe, creamos evaluacion 
+                    return evaluacion.create({tipo: 'asesor_externo', observaciones}, {transaction: t})
+                        .then((_evaluacion) => {
+                            // asociamos la evaluación con el proyecto
+                            return _seguimiento.update({id_evaluacion_asesor_externo: _evaluacion.id},{transaction: t})
+                            .then(__seguimiento => {
+                                // creamos o actualizamos los criterios
+                                return sequelize.Promise.map(criterios, (_criterio) => {
+                                    return criterio_evaluacion.create({id_evaluacion: _evaluacion.id, id_criterio: _criterio.id,valor_de_evaluacion: criterios_evaluacion[_criterio.id]}, {transaction: t})
+                                })   
+                            })
+                        })
+                }else{ // ya existe solo actualizamos
+                    return evaluacion.update({observaciones},{where: {id: _seguimiento.id_evaluacion_asesor_externo}}, {transaction: t})
+                        .then((updated) => {
+                            return evaluacion.findOne({where: {id: _seguimiento.id_evaluacion_asesor_externo}}, {transaction: t})
+                                .then(_evaluacion => {
+                                    // creamos o actualizamos los criterios
+                                    return sequelize.Promise.map(criterios, (_criterio) => {
+                                        return criterio_evaluacion.update({valor_de_evaluacion: criterios_evaluacion[_criterio.id]}, {where: {id_evaluacion: _evaluacion.id, id_criterio: _criterio.id}}, {transaction: t})
+                                    })
+                                })
+                              
+                        })
+                }
+                
+
+            })
+        
+    }).then((evaluacion)=>{
+        // console.log('success=======>    ', result)
+        res.status(200).json(evaluacion)
+    }).catch(Sequelize.ValidationError, (err) => {
+        var errores = err.errors.map((element) => {
+            return `${element.path}: ${element.message}`
+        })
+        // console.log('==>', errores)
+        res.status(202).json({errores})
+    }).catch((err) => {
+        console.log(err);
+        res.status(406).json({err: err})
+    })
+}
+
 module.exports.addObservacion = (req, res) => {
     // console.log('==========>',req.body)
     const id_proyecto = req.body.id_proyecto,

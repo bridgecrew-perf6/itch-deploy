@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {render} from 'react-dom';
-import { Button, Modal, Form, Input,Icon, message, Upload, Collapse, Badge} from 'antd';
+import { Button, Modal, Form, Input,Icon, message, Upload, Collapse, Badge, Alert} from 'antd';
 const FormItem = Form.Item;
 const { TextArea } = Input;
 const {Panel} = Collapse;
@@ -13,7 +13,7 @@ class FormSeguimiento extends Component{
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
           if (!err) {
-            console.log('Received values of form: ', values);
+            // console.log('Received values of form: ', values);
             axios.put('/api/proyecto/seguimiento',{
                 id_seguimiento: this.props.seguimiento.id,
                 url_seguimiento: values.url_seguimiento
@@ -37,7 +37,7 @@ class FormSeguimiento extends Component{
             border: 0,
             overflow: 'hidden',
           };
-        // console.log('aui', this.props)
+        // console.log('aui', seguimiento)
         return (
             <div>
                 <Form onSubmit={this.handleSubmit} >
@@ -55,7 +55,21 @@ class FormSeguimiento extends Component{
                         </Button>
                     </div>
                 </Form>
-                <h3 style={{marginTop: 20}}>Observaciones</h3>
+                {
+                    seguimiento.proyecto.anteproyecto.alumno.plan_estudios === '2015-2016' &&
+                    <div>
+                        <h3 className="border-top" style={{marginTop: 20}}>Evaluación</h3>
+                        {
+                            seguimiento.id_evaluacion_asesor_interno !== null & seguimiento.id_evaluacion_asesor_externo!== null ?
+                                <a target="_blank" href={`/api/proyecto/${seguimiento.id}/formato_evaluacion/anexoXXIX`}>
+                                    <Button type="primary" icon="file-pdf">Generar formato de evaluación</Button>
+                                </a>
+                            : <Alert message={`${seguimiento.id_evaluacion_asesor_interno === null? 'El asesor interno no ha realizado la evaluación':''}\n${seguimiento.id_evaluacion_asesor_externo===null? ', El asesor externo no ha realizado la evaluación':''}`} type="warning" showIcon></Alert>
+                            
+                        }
+                    </div>
+                }
+                <h3 className="border-top" style={{marginTop: 20}}>Observaciones</h3>
                 <div style={{overflowY: 'scroll', height: 300}}> 
                     <Collapse bordered={false}  >
                                 {seguimiento.revisiones_seguimiento.map((revision, index) => {

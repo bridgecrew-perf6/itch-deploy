@@ -15,7 +15,6 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'id_seguimiento_proyecto',
       onDelete: 'CASCADE',
       as: 'revisiones_seguimiento'
-
     })
     seguimiento_proyecto.belongsTo(models.Seguimiento, {
       foreignKey: 'id_seguimiento',
@@ -26,6 +25,14 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'id_proyecto',
       onDelete: 'CASCADE',
       as: 'proyecto'
+    })
+    seguimiento_proyecto.belongsTo(models.evaluacion, {
+      foreignKey: 'id_evaluacion_asesor_interno',
+      as: 'evaluacion_asesor_interno'
+    })
+    seguimiento_proyecto.belongsTo(models.evaluacion, {
+      foreignKey: 'id_evaluacion_asesor_externo',
+      as: 'evaluacion_asesor_externo'
     })
 
   }

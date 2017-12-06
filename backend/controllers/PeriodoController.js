@@ -85,7 +85,7 @@ module.exports.findDictamen = (req, res) => {
     Periodo.findOne({
         where: {id: id_periodo},
         include: [
-            {model: Carrera, as: 'carrera', include: [{model: Departamento, as: 'departamento'}]},
+            {model: Carrera, as: 'carrera', include: [{model: docente_carreras, as: 'docentes_carreras', include: [{model: Docente, as: 'docente'}]},{model: Departamento, as: 'departamento'}]},
             {model: Anteproyecto, as: 'anteproyectos', include: [{model: Alumno, as: 'alumno'}, {model: asesor_externo, as: 'asesor_externo', include: [{model: Empresa, as: 'empresa'}]}, {model: Docente, as: 'asesor_interno'}], where: {dictamen: 'aprobado'}, required: false}
         ]
     }).then(_periodo => {

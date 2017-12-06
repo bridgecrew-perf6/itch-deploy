@@ -10,7 +10,6 @@ const alumnoController = require('./controllers/AlumnoController');
 const periodoController = require('./controllers/PeriodoController');
 const anteproyectoController = require('./controllers/AnteproyectoController')
 const proyectoController = require('./controllers/ProyectoController');
-
 module.exports =  (app, express, passport) => {
    
     const router = express.Router();
@@ -27,14 +26,13 @@ module.exports =  (app, express, passport) => {
 
     router.put('/usuario/cambiar_contrasenia', isAuth, usuarioController.updateContrasenia);
     router.put('/usuario/cambiar_contrasenia/email', usuarioController.updateContraseniaEmail); // isAuth
-   
     // DEPARTAMENTO
     router.route('/departamento')
         .get(isAuth, departamentoController.findAll)
         .post(isAuth, departamentoController.add)
 
     router.route('/departamento/:id')
-        .get(departamentoController.findById) 
+        .get(isAuth, departamentoController.findById) 
         .put(isAuth, departamentoController.update)
 
     // CARRERA
@@ -101,10 +99,12 @@ module.exports =  (app, express, passport) => {
         .put(isAuth, alumnoController.updateDatosAnteproyecto);
     
     router.route('/alumno/:id_alumno/solicitud_residencia')
-        .get(alumnoController.generarSolicitudDeResidencia);
+        .get(isAuth, alumnoController.generarSolicitudDeResidencia);
         
     router.route('/alumno/:id/proyecto')
         .get(isAuth, alumnoController.getProyecto)
+    router.route('/alumno/:id/_proyecto')
+        .get(isAuth, alumnoController.get_Proyecto);
 
     router.route('/alumno/file_anteproyecto/:id_anteproyecto')
         .post(isAuth,alumnoController.addFileAnteproyecto);
@@ -146,19 +146,38 @@ module.exports =  (app, express, passport) => {
     router.route('/proyecto/asesoria/solucion_recomendada')
         .post(isAuth, proyectoController.addSolucionRecomendada)
         .put(isAuth, proyectoController.updateSolucionRecomendada)
+
+
     
-    router.route('/proyecto/evaluacion/criterios/asesor_interno')
-        .get(isAuth, proyectoController.getCriteriosEvaluacionAsesorInterno);
-    
-    router.route('/proyecto/evaluacion/criterios/asesor_externo')
-        .get(isAuth, proyectoController.getCriteriosEvaluacionAsesorExterno);
+    router.route('/proyecto/evaluacionAnexoIII/criterios/asesor_interno')
+        .get(isAuth, proyectoController.getCriteriosEvaluacionAnexoIIIAsesorInterno);
+
+    router.route('/proyecto/evaluacionAnexoIII/criterios/asesor_externo')
+        .get(isAuth, proyectoController.getCriteriosEvaluacionAnexoIIIAsesorExterno);
+
+    router.route('/proyecto/evaluacionAnexoXXX/criterios/asesor_interno')
+        .get(isAuth, proyectoController.getCriteriosEvaluacionAnexoXXXAsesorInterno);
+    router.route('/proyecto/evaluacionAnexoXXX/criterios/asesor_externo')
+        .get(isAuth, proyectoController.getCriteriosEvaluacionAnexoXXXAsesorExterno);
+
+    router.route('/proyecto/evaluacionAnexoXXIX/criterios/asesor_interno')
+        .get(isAuth, proyectoController.getCriteriosEvaluacionAnexoXXIXAsesorInterno);
+    router.route('/proyecto/evaluacionAnexoXXIX/criterios/asesor_externo')
+        .get(isAuth, proyectoController.getCriteriosEvaluacionAnexoXXIXAsesorExterno);
+
+
 
     router.route('/proyecto/evaluacion/asesor_interno')
         .put(isAuth, proyectoController.addEvaluacionAsesorInterno);
         
     router.route('/proyecto/evaluacion/asesor_externo')
         .put(isAuth, proyectoController.addEvaluacionAsesorExterno);
-    
+
+    router.route('/proyecto/evaluacion_seguimiento/asesor_interno')
+        .put(isAuth, proyectoController.addEvaluacionSeguimientoAsesorInterno);
+    router.route('/proyecto/evaluacion_seguimiento/asesor_externo')
+        .put(isAuth, proyectoController.addEvaluacionSeguimientoAsesorExterno);
+
     router.route('/proyecto/autorizar_carta_liberacion/asesor_interno')
         .put(isAuth, proyectoController.autorizarCartaDeLiberacionAsesorInterno);
     router.route('/proyecto/autorizar_carta_liberacion/asesor_externo')
@@ -192,8 +211,17 @@ module.exports =  (app, express, passport) => {
     router.route('/asesoria/:id_asesoria/generar_formato/')
         .get(isAuth, proyectoController.generarFormatoDeAsesoria)
 
-    router.route('/proyecto/:id_proyecto/formato_evaluacion')
-        .get(proyectoController.generarFormatoDeEvaluacion)
+    router.route('/proyecto/:id_proyecto/formato_evaluacion/anexoIII')
+        .get(isAuth, proyectoController.generarFormatoDeEvaluacionAnexoIII)
+
+    router.route('/proyecto/:id_proyecto/formato_evaluacion/anexoXXX')
+        .get(isAuth, proyectoController.generarFormatoDeEvaluacionAnexoXXX)
+    
+    router.route('/proyecto/:id_seguimiento/formato_evaluacion/anexoXXIX')
+        .get(proyectoController.generarFormatoDeEvaluacionAnexoXXIX)
+    
+    
+
     
     router.route('/proyecto/:id_proyecto/carta_liberacion/asesor_externo')
         .get(isAuth, proyectoController.generarCartaLiberacionAsesorExterno)

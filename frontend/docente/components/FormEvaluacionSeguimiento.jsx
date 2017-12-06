@@ -7,11 +7,10 @@ const Option = Select.Option;
 
 import axios from 'axios';
 
-const CreateFormEvaluacion = Form.create()(
+const CreateFormEvaluacionSeguimiento = Form.create()(
     (props => {
-        const { visible, onCancel, onCreate, form, criterios, proyecto} = props;
+        const { visible, onCancel, onCreate, form, criterios, seguimiento} = props;
         const { getFieldDecorator} = form;
-        // console.warn('=>>',proyecto)
         return(
             <Modal
                 visible={visible}
@@ -30,7 +29,7 @@ const CreateFormEvaluacion = Form.create()(
                                 <FormItem key={index} label={`${(index+1)}. ${criterio.descripcion}`} style={{width: '100%'}}>
                                     {getFieldDecorator(`${criterio.id}`, {
                                         rules: [{required: true, message: 'La pregunta debe tener un valor de evaluación.'}],
-                                        initialValue: proyecto.evaluacion_asesor_interno !== null?proyecto.evaluacion_asesor_interno.criterios_de_evaluacion.find(_eval => _eval.id_criterio == criterio.id).valor_de_evaluacion:null
+                                        initialValue: seguimiento.evaluacion_asesor_interno !== null?seguimiento.evaluacion_asesor_interno.criterios_de_evaluacion.find(_eval => _eval.id_criterio == criterio.id).valor_de_evaluacion:null
                                     })(<Select placeholder="" >
                                         {Array((criterio.valor_max+1)).fill(1).map((e, i) => {
                                                 return <Option key={i} value={`${i}`}>{i}</Option>
@@ -44,7 +43,7 @@ const CreateFormEvaluacion = Form.create()(
                     <FormItem label="Observaciones" style={{width: '100%'}}>
                         {getFieldDecorator('observaciones', {
                             rules: [{min: 5, message: 'El minimo de caracteres es de 5.'}, {max: 500, message: 'Las observaciones debe tener como maximo 500 caracteres.'}],
-                            initialValue: proyecto.evaluacion_asesor_interno !== null?proyecto.evaluacion_asesor_interno.observaciones:null
+                            initialValue: seguimiento.evaluacion_asesor_interno !== null?seguimiento.evaluacion_asesor_interno.observaciones:null
                         })(
                             <Input.TextArea placeholder="Escriba aquí sus observaciones" type="text" autosize={{ minRows: 2, maxRows: 6 }}/>
                         )
@@ -57,21 +56,21 @@ const CreateFormEvaluacion = Form.create()(
     })
 )
 
-export default class FormEvaluacion extends Component{
+export default class FormEvaluacionSeguimiento extends Component{
     constructor(props){
         super(props);
         this.state = {
             visible: props.visible,
             criterios: props.criterios_evaluacion,
-            proyecto: props.proyecto
+            seguimiento: props.seguimiento
         }
     }
     componentWillReceiveProps(nextProps) {
-        const {visible, criterios_evaluacion, proyecto} = nextProps;
+        const {visible, criterios_evaluacion, seguimiento} = nextProps;
         this.setState({
             visible: visible,
             criterios: criterios_evaluacion,
-            proyecto
+            seguimiento
         })
     }
     showModal = () => {
@@ -91,17 +90,15 @@ export default class FormEvaluacion extends Component{
             }
             console.log('Received values of form: ', values);
             // crear post al servidor
-            axios.put('/api/proyecto/evaluacion/asesor_interno', {
-                id_proyecto: this.state.proyecto.id,
+            axios.put('/api/proyecto/evaluacion_seguimiento/asesor_interno', {
+                id_seguimiento: this.state.seguimiento.id,
                 observaciones: values.observaciones,
                 criterios_evaluacion: values,
                 criterios: this.state.criterios
             }).then((res) => {
                 if(res.status === 200){
-                    message.success("Evaluación guardada!")
-                    this.props.updateProyecto();
+                    message.success("Evaluación del seguimiento guardada!")
                     this.setState({ visible: false });
-                    form.resetFields();
                 }else{
                     Modal.error({
                         title: 'Error al guardar la evaluación. Revisar los siguientes campos',
@@ -121,17 +118,16 @@ export default class FormEvaluacion extends Component{
         this.form = form;
     }
     render(){
-        // console.warn('=>>',this.state.proyecto)
         return(
             <div>
 
-                <CreateFormEvaluacion
+                <CreateFormEvaluacionSeguimiento
                     ref={this.saveFormRef}
                     visible={this.state.visible}
                     onCancel={this.handleCancel}
                     onCreate={this.handleCreate}
                     criterios={this.state.criterios}
-                    proyecto={this.state.proyecto}
+                    seguimiento={this.state.seguimiento}
                 />
             </div>
         )

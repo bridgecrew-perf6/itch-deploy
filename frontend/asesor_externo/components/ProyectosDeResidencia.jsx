@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import {Select, Row, Col} from 'antd';
+import {Select, Row, Col, Spin} from 'antd';
 const {Option} = Select
 
 import axios from 'axios';
@@ -15,7 +15,8 @@ export default class ProyectosDeResidencia extends Component{
             proyectos: props.proyectos,
             usuario: props.usuario,
             renderProyecto: null,
-            id_alumno: null
+            id_alumno: null,
+            spin: false,
         }
     }
     componentWillReceiveProps(nextProps){
@@ -23,36 +24,42 @@ export default class ProyectosDeResidencia extends Component{
             proyectos: nextProps.proyectos,
             usuario: props.usuario,
             renderProyecto: null,
-            id_alumno: null
+            id_alumno: null,
+            spin: false
         })
     }
 
+    
     onChangeResidente = (id_alumno) => {
+        this.setState({spin: true});
         axios.get(`/api/alumno/${id_alumno}/proyecto`)
             .then((res) => {
                 if(res.status === 200){
                     // console.warn('proyecto', res.data)
                     this.setState({
                         renderProyecto:(<Proyecto updateProyecto={this.updateProyecto.bind(this)} proyecto={res.data} usuario={this.state.usuario}/>),
-                        id_alumno
+                        id_alumno,
+                        spin: false,
                     })
                 }
             })
     }
     updateProyecto = () => {
+        this.setState({spin: true});
         axios.get(`/api/alumno/${this.state.id_alumno}/proyecto`)
         .then((res) => {
             if(res.status === 200){
                 // console.warn('proyecto', res.data)
                 this.setState({
-                    renderProyecto:(<Proyecto updateProyecto={this.updateProyecto.bind(this)} proyecto={res.data} usuario={this.state.usuario}/>)
+                    renderProyecto:(<Proyecto updateProyecto={this.updateProyecto.bind(this)} proyecto={res.data} usuario={this.state.usuario}/>),
+                    spin: false,
                 })
             }
         })
     }
 
     render(){
-        const {proyectos, renderProyecto} = this.state
+        const {proyectos, renderProyecto, spin} = this.state
         // console.warn(')>', proye)
         return (
             <Row>
@@ -73,6 +80,7 @@ export default class ProyectosDeResidencia extends Component{
                     </Select>
                 </Col>
                 <Col xs={24} lg={24} style={{marginTop: 25}}>
+                    {spin === true ? <Spin size="large" tip="Cargado..."/>:null}
                     {renderProyecto}
                 </Col>
             </Row>

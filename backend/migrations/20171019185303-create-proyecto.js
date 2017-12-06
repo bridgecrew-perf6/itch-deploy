@@ -55,13 +55,13 @@ module.exports = {
         type: Sequelize.INTEGER,
         onDelete: 'CASCADE',
         allowNull: true,
-        defaultValue: null,
+        defaultValue: null
       },
       id_evaluacion_asesor_externo: {
         type: Sequelize.INTEGER,
         onDelete: 'CASCADE',
         allowNull: true,
-        defaultValue: null,
+        defaultValue: null
       },
       createdAt: {
         allowNull: false,

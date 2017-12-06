@@ -11,7 +11,7 @@ const CreateFormEvaluacion = Form.create()(
     (props => {
         const { visible, onCancel, onCreate, form, criterios, proyecto} = props;
         const { getFieldDecorator} = form;
-        console.warn('=>>',proyecto)
+        // console.warn('=>>',proyecto)
         return(
             <Modal
                 visible={visible}
@@ -32,8 +32,8 @@ const CreateFormEvaluacion = Form.create()(
                                         rules: [{required: true, message: 'La pregunta debe tener un valor de evaluación.'}],
                                         initialValue: proyecto.evaluacion_asesor_externo !== null?proyecto.evaluacion_asesor_externo.criterios_de_evaluacion.find(_eval => _eval.id_criterio == criterio.id).valor_de_evaluacion:null
                                     })(<Select placeholder="" >
-                                        {Array(criterio.valor_max).fill(1).map((e, i) => {
-                                                return <Option key={i} value={`${(i+1)}`}>{(i+1)}</Option>
+                                        {Array((criterio.valor_max+1)).fill(1).map((e, i) => {
+                                                return <Option key={i} value={`${i}`}>{i}</Option>
                                         })}
                                     </Select>)}
                                 </FormItem>

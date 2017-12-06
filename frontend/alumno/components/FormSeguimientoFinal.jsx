@@ -86,8 +86,10 @@ class FormSeguimientoFinal extends Component{
                     <Col xs={24} lg={24}>
                         {
                             proyecto.id_evaluacion_asesor_interno !== null & proyecto.id_evaluacion_asesor_externo!== null ?
-                            <a target="_blank" href={`/api/proyecto/${proyecto.id}/formato_evaluacion`}>
-                                <Button type="primary" icon="file-pdf">Generar formato</Button></a>
+                                
+                                <a target="_blank" href={`/api/proyecto/${proyecto.id}/formato_evaluacion/${proyecto.anteproyecto.alumno.plan_estudios === '2009-2010' ? 'anexoIII' : 'anexoXXX'}`}>
+                                    <Button type="primary" icon="file-pdf">Generar formato de evaluación</Button>
+                                </a>
                             : <Alert message={`${proyecto.id_evaluacion_asesor_interno === null? 'El asesor interno no ha realizado la evaluación':''}\n${proyecto.id_evaluacion_asesor_externo===null? ', El asesor externo no ha realizado la evaluación':''}`} type="warning" showIcon></Alert>
                             
                         }

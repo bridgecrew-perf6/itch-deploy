@@ -9,18 +9,19 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       descripcion: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(300)
       },
       valor_max: {
-        type: Sequelize.INTEGER
-      },
-      valor_min: {
         type: Sequelize.INTEGER
       },
       tipo: {
         type: Sequelize.ENUM,
         allowNull: false,
         values: ['asesor_externo', 'asesor_interno'],
+      },
+      anexo: {
+        type: Sequelize.STRING(30),
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

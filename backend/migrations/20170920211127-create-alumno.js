@@ -13,6 +13,11 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
+      plan_estudios: {
+        type: Sequelize.ENUM,
+        allowNull: false,
+        values: ['2009-2010', '2015-2016'],
+      },
       nombre: {
         type: Sequelize.STRING(40),
         allowNull: false

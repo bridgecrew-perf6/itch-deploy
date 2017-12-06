@@ -11,6 +11,14 @@ module.exports = (sequelize, DataTypes) => {
         len: [8,8]
       }
     },
+    plan_estudios: {
+      type: DataTypes.ENUM,
+      allowNull: false,
+      values: ['2009-2010', '2015-2016'],
+      validate: {
+        notEmpty: {msg: 'El campo no debe estar vacio'}
+      }
+    },
     nombre: {
       type: DataTypes.STRING,
       allowNull: false,

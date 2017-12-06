@@ -50,7 +50,7 @@ export default class LayoutResidente extends Component{
                         
                 //     }
                 // })
-                axios.get(`/api/alumno/${usuario.id_alumno}/proyecto`)
+                axios.get(`/api/alumno/${usuario.id_alumno}/_proyecto`)
                     .then(res => {
                         // console.warn('CTTTTM')
                         if(res.status === 200){
@@ -96,7 +96,7 @@ export default class LayoutResidente extends Component{
     }
     updateAsesorias = () => {
         const {usuario} = this.state;
-        axios.get(`/api/alumno/${usuario.id_alumno}/proyecto`)
+        axios.get(`/api/alumno/${usuario.id_alumno}/_proyecto`)
         .then(res => {
             // console.warn(res.data)
             if(res.status === 200){
@@ -115,7 +115,7 @@ export default class LayoutResidente extends Component{
     handleMenu = ({item, key, selectedKeys}) => {
         const {usuario, proyecto} = this.state;
         if(key == 1){ // Registrar anteproyecto /
-            axios.get(`/api/alumno/${usuario.id_alumno}/proyecto`)
+            axios.get(`/api/alumno/${usuario.id_alumno}/_proyecto`)
                 .then(res => {
                     // console.warn(res.data)
                     if(res.status === 200){
@@ -133,7 +133,7 @@ export default class LayoutResidente extends Component{
                 })
             
         }else if(key == 2){
-            axios.get(`/api/alumno/${usuario.id_alumno}/proyecto`)
+            axios.get(`/api/alumno/${usuario.id_alumno}/_proyecto`)
             .then(res => {
                 // console.warn(res.data)
                 if(res.status === 200){

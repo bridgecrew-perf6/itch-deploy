@@ -347,7 +347,7 @@ module.exports.generarSolicitudDeResidencia = (req, res) => {
             res.status(406).json({err: err});
         })
 }
-module.exports.getProyecto = (req, res) => {
+module.exports.get_Proyecto = (req, res) => {
     const id_alumno = req.params.id;
     sequelize.transaction( t => {
         return Anteproyecto.findOne({where: {id_alumno: id_alumno}}, {transaction: t})
@@ -356,6 +356,42 @@ module.exports.getProyecto = (req, res) => {
                 return Proyecto.findOrCreate({
                     where: {id_anteproyecto: _anteproyecto.id},
                     include: [{model: evaluacion, as: 'evaluacion_asesor_interno', include: [{model: criterio_evaluacion, as: 'criterios_de_evaluacion', include: [{model: criterio, as: 'ref_criterio'}]}]},{model: evaluacion, as: 'evaluacion_asesor_externo', include: [{model: criterio_evaluacion, as: 'criterios_de_evaluacion', include: [{model: criterio, as: 'ref_criterio'}]}]},{model: seguimiento_proyecto, as: 'seguimientos_proyecto', include: [{model: Seguimiento, as: 'seguimiento'},{model: revision_seguimiento, as: 'revisiones_seguimiento', include: [{model: Docente, as: 'docente'}]}]},{model: Asesoria, as: 'asesorias', include: {model: solucion_recomendada, as: 'soluciones_recomendadas'}},{model: observaciones, as: 'observaciones'},{model: Anteproyecto, as: 'anteproyecto', include: [{model: revision_anteproyecto, as: 'revisiones', include: [{model: Docente, as: 'docente'}]},{model: Alumno, as: 'alumno'}, {model: Periodo, as: 'periodo'}, {model: asesor_externo, as: 'asesor_externo'}] }],                    
+                    transaction: t
+                }).spread((proyecto_find, created) => {
+                    if(created){
+                        // buscar el proyecto :c
+                        return Proyecto.findOne({
+                            where: {id_anteproyecto: _anteproyecto.id},
+                            include: [{model: seguimiento_proyecto, as: 'seguimientos_proyecto', include: [{model: Seguimiento, as: 'seguimiento'},{model: revision_seguimiento, as: 'revisiones_seguimiento', include: [{model: Docente, as: 'docente'}]}]},{model: Anteproyecto, as: 'anteproyecto', include: [{model: revision_anteproyecto, as: 'revisiones', include: [{model: Docente, as: 'docente'}]},{model: Alumno, as: 'alumno'}, {model: Periodo, as: 'periodo'}, {model: asesor_externo, as: 'asesor_externo'}] }],                    
+                        }, {transaction: t})
+                    }else {
+                        return proyecto_find;
+                    }
+                });
+            })
+
+    }).then((_proyecto)=>{
+        res.status(200).json(_proyecto)
+    }).catch(Sequelize.ValidationError, (err) => {
+        var errores = err.errors.map((element) => {
+            return `${element.path}: ${element.message}`
+        })
+        // console.log('==>', errores)
+        res.status(202).json({errores})
+    }).catch((err) => {
+        console.log(err)
+        res.status(406).json({err: err})
+    })
+}
+module.exports.getProyecto = (req, res) => {
+    const id_alumno = req.params.id;
+    sequelize.transaction( t => {
+        return Anteproyecto.findOne({where: {id_alumno: id_alumno}}, {transaction: t})
+            .then(_anteproyecto => {
+                // console.log('========>', _anteproyecto)
+                return Proyecto.findOrCreate({
+                    where: {id_anteproyecto: _anteproyecto.id},
+                    include: [{model: evaluacion, as: 'evaluacion_asesor_interno', include: [{model: criterio_evaluacion, as: 'criterios_de_evaluacion', include: [{model: criterio, as: 'ref_criterio'}]}]},{model: evaluacion, as: 'evaluacion_asesor_externo', include: [{model: criterio_evaluacion, as: 'criterios_de_evaluacion', include: [{model: criterio, as: 'ref_criterio'}]}]},{model: seguimiento_proyecto, as: 'seguimientos_proyecto', include: [{model: evaluacion, as: 'evaluacion_asesor_externo', include: [{model: criterio_evaluacion, as: 'criterios_de_evaluacion', include: [{model: criterio, as: 'ref_criterio'}]}]},{model: evaluacion, as: 'evaluacion_asesor_interno', include: [{model: criterio_evaluacion, as: 'criterios_de_evaluacion', include: [{model: criterio, as: 'ref_criterio'}]}]},{model: Seguimiento, as: 'seguimiento'},{model: revision_seguimiento, as: 'revisiones_seguimiento', include: [{model: Docente, as: 'docente'}]}]},{model: Asesoria, as: 'asesorias', include: {model: solucion_recomendada, as: 'soluciones_recomendadas'}},{model: observaciones, as: 'observaciones'},{model: Anteproyecto, as: 'anteproyecto', include: [{model: revision_anteproyecto, as: 'revisiones', include: [{model: Docente, as: 'docente'}]},{model: Alumno, as: 'alumno'}, {model: Periodo, as: 'periodo'}, {model: asesor_externo, as: 'asesor_externo'}] }],                    
                     transaction: t
                 }).spread((proyecto_find, created) => {
                     if(created){
@@ -396,7 +432,8 @@ module.exports.add = (req, res) => {
         domicilio = req.body.domicilio,
         ciudad = req.body.ciudad,
         no_seguro = req.body.no_seguro,
-        id_tipo_seguro = req.body.id_tipo_seguro;
+        id_tipo_seguro = req.body.id_tipo_seguro,
+        plan_estudios = req.body.plan_estudios;
 
     const contrasenia = generator.generate({length: 8});
 
@@ -418,7 +455,8 @@ module.exports.add = (req, res) => {
                 numero_celular,
                 no_seguro,
                 id_tipo_seguro,
-                id_usuario: usuario.id
+                id_usuario: usuario.id,
+                plan_estudios
             }, {transaction: t}).then(alumno => {
                 return Anteproyecto.create({
                     id_alumno: alumno.id,

@@ -7,12 +7,16 @@ module.exports = (sequelize, DataTypes) => {
     valor_max: {
       type: DataTypes.INTEGER
     },
-    valor_min: {
-      type: DataTypes.INTEGER
-    },
     tipo: {
       type: DataTypes.ENUM,
       values: ['asesor_externo', 'asesor_interno'],
+      validate: {
+        notEmpty: {msg: 'El campo debe tener un valor'}
+      }
+    },
+    anexo: {
+      type: DataTypes.STRING,
+      allowNull: false,
       validate: {
         notEmpty: {msg: 'El campo debe tener un valor'}
       }

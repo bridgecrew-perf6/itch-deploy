@@ -472,8 +472,221 @@ module.exports = {
         pdfDoc.pipe(res);
         pdfDoc.end();
     },
+    generarFormatoEvaluacionAnexoIII: (proyecto, res) => {
+        // evaluacion asesor externo
+        var content_table = [];
+        var calificacion_final = 0;
+        proyecto.evaluacion_asesor_externo.criterios_de_evaluacion.map((criterio_evaluacion, index) => {
+            content_table.push([ 
+                {text: `${(index+1)}.- ${criterio_evaluacion.ref_criterio.descripcion}`, style: 'normal', alignment: 'left'},
+                {text: `${criterio_evaluacion.ref_criterio.valor_max}`, style: 'normal', alignment: 'center'},
+                {text: `${criterio_evaluacion.valor_de_evaluacion}`, style: 'normal', alignment: 'center'}
+            ])
+            calificacion_final += criterio_evaluacion.valor_de_evaluacion;
+        })
+        content_table.unshift([{text: 'Criterios a evaluar', style: 'normal', alignment: 'center', bold: true},{text: 'A\nValor', style: 'normal', alignment: 'center'},{text: 'B\nEvaluación', style: 'normal', alignment: 'center'}])
+        content_table.unshift([{fillColor: '#d7d9db', text: 'Evaluación asesor externo', style: 'normal', bold: true, alignment: 'center', colSpan: 3}, '', ''])        
+        content_table.unshift([{text: 'En qué medida el Residente cumple con lo siguiente:', style: 'normal', alignment: 'center', bold: true, colSpan: 3}, '', ''])
+        content_table.push([{text: [
+            {text: 'OBSERVACIONES:\n', style: 'normal', bold: true},
+            {text: `${proyecto.evaluacion_asesor_externo.observaciones}`, style: 'normal', alignment: 'left'}
+        ], colSpan: 3}, '', ''])
 
-    generarFormatoEvaluacion: (proyecto, res) => {
+        // evaluacion asesor interno
+        content_table.push([{fillColor: '#d7d9db', text: 'Evaluación asesor interno', style: 'normal', bold: true, alignment: 'center', colSpan: 3}, '', ''])        
+        
+        proyecto.evaluacion_asesor_interno.criterios_de_evaluacion.map((criterio_evaluacion, index) => {
+            content_table.push([
+                {text: `${(index+1)}.- ${criterio_evaluacion.ref_criterio.descripcion}`, style: 'normal', alignment: 'left'},
+                {text: `${criterio_evaluacion.ref_criterio.valor_max}`, style: 'normal', alignment: 'center'},
+                {text: `${criterio_evaluacion.valor_de_evaluacion}`, style: 'normal', alignment: 'center'}
+            ])
+            calificacion_final += criterio_evaluacion.valor_de_evaluacion;
+        })
+        content_table.push([{text: [
+            {text: 'OBSERVACIONES:\n', style: 'normal', bold: true},
+            {text: `${proyecto.evaluacion_asesor_interno.observaciones}`, style: 'normal', alignment: 'left'}
+        ], colSpan: 3}, '', ''])
+
+        content_table.push([{text: 'CALIFICACIÓN FINAL\n', style: 'normal', bold: true, colSpan: 2, alignment: 'center'}, '', {text: `${calificacion_final}`, style: 'normal', alignment: 'center'}])
+        content_table.push([{text: [
+            {text: 'NIVEL DE DESEMPEÑO:\n', style: 'normal', bold: true, alignment: 'center'},
+            {text: `${nivelDeDesempenio(calificacion_final)}`, style: 'normal', alignment: 'center'}
+        ], colSpan: 3}, '', ''])
+        
+        
+        var docDefinition = {
+            pageSize: 'LETTER',
+            pageMargins: [40, 120, 40, 100],
+            background: [
+                {
+                    margin: [0,250,0,0],
+                    image: __dirname + '/../public/img/escudo.png',
+                    width: 400,
+                    height: 400,
+                    alignment: 'center'
+                }
+            ],
+            header: (currentPage, pageCount) => {
+                return {
+                    margin: [40, 20, 40, 0],
+                    alignment: 'justify',
+                    columns: [
+                        {
+                            table: {
+                                widths: ['*','*'],
+                                body: [
+                                    [{image: __dirname+'/../public/img/sep-tec.png', width: 200, height: 70,alignment: 'left', },{margin: [0,25,0,0],alignment: 'right',text: [{text: 'TECNOLÓGICO NACIONAL DE MEXICO\n', bold: true, style: 'header_tecnm'},{text: 'Instituto Tecnológico de Chilpancingo', bold: true, style: 'header_itch'}]}],
+                                    [{text: '“2015, Año del Generalísimo José María Morelos y Pavón”', alignment: 'center', style: 'header_bottom', colSpan: 2}]
+                                ]
+                            },
+                            layout: 'noBorders'
+                        }
+                        
+                        
+                    ]
+                }
+            },
+            content: [
+                {
+                    alignment: 'center',
+                    width: '*',
+                    bold: true,
+                    text: `Anexo III \n Formato de evaluación`
+                },
+                {
+                    alignment: 'left',
+                    width: '*',
+                    margin: [0, 10, 0,0],
+                    text: [
+                        {text: `Nombre del residente: `, style: 'normal'},
+                        {text: `${proyecto.anteproyecto.alumno.nombre}  ${proyecto.anteproyecto.alumno.ap_paterno}  ${proyecto.anteproyecto.alumno.ap_materno}`, style: 'normal', decoration: 'underline'},
+                        
+                    ]
+                },
+                {
+                    alignment: 'left',
+                    width: '*',
+                    margin: [0, 10, 0,0],
+                    text: [
+                        {text: `Número de control: `, style: 'normal'},
+                        {text: `${proyecto.anteproyecto.alumno.no_control}`, style: 'normal', decoration: 'underline'},
+                    ]
+                },
+                {
+                    alignment: 'left',
+                    width: '*',
+                    margin: [0, 10, 0,0],
+                    text: [
+                        {text: `Nombre del proyecto: `, style: 'normal'},
+                        {text: `${proyecto.anteproyecto.nombre}`, style: 'normal', decoration: 'underline'},
+                    ]
+                },
+                {
+                    alignment: 'left',
+                    width: '*',
+                    margin: [0, 10, 0,0],
+                    text: [
+                        {text: `Carrera: `, style: 'normal'},
+                        {text: `${proyecto.anteproyecto.periodo.carrera.nombre}`, style: 'normal', decoration: 'underline'},
+                    ]
+                },
+                {
+                    alignment: 'left',
+                    width: '*',
+                    margin: [0, 10, 0,0],
+                    text: [
+                        {text: `Periodo de realización de la Residencia Profesional: `, style: 'normal'},
+                        {text: `${proyecto.anteproyecto.periodo.periodo} ${proyecto.anteproyecto.periodo.ciclo}`, style: 'normal', decoration: 'underline'},
+                    ]
+                },
+                {
+                    margin: [0, 20, 0, 0],
+                    table: {
+                        widths: ['*', 'auto', 'auto'],
+                        body: content_table
+                    }
+                },
+                {
+                    margin: [0,10, 0,0],
+                    table: {
+                        widths: ['*','*'],
+                        alignment: 'center',
+                        body: [
+                            [{alignment: 'center',style: 'normal', text: `           ${proyecto.anteproyecto.asesor_interno.titulo} ${proyecto.anteproyecto.asesor_interno.nombre} ${proyecto.anteproyecto.asesor_interno.ap_paterno} ${proyecto.anteproyecto.asesor_interno.ap_materno}           `, decoration: 'underline'}, {alignment: 'center',text: `           ${proyecto.anteproyecto.asesor_externo.nombre}           `, style:'normal', decoration: 'underline'}],
+                            [{alignment: 'center',text: 'Nombre y firma del asesor interno', style:'normal'}, {alignment: 'center',text: 'Nombre y firma del asesor externo', style:'normal'}],
+                        ]
+                    },
+                    layout: 'noBorders'              
+                },
+            ],
+            footer: (currentPage, pageCount) => {
+                return {
+                    margin: [40, 20, 40, 0],
+                    alignment: 'justify',
+                    columns: [
+                        {
+                            table: {
+                                widths: [40, '*', 40, 40,40],
+                                body: [
+                                    [
+                                        {image: __dirname+'/../public/img/tec_Logo.png', width: 40, height: 40 },
+                                        {alignment: 'center',text: [
+                                            {text: 'Av. José Francisco Ruíz Massieu No. 5, Colonia Villa Moderna, C.P.  39090 Chilpancingo, Guerrero.', style: 'footer_text'},
+                                            {text: '\nTeléfono: (747) 48 01022, Tel/Fax: 47 2 10 14 ', style: 'footer_text'},
+                                            {text: 'www.itchilpancingo.edu.mx', link: 'http://www.itchilpancingo.edu.mx',style: 'link_footer'},
+                                            {text: ', email: ', style: 'footer_text'},
+                                            {text: 'itchilpancingo@hotmail.com', style:'link_footer'},
+                                            {text: '\nFacebook: ', style: 'footer_text'},
+                                            {text: 'Tecnológico de Chilpancingo Comunicación',link: 'https://www.facebook.com/Tecnológico-de-Chilpancingo-Comunicación-131577620223301/', decoration:'underline', style:'link_footer'}
+
+                                        ]},
+                                        {image: __dirname+'/../public/img/footer_2.png', width: 40, height: 40},
+                                        {image: __dirname+'/../public/img/footer_3.png', width: 40, height: 40},
+                                        {image: __dirname+'/../public/img/footer_4.png', width: 40, height: 40},
+
+                                    
+                                    ],
+                                ]
+                            },
+                            layout: 'noBorders'
+                        }
+                        
+                        
+                    ]
+                }
+            },
+            styles: {
+                normal: {
+                    fontSize: 10
+                },
+                header_tecnm: {
+                    color: '#bababa',
+                    fontSize: 12
+                },
+                header_itch: {
+                    color: '#bababa',
+                    fontSize: 11
+                },
+                header_bottom: {
+                    color: '#bababa',
+                    fontSize: 9
+                },
+                footer_text: {
+                    color: '#bababa',
+                    fontSize: 7.5
+                },
+                link_footer: {
+                    color: '#0b24fb',
+                    fontSize: 7.5
+                }
+            }
+        };
+        var pdfDoc = printer.createPdfKitDocument(docDefinition);
+        pdfDoc.pipe(res);
+        pdfDoc.end();
+    },
+    generarFormatoDeEvaluacionDeResidenciaAnexoXXX: (proyecto, res) => {
         // evaluacion asesor externo
         var evaluacion_asesor_interno = [], evaluacion_asesor_externo = [];
         var calificacion_final = 0;
@@ -481,7 +694,7 @@ module.exports = {
         var promedio = 0;
         proyecto.evaluacion_asesor_externo.criterios_de_evaluacion.map((criterio_evaluacion, index) => {
             evaluacion_asesor_externo.push([ 
-                {text: `${(index+1)}.- ${criterio_evaluacion.ref_criterio.descripcion}`, style: 'normal', alignment: 'left'},
+                {text: `${criterio_evaluacion.ref_criterio.descripcion}`, style: 'normal', alignment: 'left'},
                 {text: `${criterio_evaluacion.ref_criterio.valor_max}`, style: 'normal', alignment: 'center'},
                 {text: `${criterio_evaluacion.valor_de_evaluacion}`, style: 'normal', alignment: 'center'}
             ])
@@ -492,7 +705,6 @@ module.exports = {
         evaluacion_asesor_externo.unshift([{text: 'En qué medida el Residente cumple con lo siguiente', style: 'normal', alignment: 'center', bold: true, colSpan: 3}, '', ''])
         evaluacion_asesor_externo.unshift([{fillColor: '#d7d9db', text: 'Evaluación asesor externo', style: 'normal', bold: true, alignment: 'center', colSpan: 3}, '', ''])                        
         evaluacion_asesor_externo.push([{text: 'Calificación total\n', style: 'normal', bold: true, alignment: 'right'}, {text: `${calificacion_total}`, style: 'normal', alignment: 'center'}, {text: `${calificacion_final}`, style: 'normal', alignment: 'center'}])
-
         // evaluacion asesor interno
         promedio += calificacion_final;
         calificacion_final = 0;
@@ -503,7 +715,7 @@ module.exports = {
         
         proyecto.evaluacion_asesor_interno.criterios_de_evaluacion.map((criterio_evaluacion, index) => {
             evaluacion_asesor_interno.push([
-                {text: `${(index+1)}.- ${criterio_evaluacion.ref_criterio.descripcion}`, style: 'normal', alignment: 'left'},
+                {text: `${criterio_evaluacion.ref_criterio.descripcion}`, style: 'normal', alignment: 'left'},
                 {text: `${criterio_evaluacion.ref_criterio.valor_max}`, style: 'normal', alignment: 'center'},
                 {text: `${criterio_evaluacion.valor_de_evaluacion}`, style: 'normal', alignment: 'center'}
             ])
@@ -514,14 +726,6 @@ module.exports = {
         promedio += calificacion_final;
         promedio = (promedio / 2);
 
-        // evaluacion_asesor_interno.push([{text: 'CALIFICACIÓN FINAL\n', style: 'normal', bold: true, colSpan: 2, alignment: 'center'}, '', {text: `${calificacion_final}`, style: 'normal', alignment: 'center'}])
-        
-        // evaluacion_asesor_interno.push([{text: [
-        //     {text: 'NIVEL DE DESEMPEÑO:\n', style: 'normal', bold: true, alignment: 'center'},
-        //     {text: `${nivelDeDesempenio(calificacion_final)}`, style: 'normal', alignment: 'center'}
-        // ], colSpan: 3}, '', ''])
-        
-        
         var docDefinition = {
             pageSize: 'LETTER',
             pageMargins: [40, 110, 40, 80],
@@ -559,19 +763,29 @@ module.exports = {
                     alignment: 'center',
                     width: '*',
                     bold: true,
-                    text: `ANEXO XXIX. FORMATO DE EVALUACIÓN Y SEGUIMIENTO DE RESIDENCIA PROFESIONAL`,
-                    style: 'normal'
+                    text: `ANEXO XXX. FORMATO DE EVALUACIÓN DE REPORTE DE RESIDENCIA PROFESIONAL`,
+                    style: '_normal'
                 },
                 {
-                    alignment: 'jusfity',
-                    width: '*',
                     margin: [0, 15, 0,0],
-                    text: [
-                        {text: `Nombre del residente: `, style: 'normal'},
-                        {text: `${proyecto.anteproyecto.alumno.nombre}  ${proyecto.anteproyecto.alumno.ap_paterno}  ${proyecto.anteproyecto.alumno.ap_materno}`, style: 'normal', decoration: 'underline'},
-                        {text: ` Número de control: `, style: 'normal'},
-                        {text: `${proyecto.anteproyecto.alumno.no_control}`, style: 'normal', decoration: 'underline'},
-                        
+                    columns: [
+                        {
+                            alignment: 'left',
+                            width: '*',
+                            text: [
+                                {text: `Nombre del residente: `, style: '_normal',},
+                                {text: `     ${proyecto.anteproyecto.alumno.nombre}  ${proyecto.anteproyecto.alumno.ap_paterno}  ${proyecto.anteproyecto.alumno.ap_materno}     `, style: '_normal', decoration: 'underline'},
+                                
+                            ]
+                        },
+                        {
+                            alignment: 'right',
+                            width: '*',
+                            text: [
+                                {text: ` Número de control: `, style: '_normal'},
+                                {text: `     ${proyecto.anteproyecto.alumno.no_control}     `, style: '_normal', decoration: 'underline'},
+                            ]
+                        }
                     ]
                 },
                 {
@@ -579,8 +793,8 @@ module.exports = {
                     width: '*',
                     margin: [0, 10, 0,0],
                     text: [
-                        {text: `Nombre del proyecto: `, style: 'normal'},
-                        {text: `${proyecto.anteproyecto.nombre}`, style: 'normal', decoration: 'underline'},
+                        {text: `Programa educativo: `, style: '_normal'},
+                        {text: `${proyecto.anteproyecto.periodo.carrera.nombre}`, style: '_normal', decoration: 'underline'},
                     ]
                 },
                 {
@@ -588,8 +802,8 @@ module.exports = {
                     width: '*',
                     margin: [0, 10, 0,0],
                     text: [
-                        {text: `Programa educativo: `, style: 'normal'},
-                        {text: `${proyecto.anteproyecto.periodo.carrera.nombre}`, style: 'normal', decoration: 'underline'},
+                        {text: `Periodo de realización de la Residencia Profesional: `, style: '_normal'},
+                        {text: `${proyecto.anteproyecto.periodo.periodo} ${proyecto.anteproyecto.periodo.ciclo}`, style: '_normal', decoration: 'underline'},
                     ]
                 },
                 {
@@ -597,17 +811,8 @@ module.exports = {
                     width: '*',
                     margin: [0, 10, 0,0],
                     text: [
-                        {text: `Periodo de realización de la Residencia Profesional: `, style: 'normal'},
-                        {text: `${proyecto.anteproyecto.periodo.periodo} ${proyecto.anteproyecto.periodo.ciclo}`, style: 'normal', decoration: 'underline'},
-                    ]
-                },
-                {
-                    alignment: 'left',
-                    width: '*',
-                    margin: [0, 10, 0,0],
-                    text: [
-                        {text: `Calificación parcial (promedio de ambas evaluaciones): `, style: 'normal'},
-                        {text: `${promedio}`, style: 'normal', decoration: 'underline'},
+                        {text: `Calificación parcial (promedio de ambas evaluaciones): `, style: '_normal'},
+                        {text: `${promedio}`, style: '_normal', decoration: 'underline'},
                     ]
                 },
                 {
@@ -657,6 +862,269 @@ module.exports = {
                         widths: ['*', '*', '*'],
                         body: [
                             [{text: [{text: `\n   ${proyecto.anteproyecto.asesor_interno.titulo} ${proyecto.anteproyecto.asesor_interno.nombre} ${proyecto.anteproyecto.asesor_interno.ap_paterno} ${proyecto.anteproyecto.asesor_interno.ap_materno}   `, style: 'normal', decoration: 'underline'},{text: `\nNombre y firma del asesor interno`, style: 'normal'}], style: 'normal', alignment: 'center'}, {text: `Sello de la empresa, organismo o dependencia`, style: 'normal',alignment: 'center'}, {text: `Fecha de evaluación\n ${moment(proyecto.evaluacion_asesor_interno.createdAt).utc().format('LL')}`, style: 'normal', alignment: 'center'}]
+                        ]
+                    }
+                }
+
+                
+            ],
+            footer: (currentPage, pageCount) => {
+                return {
+                    margin: [40, 20, 40, 0],
+                    alignment: 'justify',
+                    columns: [
+                        {
+                            table: {
+                                widths: [40, '*', 40, 40,40],
+                                body: [
+                                    [
+                                        {image: __dirname+'/../public/img/tec_Logo.png', width: 40, height: 40 },
+                                        {alignment: 'center',text: [
+                                            {text: 'Av. José Francisco Ruíz Massieu No. 5, Colonia Villa Moderna, C.P.  39090 Chilpancingo, Guerrero.', style: 'footer_text'},
+                                            {text: '\nTeléfono: (747) 48 01022, Tel/Fax: 47 2 10 14 ', style: 'footer_text'},
+                                            {text: 'www.itchilpancingo.edu.mx', link: 'http://www.itchilpancingo.edu.mx',style: 'link_footer'},
+                                            {text: ', email: ', style: 'footer_text'},
+                                            {text: 'itchilpancingo@hotmail.com', style:'link_footer'},
+                                            {text: '\nFacebook: ', style: 'footer_text'},
+                                            {text: 'Tecnológico de Chilpancingo Comunicación',link: 'https://www.facebook.com/Tecnológico-de-Chilpancingo-Comunicación-131577620223301/', decoration:'underline', style:'link_footer'}
+
+                                        ]},
+                                        {image: __dirname+'/../public/img/footer_2.png', width: 40, height: 40},
+                                        {image: __dirname+'/../public/img/footer_3.png', width: 40, height: 40},
+                                        {image: __dirname+'/../public/img/footer_4.png', width: 40, height: 40},
+
+                                    
+                                    ],
+                                ]
+                            },
+                            layout: 'noBorders'
+                        }
+                        
+                        
+                    ]
+                }
+            },
+            styles: {
+                _normal: {
+                    fontSize: 10
+                },
+                normal: {
+                    fontSize: 8
+                },
+                header_tecnm: {
+                    color: '#bababa',
+                    fontSize: 12
+                },
+                header_itch: {
+                    color: '#bababa',
+                    fontSize: 11
+                },
+                header_bottom: {
+                    color: '#bababa',
+                    fontSize: 9
+                },
+                footer_text: {
+                    color: '#bababa',
+                    fontSize: 7.5
+                },
+                link_footer: {
+                    color: '#0b24fb',
+                    fontSize: 7.5
+                }
+            }
+
+       }
+        
+        var pdfDoc = printer.createPdfKitDocument(docDefinition);
+        pdfDoc.pipe(res);
+        pdfDoc.end();
+    },
+    generarFormatoEvaluacionDeSeguimientoAnexoXXIX: (seguimiento, res) => {
+        // evaluacion asesor externo
+        var evaluacion_asesor_interno = [], evaluacion_asesor_externo = [];
+        var calificacion_final = 0;
+        var calificacion_total = 0;
+        var promedio = 0;
+        seguimiento.evaluacion_asesor_externo.criterios_de_evaluacion.map((criterio_evaluacion, index) => {
+            evaluacion_asesor_externo.push([ 
+                {text: `${criterio_evaluacion.ref_criterio.descripcion}`, style: 'normal', alignment: 'left'},
+                {text: `${criterio_evaluacion.ref_criterio.valor_max}`, style: 'normal', alignment: 'center'},
+                {text: `${criterio_evaluacion.valor_de_evaluacion}`, style: 'normal', alignment: 'center'}
+            ])
+            calificacion_total += criterio_evaluacion.ref_criterio.valor_max;
+            calificacion_final += criterio_evaluacion.valor_de_evaluacion;
+        })
+        evaluacion_asesor_externo.unshift([{text: 'Criterios a evaluar', style: 'normal', alignment: 'center', bold: true},{text: 'Valor', style: 'normal', alignment: 'center'},{text: 'Evaluación', style: 'normal', alignment: 'center'}])
+        evaluacion_asesor_externo.unshift([{text: 'En qué medida el Residente cumple con lo siguiente', style: 'normal', alignment: 'center', bold: true, colSpan: 3}, '', ''])
+        evaluacion_asesor_externo.unshift([{fillColor: '#d7d9db', text: 'Evaluación asesor externo', style: 'normal', bold: true, alignment: 'center', colSpan: 3}, '', ''])                        
+        evaluacion_asesor_externo.push([{text: 'Calificación total\n', style: 'normal', bold: true, alignment: 'right'}, {text: `${calificacion_total}`, style: 'normal', alignment: 'center'}, {text: `${calificacion_final}`, style: 'normal', alignment: 'center'}])
+
+        // evaluacion asesor interno
+        promedio += calificacion_final;
+        calificacion_final = 0;
+        calificacion_total = 0;
+        evaluacion_asesor_interno.push([{fillColor: '#d7d9db', text: 'Evaluación asesor interno', style: 'normal', bold: true, alignment: 'center', colSpan: 3}, '', ''])                
+        evaluacion_asesor_interno.push([{text: 'En qué medida el Residente cumple con lo siguiente', style: 'normal', alignment: 'center', bold: true, colSpan: 3}, '', ''])
+        evaluacion_asesor_interno.push([{text: 'Criterios a evaluar', style: 'normal', alignment: 'center', bold: true},{text: 'Valor', style: 'normal', alignment: 'center'},{text: 'Evaluación', style: 'normal', alignment: 'center'}]);
+        
+        seguimiento.evaluacion_asesor_interno.criterios_de_evaluacion.map((criterio_evaluacion, index) => {
+            evaluacion_asesor_interno.push([
+                {text: `${criterio_evaluacion.ref_criterio.descripcion}`, style: 'normal', alignment: 'left'},
+                {text: `${criterio_evaluacion.ref_criterio.valor_max}`, style: 'normal', alignment: 'center'},
+                {text: `${criterio_evaluacion.valor_de_evaluacion}`, style: 'normal', alignment: 'center'}
+            ])
+            calificacion_final += criterio_evaluacion.valor_de_evaluacion;
+            calificacion_total += criterio_evaluacion.ref_criterio.valor_max;
+        })
+        evaluacion_asesor_interno.push([{text: 'Calificación total\n', style: 'normal', bold: true, alignment: 'right'}, {text: `${calificacion_total}`, style: 'normal', alignment: 'center'}, {text: `${calificacion_final}`, style: 'normal', alignment: 'center'}])
+        promedio += calificacion_final;
+        promedio = (promedio / 2);
+        
+        var docDefinition = {
+            pageSize: 'LETTER',
+            pageMargins: [40, 110, 40, 80],
+            background: [
+                {
+                    margin: [0,250,0,0],
+                    image: __dirname + '/../public/img/escudo.png',
+                    width: 400,
+                    height: 400,
+                    alignment: 'center'
+                }
+            ],
+            header: (currentPage, pageCount) => {
+                return {
+                    margin: [40, 20, 40, 0],
+                    alignment: 'justify',
+                    columns: [
+                        {
+                            table: {
+                                widths: ['*','*'],
+                                body: [
+                                    [{image: __dirname+'/../public/img/sep-tec.png', width: 200, height: 70,alignment: 'left', },{margin: [0,25,0,0],alignment: 'right',text: [{text: 'TECNOLÓGICO NACIONAL DE MEXICO\n', bold: true, style: 'header_tecnm'},{text: 'Instituto Tecnológico de Chilpancingo', bold: true, style: 'header_itch'}]}],
+                                    [{text: '“2015, Año del Generalísimo José María Morelos y Pavón”', alignment: 'center', style: 'header_bottom', colSpan: 2}]
+                                ]
+                            },
+                            layout: 'noBorders'
+                        }
+                        
+                        
+                    ]
+                }
+            },
+            content: [
+                {
+                    alignment: 'center',
+                    width: '*',
+                    bold: true,
+                    text: `ANEXO XXIX. FORMATO DE EVALUACIÓN Y SEGUIMIENTO DE RESIDENCIA PROFESIONAL`,
+                    style: 'normal'
+                },
+                {
+                    width: '*',
+                    margin: [0, 15, 0,0],
+                    columns: [
+                        {
+                            alignment: 'left',
+                            text: [
+                                {text: `Nombre del residente: `, style: 'normal'},
+                                {text: `    ${seguimiento.proyecto.anteproyecto.alumno.nombre}  ${seguimiento.proyecto.anteproyecto.alumno.ap_paterno}  ${seguimiento.proyecto.anteproyecto.alumno.ap_materno}    `, style: 'normal', decoration: 'underline'},
+                                
+                            ]
+                        },
+                        {
+                            alignment: 'right',
+                            text: [
+                                {text: ` Número de control: `, style: 'normal'},
+                                {text: `   ${seguimiento.proyecto.anteproyecto.alumno.no_control}   `, style: 'normal', decoration: 'underline'},
+                                
+                            ]
+                        },
+                    ]
+                },
+                {
+                    alignment: 'left',
+                    width: '*',
+                    margin: [0, 10, 0,0],
+                    text: [
+                        {text: `Nombre del proyecto: `, style: 'normal'},
+                        {text: `${seguimiento.proyecto.anteproyecto.nombre}`, style: 'normal', decoration: 'underline'},
+                    ]
+                },
+                {
+                    alignment: 'left',
+                    width: '*',
+                    margin: [0, 10, 0,0],
+                    text: [
+                        {text: `Programa educativo: `, style: 'normal'},
+                        {text: `${seguimiento.proyecto.anteproyecto.periodo.carrera.nombre}`, style: 'normal', decoration: 'underline'},
+                    ]
+                },
+                {
+                    alignment: 'left',
+                    width: '*',
+                    margin: [0, 10, 0,0],
+                    text: [
+                        {text: `Periodo de realización de la Residencia Profesional: `, style: 'normal'},
+                        {text: `${seguimiento.proyecto.anteproyecto.periodo.periodo} ${seguimiento.proyecto.anteproyecto.periodo.ciclo}`, style: 'normal', decoration: 'underline'},
+                    ]
+                },
+                {
+                    alignment: 'left',
+                    width: '*',
+                    margin: [0, 10, 0,0],
+                    text: [
+                        {text: `Calificación parcial (promedio de ambas evaluaciones): `, style: 'normal'},
+                        {text: `${promedio}`, style: 'normal', decoration: 'underline'},
+                    ]
+                },
+                {
+                    margin: [0, 15, 0, 0],
+                    table: {
+                        widths: ['*', 'auto', 'auto'],
+                        body: evaluacion_asesor_externo
+                    }
+                },
+                {
+                    alignment: 'left',
+                    width: '*',
+                    margin: [0, 5, 0, 0],
+                    text: [
+                        {text: `Observaciones: `, style: 'normal', bold: true},
+                        {text: `${seguimiento.evaluacion_asesor_externo.observaciones}`, style: 'normal', decoration: 'underline'}
+                    ]
+                },
+                {
+                    margin: [0, 10, 0, 0],
+                    table: {
+                        widths: ['*', '*', '*'],
+                        body: [
+                            [{text: [{text: `\n   ${seguimiento.proyecto.anteproyecto.asesor_externo.nombre}    `, style: 'normal', decoration: 'underline'},{text: `\nNombre y firma del asesor externo`, style: 'normal'}], style: 'normal', alignment: 'center'}, {text: `Sello de la empresa, organismo o dependencia`, style: 'normal',alignment: 'center'}, {text: `Fecha de evaluación\n ${moment(seguimiento.evaluacion_asesor_externo.createdAt).utc().format('LL')}`, style: 'normal', alignment: 'center'}]
+                        ]
+                    }
+                },
+                {
+                    margin: [0, 20, 0, 0],
+                    table: {
+                        widths: ['*', 'auto', 'auto'],
+                        body: evaluacion_asesor_interno
+                    }
+                },
+                {
+                    alignment: 'left',
+                    width: '*',
+                    margin: [0, 10, 0, 0],
+                    text: [
+                        {text: `Observaciones: `, style: 'normal', bold: true},
+                        {text: `${seguimiento.evaluacion_asesor_interno.observaciones}`, style: 'normal', decoration: 'underline'}
+                    ]
+                },
+                {
+                    margin: [0, 15, 0, 0],
+                    table: {
+                        widths: ['*', '*', '*'],
+                        body: [
+                            [{text: [{text: `\n   ${seguimiento.proyecto.anteproyecto.asesor_interno.titulo} ${seguimiento.proyecto.anteproyecto.asesor_interno.nombre} ${seguimiento.proyecto.anteproyecto.asesor_interno.ap_paterno} ${seguimiento.proyecto.anteproyecto.asesor_interno.ap_materno}   `, style: 'normal', decoration: 'underline'},{text: `\nNombre y firma del asesor interno`, style: 'normal'}], style: 'normal', alignment: 'center'}, {text: `Sello de la empresa, organismo o dependencia`, style: 'normal',alignment: 'center'}, {text: `Fecha de evaluación\n ${moment(seguimiento.evaluacion_asesor_interno.createdAt).utc().format('LL')}`, style: 'normal', alignment: 'center'}]
                         ]
                     }
                 }
