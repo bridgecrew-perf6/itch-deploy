@@ -17,6 +17,16 @@ module.exports = {
         nombre: 'Ciencias económico-admisnitrativas',
         createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
         updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
+      {
+        nombre: 'Division de estudios profesionales',
+        createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
+        updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
+      },
+      {
+        nombre: 'Gestión tecnológica y vinculación',
+        createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
+        updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     ])
   },

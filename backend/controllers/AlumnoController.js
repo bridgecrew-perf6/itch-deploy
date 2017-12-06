@@ -337,15 +337,18 @@ module.exports.generarFormatoDeCancelacion = (req, res) => {
 
 module.exports.generarSolicitudDeResidencia = (req, res) => {
     const id_alumno = req.params.id_alumno;
-    Anteproyecto.findOne({where: {id_alumno}, include: [{model: asesor_externo, as: 'asesor_externo', include: [{model: Empresa, as: 'empresa'}]},{model: Periodo, as: 'periodo'},{model: Alumno, as: 'alumno', include: [{model: tipo_seguro, as: 'seguro'},{model: Usuario, as: 'usuario'},{model: Carrera, as: 'carrera'}]}]})
+    sequelize.transaction(t => {
+        return Anteproyecto.findOne({where: {id_alumno}, include: [{model: asesor_externo, as: 'asesor_externo', include: [{model: Empresa, as: 'empresa'}]},{model: Periodo, as: 'periodo'},{model: Alumno, as: 'alumno', include: [{model: tipo_seguro, as: 'seguro'},{model: Usuario, as: 'usuario'},{model: Carrera, as: 'carrera'}]}]}, {transaction: t})
         .then(_anteproyecto => {
-            // console.log('=>',_anteproyecto)
-            // res.status(200).json(_anteproyecto)
-            pdfs.generarSolicitudDeResidencia(_anteproyecto, res);
-        }).catch(err => {
-            console.log(err);
-            res.status(406).json({err: err});
+            return  Departamento.findOne({where: {nombre: 'Division de estudios profesionales'}, include: [{model: Docente, as: 'docentes', include: [{model: Usuario, as: 'usuario', where: {rol: 'jefe_departamento'}}]}]}, {transaction: t})
+                .then(division_estudios => {
+                    pdfs.generarSolicitudDeResidencia(_anteproyecto, division_estudios,res);
+                })
         })
+    }).catch(err => {
+        console.log(err);
+        res.status(406).json({err: err});
+    })
 }
 module.exports.get_Proyecto = (req, res) => {
     const id_alumno = req.params.id;

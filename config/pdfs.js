@@ -33,7 +33,7 @@ function nivelDeDesempenio(calificacion_final) {
 
 
 module.exports = {
-    generarSolicitudDeResidencia: (anteproyecto, res) => {
+    generarSolicitudDeResidencia: (anteproyecto, division_estudios, res) => {
         var docDefinition = {
             pageSize: 'LETTER',
             pageMargins: [40, 125, 40, 50],
@@ -87,16 +87,16 @@ module.exports = {
                             alignment: 'justify',
                             text: [
                                 {text: 'C.', style: 'subtitulo'},
-                                {text: 'M.C. TOLEDO RODRIGUEZ CORONA', style: 'titulo', decoration: 'underline', bold: true},
+                                {text: `${division_estudios.docentes[0].titulo} ${division_estudios.docentes[0].nombre} ${division_estudios.docentes[0].ap_paterno} ${division_estudios.docentes[0].ap_materno}`, style: 'titulo', decoration: 'underline', bold: true},
                                 {text: '\nJefe de la Div. de Estudios Profesionales', style: 'titulo'},
                             ]
                         },
                         {
                             alignment: 'justify',
                             text: [
-                                {text: `AT'N: C.` , style: 'subtitulo'},
-                                {text: 'M.C. TOLEDO RODRIGUEZ CORONA', style: 'titulo', decoration: 'underline', bold: true},
-                                {text: `Coord. de la Carrera de  `, style: 'titulo'},
+                                {text: `AT'N: C. ` , style: 'subtitulo'},
+                                {text: `${division_estudios.docentes[0].titulo} ${division_estudios.docentes[0].nombre} ${division_estudios.docentes[0].ap_paterno} ${division_estudios.docentes[0].ap_materno}`, style: 'titulo', decoration: 'underline', bold: true},
+                                {text: `\nCoord. de la Carrera de  `, style: 'titulo'},
                                 {text: `${anteproyecto.alumno.carrera.nombre}`, style: 'titulo', decoration: 'underline', bold: true}
                             ]
                         }
@@ -413,7 +413,7 @@ module.exports = {
         pdfDoc.pipe(res);
         pdfDoc.end();
     },
-    generarCartaLiberacionAsesorExterno: (proyecto, res) => {
+    generarCartaLiberacionAsesorExterno: (proyecto, depto_vinculacion, res) => {
         var docDefinition = {
             pageSize: 'LETTER',
             pageMargins: [40, 80, 40, 100],
@@ -429,7 +429,7 @@ module.exports = {
                     width: '*',
                     margin: [0, 50, 0, 0],
                     text: [
-                        {text: `${params.jefe_departamento_de_vinculacion}`.toUpperCase(), style: 'normal', bold: true},
+                        {text: `${depto_vinculacion.docentes[0].titulo} ${depto_vinculacion.docentes[0].nombre} ${depto_vinculacion.docentes[0].ap_paterno} ${depto_vinculacion.docentes[0].ap_materno}`.toUpperCase(), style: 'normal', bold: true},
                         {text: `\nJEFE DEL DEPARTAMENTO DE GESTIÓN TECNOLÓGICA Y VINCULACIÓN`.toUpperCase(), style: 'normal', bold: true},
                         {text: `\nINSTITUTO TECNOLÓGICO DE CHILPANCINGO\nPRESENTE`.toUpperCase(), style: 'normal', bold: true}
                     ]

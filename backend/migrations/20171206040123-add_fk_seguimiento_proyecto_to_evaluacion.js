@@ -29,6 +29,7 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
+    let migrations = [];
     migrations.push(
       queryInterface.removeConstraint('seguimiento_proyectos', 'fkey_id_evaluacion_asesor_interno_seguimiento')
     )

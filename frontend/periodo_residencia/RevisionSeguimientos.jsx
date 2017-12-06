@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {message, Modal, Row, Col, Select, Table, Button, Input, Icon, Popconfirm, Badge} from 'antd';
+import {message, Modal, Row, Col, Select, Table, Button, Input, Icon, Popconfirm, Badge, Spin} from 'antd';
 const {Option, OptGroup}  = Select;
 
 import axios from 'axios';
@@ -17,7 +17,8 @@ export default class revisionAnteproyectos extends Component{
             carreras: props.carreras,
             renderProyecto: null,
             periodo: null,
-            id_alumno: null
+            id_alumno: null,
+            spin: false,
         }
     }
     
@@ -26,19 +27,21 @@ export default class revisionAnteproyectos extends Component{
             .then(res => {
                 if(res.status === 200){
                     this.setState({
-                        periodo: res.data
+                        periodo: res.data,
                     })
                 }
             })
     }
     handleChangeResidente = (id_alumno) => {
+        this.setState({spin: true, renderProyecto: null});
         const {usuario} = this.state
         axios.get(`/api/alumno/${id_alumno}/proyecto`)
             .then(res => {
                 if(res.status === 200){
                     this.setState({
                         renderProyecto: (<RevisionProyecto key={uuid.v1()} updateProyecto={this.updateProyecto.bind(this)} proyecto={res.data} usuario={usuario}/>),
-                        id_alumno
+                        id_alumno,
+                        spin: false
                     })
                 }else{
                     message.warning('Ops, ocurrio un error interno, favor de reportar al administrador.')
@@ -46,13 +49,15 @@ export default class revisionAnteproyectos extends Component{
             })
     }
     updateProyecto = () => {
+        this.setState({spin: true, renderProyecto: null});
         const {usuario, id_alumno} = this.state
         axios.get(`/api/alumno/${id_alumno}/proyecto`)
             .then(res => {
                 if(res.status === 200){
                     this.setState({
                         renderProyecto: (<RevisionProyecto key={uuid.v1()} updateProyecto={this.updateProyecto.bind(this)} proyecto={res.data} usuario={usuario}/>),
-                        id_alumno
+                        id_alumno,
+                        spin: false
                     })
                 }else{
                     message.warning('Ops, ocurrio un error interno, favor de reportar al administrador.')
@@ -61,7 +66,7 @@ export default class revisionAnteproyectos extends Component{
     }
 
     render(){
-        const {carreras, renderProyecto, periodo} = this.state
+        const {carreras, renderProyecto, periodo, spin} = this.state
         return (
             <div>
                 <Row type="flex" gutter={30}>
@@ -101,6 +106,11 @@ export default class revisionAnteproyectos extends Component{
                                     null
                             }
                         </Select>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col xs={24} lg={24} style={{textAlign: 'center'}}>
+                        {spin === true ? <Spin style={{marginTop: 20, marginBottom: 20}} size="large" tip="Cargado..."/> :  null}
                     </Col>
                 </Row>
                 {renderProyecto}                   

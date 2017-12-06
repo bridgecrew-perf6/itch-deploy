@@ -278,7 +278,7 @@ module.exports =  (app, express, passport) => {
         res.render('index');
     });
 
-    
+
 
     function isAuth(req, res, next){
         if(req.isAuthenticated())

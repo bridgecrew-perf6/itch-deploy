@@ -104,22 +104,22 @@ module.exports = {
         updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       {
-        titulo: 'ING.',
-        nombre: 'Adriana',
-        ap_paterno: 'Maldonado',
-        ap_materno: 'Bravo',
+        titulo: 'M.C.',
+        nombre: 'Toledo',
+        ap_paterno: 'Rodriguez',
+        ap_materno: 'Corona',
         id_usuario: 11, 
-        id_departamento: 3, 
+        id_departamento: 4, 
         createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
         updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       {
-        titulo: 'LIC.',
-        nombre: 'Roxana',
-        ap_paterno: 'Ruiz',
-        ap_materno: 'Silva',
+        titulo: 'M.A.T.I',
+        nombre: 'Jesús',
+        ap_paterno: 'Marín',
+        ap_materno: 'Robles',
         id_usuario: 12, 
-        id_departamento: 3, 
+        id_departamento: 5, 
         createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
         updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
       }

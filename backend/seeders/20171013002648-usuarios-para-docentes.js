@@ -70,21 +70,19 @@ module.exports = {
         updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       {
-        correo: 'adri_maldonado@gmail.com',
-        rol: 'docente',
+        correo: 'toledo@gmail.com',
+        rol: 'jefe_departamento',
         contrasenia: generateHash('123456'),
         createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
         updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       {
-        correo: 'rox_ruiz@gmail.com',
-        rol: 'docente',
+        correo: 'jesus_marin@gmail.com',
+        rol: 'jefe_departamento',
         contrasenia: generateHash('123456'),
         createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
         updatedAt: Sequelize.literal('CURRENT_TIMESTAMP')
       }
-
-
     ]);
   },
 

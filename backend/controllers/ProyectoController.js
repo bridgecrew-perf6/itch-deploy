@@ -157,11 +157,16 @@ module.exports.generarCartaLiberacionAsesorInterno = (req, res) => {
 }
 module.exports.generarCartaLiberacionAsesorExterno = (req, res) => {
     const id_proyecto = req.params.id_proyecto;
-    Proyecto.findOne({
-        where: {id: id_proyecto},
-        include: [{model: Anteproyecto, as: 'anteproyecto', include: [{model: Docente, as: 'asesor_interno'},{model: asesor_externo, as: 'asesor_externo'},{model: Alumno, as: 'alumno'},{model: Periodo, as: 'periodo', include: [{model: Carrera, as: 'carrera', include: [{model: Departamento, as: 'departamento', include: [{model: Docente, as: 'docentes', include: [{model: Usuario, as: 'usuario', where: {rol: 'jefe_departamento'} }]  }]}]}]}]}]
-    }).then(_proyecto => {
-        pdfs.generarCartaLiberacionAsesorExterno(_proyecto, res);
+    sequelize.transaction(t => {
+        return Proyecto.findOne({
+            where: {id: id_proyecto},
+            include: [{model: Anteproyecto, as: 'anteproyecto', include: [{model: Docente, as: 'asesor_interno'},{model: asesor_externo, as: 'asesor_externo'},{model: Alumno, as: 'alumno'},{model: Periodo, as: 'periodo', include: [{model: Carrera, as: 'carrera', include: [{model: Departamento, as: 'departamento', include: [{model: Docente, as: 'docentes', include: [{model: Usuario, as: 'usuario', where: {rol: 'jefe_departamento'} }]  }]}]}]}]}]
+        }, {transaction: t}).then(_proyecto => {
+            return  Departamento.findOne({where: {nombre: 'Gestión tecnológica y vinculación'}, include: [{model: Docente, as: 'docentes', include: [{model: Usuario, as: 'usuario', where: {rol: 'jefe_departamento'}}]}]}, {transaction: t})
+            .then(depto_vinculacion => {
+                pdfs.generarCartaLiberacionAsesorExterno(_proyecto, depto_vinculacion, res);
+            })
+        })
     }).catch(err => {
         console.log(err)
         res.status(406).json({err: err})

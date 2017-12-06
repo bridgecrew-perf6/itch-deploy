@@ -80,7 +80,9 @@ export default class ProyectosDeResidencia extends Component{
                     </Select>
                 </Col>
                 <Col xs={24} lg={24} style={{marginTop: 25}}>
-                    {spin === true ? <Spin size="large" tip="Cargado..."/>:null}
+                    <div style={{textAlign: 'center'}}>
+                        {spin === true ? <Spin size="large" tip="Cargando..."/>:null}
+                    </div>
                     {renderProyecto}
                 </Col>
             </Row>
