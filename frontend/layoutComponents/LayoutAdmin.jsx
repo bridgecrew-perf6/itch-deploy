@@ -14,6 +14,7 @@ import {getIsAuth} from '../api.jsx';
 import Departamento from '../departamento/index.jsx';
 import Docente from '../docente/index.jsx';
 import Empresa from '../empresa/index.jsx';
+import Usuario from '../usuario/index.jsx';
 import CambiarContrasenia from '../layoutComponents/CambiarContrasenia.jsx';
 
 class LayoutAdmin extends Component{
@@ -32,6 +33,10 @@ class LayoutAdmin extends Component{
                         2: {
                             title: 'Gestión de empresas',
                             render: <Empresa/>
+                        },
+                        5: {
+                            title: 'Usuarios del sistema',
+                            render: <Usuario/>
                         }
                     },
             visibleCambiarContrasenia: false
@@ -97,6 +102,10 @@ class LayoutAdmin extends Component{
                                 <Icon type="contacts"/>
                                 <span>Empresas</span>
                             </Menu.Item>
+                            <Menu.Item key="5" >
+                                <Icon type="contacts"/>
+                                <span>Usuarios del sistema</span>
+                            </Menu.Item>
                             <Menu.Divider/>
                             <SubMenu
                                 key="sub1"
@@ -114,7 +123,7 @@ class LayoutAdmin extends Component{
                                 type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
                                 onClick={this.toggle}
                             />
-                            <div style={{float: 'right'}} >
+                            <div style={{float: 'right', marginRight: 20}} >
                                 {component.title}
                             </div>
                         </Header>

@@ -6,6 +6,7 @@ const Docente = require('../models').Docente
 const Sequelize = require('../models/index').Sequelize;
 const bCrypt = require('bcrypt-nodejs');
 const generator = require('generate-password');
+const transporter = require('../../config/email');
 
 const rol = {
     JEFE_PROYECTO: 'jefe_proyecto',
@@ -53,13 +54,27 @@ module.exports.updateContrasenia = (req, res) => {
 
 module.exports.updateContraseniaEmail = (req, res) => {
 	const contrasenia = generator.generate({length: 8});
-	console.warn('quit => ', contrasenia)
 	const contraseniaHash = generateHash(contrasenia);
-	const id_usuario = req.body.id_usuario
+	const id_usuario = req.body.id_usuario,
+		correo = req.body.correo;
 	Usuario.update({contrasenia: contraseniaHash}, {where: {id: id_usuario}})
-		.then(usuario => {
-			// console.log('=>',departamento)
-			res.status(200).json(usuario)
+		.then(_usuario => {
+			// enviar email con contraseña al docente
+			// console.log('ASdasd',_usuario)
+			const mailOptions = {
+				from: 'seguimientoresidenciasitch@gmail.com',
+				to: correo,
+				subject: 'Nueva contraseña para acceder al sistema de seguimiento de residencias ITCH',
+				text: `Correo: ${correo}, Contraseña: ${contrasenia}`
+			}
+			transporter.sendMail(mailOptions, (err, info) => {
+				if(err){
+					console.error('EMAIL', err)
+				}else{
+					console.log('EMAIL', 'contraseña enviada!');
+				}
+			})
+			res.status(200).json(_usuario)
 		}).catch(Sequelize.ValidationError, (err) => {
 			var errores = err.errors.map((element) => {
 				return `${element.path}: ${element.message}`
@@ -67,7 +82,17 @@ module.exports.updateContraseniaEmail = (req, res) => {
 			// console.log('==>', errores)
 			res.status(202).json({errores})
 		}).catch((err) => {
+			console.log(err)
 			res.status(406).json({err: err})
+		})
+}
+
+module.exports.findAll = (req, res) => {
+	Usuario.findAll({where: {rol: {$notIn: ['admin']}}})
+		.then(usuarios => {
+			res.status(200).json(usuarios);
+		}).catch(err => {
+			res.status(406).json({err: err});
 		})
 }
 module.exports.isAuth = (req, res) => {
