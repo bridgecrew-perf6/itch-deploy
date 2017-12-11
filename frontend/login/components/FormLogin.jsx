@@ -4,6 +4,7 @@ import { Form, Icon, Input, Button, Checkbox, message, Alert} from 'antd';
 const FormItem = Form.Item;
 import {Redirect} from 'react-router-dom';
 // api
+const UUID = "efda6eec-c3d4-414d-8c1e-eede8c03a2b3";
 import request from 'superagent';
 
 class FormLogin extends Component{
@@ -21,7 +22,7 @@ class FormLogin extends Component{
           if (!err) {
               request
                 .post('/api/usuario/auth')
-                .send({correo, contrasenia})
+                .send({correo, contrasenia, UUID})
                 .end((err, res)=>{
                     console.log(res)
                     if(res.status === 200 && res.body.isAuth === true){
