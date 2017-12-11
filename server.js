@@ -11,8 +11,9 @@ const methodOverride = require('method-override');
 var cluster = require('cluster');
 var numCPUs = require('os').cpus().length;
 var ClusterStore = require('strong-cluster-connect-store')(session);
-
 if(cluster.isMaster){
+    // CronJob
+require('./backups/cron');
     ClusterStore.setup();
     for(var i = 0; i < numCPUs; i++){
         cluster.fork()
@@ -29,9 +30,6 @@ if(cluster.isMaster){
     // CONFIG ENVIROMENT
     require('dotenv').config()
     const PORT = (process.env.NODE_ENV === 'development') ? 3000 : 80;
-    
-    
-    
     // MIDDLEWARES
     app.set('view engine', 'pug');
     app.use(morgan('dev')); 
