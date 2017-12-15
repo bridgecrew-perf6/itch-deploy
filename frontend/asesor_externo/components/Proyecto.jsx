@@ -71,6 +71,7 @@ export default class Proyecto extends Component{
         
     }
     showEvaluacionSeguimientoAsesorExterno = (alumno) => {
+        alert(alumno);
         axios.get('/api/proyecto/evaluacionAnexoXXIX/criterios/asesor_externo/')
             .then(res => {
                 if(res.status === 200){
@@ -142,8 +143,8 @@ export default class Proyecto extends Component{
                                             seguimiento.url_seguimiento
                                             ?
                                                 <div style={{marginTop: 10, marginBottom: 10}}>
-                                                    <Button style={{marginBottom: 30}} onClick={() => this.showEvaluacionSeguimientoAsesorExterno(proyecto.anteproyecto.alumno)} icon="bars" type="primary">Realizar evaluación</Button>
-                                                    <FormEvaluacionSeguimiento seguimiento={seguimiento} visible={visibleEvaluacionSeguimientoAsesorExterno} criterios_evaluacion={criterios_evaluacion_seguimiento}/>
+                                                    <Button key={uuid.v4()} style={{marginBottom: 30}} onClick={() => this.showEvaluacionSeguimientoAsesorExterno(proyecto.anteproyecto.alumno)} icon="bars" type="primary">Realizar evaluación</Button>
+                                                    <FormEvaluacionSeguimiento key={uuid.v4()} seguimiento={seguimiento} visible={visibleEvaluacionSeguimientoAsesorExterno} criterios_evaluacion={criterios_evaluacion_seguimiento}/>
                                                 </div>
                                             :
                                                 <Alert style={{marginTop: 10, marginBottom: 10}} message="El alumno debe subir su avance del seguimiento de residencia para continuar con el proceso de evaluación" type="warning" showIcon/>

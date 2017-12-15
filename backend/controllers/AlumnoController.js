@@ -386,7 +386,7 @@ module.exports.get_Proyecto = (req, res) => {
         res.status(406).json({err: err})
     })
 }
-module.exports.getProyecto = (req, res) => {
+module.exports.getProyectoFindOrCreate = (req, res) => {
     const id_alumno = req.params.id;
     sequelize.transaction( t => {
         return Anteproyecto.findOne({where: {id_alumno: id_alumno}}, {transaction: t})
@@ -409,6 +409,31 @@ module.exports.getProyecto = (req, res) => {
                 });
             })
 
+    }).then((_proyecto)=>{
+        res.status(200).json(_proyecto)
+    }).catch(Sequelize.ValidationError, (err) => {
+        var errores = err.errors.map((element) => {
+            return `${element.path}: ${element.message}`
+        })
+        // console.log('==>', errores)
+        res.status(202).json({errores})
+    }).catch((err) => {
+        console.log(err)
+        res.status(406).json({err: err})
+    })
+}
+
+module.exports.getProyecto = (req, res) => {
+    const id_alumno = req.params.id;
+    sequelize.transaction( t => {
+        return Anteproyecto.findOne({where: {id_alumno: id_alumno}}, {transaction: t})
+            .then(_anteproyecto => {
+                return Proyecto.findOne({
+                    where: {id_anteproyecto: _anteproyecto.id},
+                    include: [{model: evaluacion, as: 'evaluacion_asesor_interno', include: [{model: criterio_evaluacion, as: 'criterios_de_evaluacion', include: [{model: criterio, as: 'ref_criterio'}]}]},{model: evaluacion, as: 'evaluacion_asesor_externo', include: [{model: criterio_evaluacion, as: 'criterios_de_evaluacion', include: [{model: criterio, as: 'ref_criterio'}]}]},{model: seguimiento_proyecto, as: 'seguimientos_proyecto', include: [{model: evaluacion, as: 'evaluacion_asesor_externo', include: [{model: criterio_evaluacion, as: 'criterios_de_evaluacion', include: [{model: criterio, as: 'ref_criterio'}]}]},{model: evaluacion, as: 'evaluacion_asesor_interno', include: [{model: criterio_evaluacion, as: 'criterios_de_evaluacion', include: [{model: criterio, as: 'ref_criterio'}]}]},{model: Seguimiento, as: 'seguimiento'},{model: revision_seguimiento, as: 'revisiones_seguimiento', include: [{model: Docente, as: 'docente'}]}]},{model: Asesoria, as: 'asesorias', include: {model: solucion_recomendada, as: 'soluciones_recomendadas'}},{model: observaciones, as: 'observaciones'},{model: Anteproyecto, as: 'anteproyecto', include: [{model: revision_anteproyecto, as: 'revisiones', include: [{model: Docente, as: 'docente'}]},{model: Alumno, as: 'alumno'}, {model: Periodo, as: 'periodo'}, {model: asesor_externo, as: 'asesor_externo'}] }],                    
+                    transaction: t
+                })
+            })
     }).then((_proyecto)=>{
         res.status(200).json(_proyecto)
     }).catch(Sequelize.ValidationError, (err) => {

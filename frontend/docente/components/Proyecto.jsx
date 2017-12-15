@@ -189,9 +189,9 @@ export default class Proyecto extends Component{
             id_asesoria
         }).then(res => {
             if(res.status === 200){
-                message.success('Se ha realizado el cambio de autorizar el formato de asesoria')
+                message.success('Se ha realizado el cambio de autorizar el formato de asesoría')
             }else{
-                message.error('Surgio un error al actualizar la autorización de la asesoria, favor de reportarlo con el administrador.')
+                message.error('Surgio un error al actualizar la autorización de la asesoría, favor de reportarlo con el administrador.')
             }
         })
             
@@ -244,7 +244,7 @@ export default class Proyecto extends Component{
             tipo
         }).then(res => {
                 if(res.status === 200){
-                    message.success('El tipo de asesoria se ha actualizado satisfactoriamente!')
+                    message.success('El tipo de asesoría se ha actualizado satisfactoriamente!')
                 }else{
                     message.error('Ops, hemos tenido un problema, favor de reportar al administrador.')
                 }
@@ -373,7 +373,7 @@ export default class Proyecto extends Component{
             },
             {
                 className: 'center-text',
-                title: 'Tipo de asesoria',
+                title: 'Tipo de asesoría',
                 dataIndex: 'tipo',
                 key: 'tipo',
                 render: (text, record) => (
@@ -495,10 +495,10 @@ export default class Proyecto extends Component{
                             </Col>
                         </Row>
                     </TabPane>
-                    <TabPane tab={<span><Icon type="solution" />Asesorias</span>} key="asesorias">
+                    <TabPane tab={<span><Icon type="solution" />Asesorías</span>} key="asesorias">
                         <Row>
                             <Col xs={24} lg={24}>
-                                <Table title={() => 'Asesorias'} columns={columnsAsesorias} dataSource={_asesorias} pagination={{ pageSize: 5 }} scroll={{ x: 1200 }} />
+                                <Table title={() => 'Asesorías'} columns={columnsAsesorias} dataSource={_asesorias} pagination={{ pageSize: 5 }} scroll={{ x: 1200 }} />
                             </Col>
                         </Row>
                     </TabPane>

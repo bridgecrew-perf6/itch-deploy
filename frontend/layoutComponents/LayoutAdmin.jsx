@@ -103,7 +103,7 @@ class LayoutAdmin extends Component{
                                 <span>Empresas</span>
                             </Menu.Item>
                             <Menu.Item key="5" >
-                                <Icon type="contacts"/>
+                                <Icon type="bars"/>
                                 <span>Usuarios del sistema</span>
                             </Menu.Item>
                             <Menu.Divider/>

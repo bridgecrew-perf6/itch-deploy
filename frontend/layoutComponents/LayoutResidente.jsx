@@ -104,7 +104,7 @@ export default class LayoutResidente extends Component{
                     visibleCambiarContrasenia: false,
                     visibleCancelacion: false,
                     componentRender: {
-                        title: 'Asesorias',
+                        title: 'Asesorías',
                         render: <RegistrarAsesoria key={uuid.v1()} updateAsesorias={this.updateAsesorias.bind(this)} usuario={usuario} proyecto={res.data}/>
                     }
                 })
@@ -142,7 +142,7 @@ export default class LayoutResidente extends Component{
                         visibleCambiarContrasenia: false,
                         visibleCancelacion: false,
                         componentRender: {
-                            title: 'Asesorias',
+                            title: 'Asesorías',
                             render: <RegistrarAsesoria key={uuid.v1()} updateAsesorias={this.updateAsesorias.bind(this)} usuario={usuario} proyecto={res.data}/>
                         }
                     })
@@ -205,7 +205,7 @@ export default class LayoutResidente extends Component{
                             </Menu.Item>
                             <Menu.Item key="2" >
                                 <Icon type="solution"/>
-                                <span>Asesorias</span>
+                                <span>Asesorías</span>
                             </Menu.Item>
                             <Menu.Item key="4" >
                                 <Icon type="calendar"/>

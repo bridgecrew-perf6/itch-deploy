@@ -114,7 +114,7 @@ export default class RevisionSeguimiento extends Component{
             },
             {
                 className: 'center-text',
-                title: 'Observacion',
+                title: 'Observación',
                 dataIndex: 'observacion',
                 key: 'observacion',
             },

@@ -31,6 +31,7 @@ export default class RevisionProyectoResidencia extends Component{
             spin: false,
         })
     }
+    
 
     onChangeResidente = (id_alumno) => {
         this.setState({spin: true, renderProyecto: null})

@@ -210,7 +210,7 @@ export default class RevisionProyecto extends Component{
             },
             {
                 className: 'center-text',
-                title: 'Observacion',
+                title: 'Observación',
                 dataIndex: 'observacion',
                 key: 'observacion',
             }
@@ -297,10 +297,10 @@ export default class RevisionProyecto extends Component{
                         </Col>
                     </Row>
                 </TabPane>
-                <TabPane tab={<span><Icon type="solution" />Asesorias</span>} key="asesorias">
+                <TabPane tab={<span><Icon type="solution" />Asesorías</span>} key="asesorias">
                     <Row>
                         <Col xs={24} lg={24}>
-                            <Table title={() => 'Asesorias'} columns={columnsAsesorias} dataSource={_asesorias} pagination={{ pageSize: 5 }} scroll={{ x: 1200 }} />
+                            <Table title={() => 'Asesorías'} columns={columnsAsesorias} dataSource={_asesorias} pagination={{ pageSize: 5 }} scroll={{ x: 1200 }} />
                         </Col>
                     </Row>
                 </TabPane>

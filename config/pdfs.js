@@ -1271,7 +1271,7 @@ module.exports = {
                     alignment: 'center',
                     width: '*',
                     bold: true,
-                    text: `Anexo V \n Formato de registro de asesoria`
+                    text: `Anexo V \n Formato de registro de asesoría`
                 },
                 {
                     margin: [0, 50, 0,0],
@@ -1342,9 +1342,9 @@ module.exports = {
                     alignment: 'left',
                     width: '*',
                     text: [
-                        {text: 'Asesoria número: ', style: 'normal'},
+                        {text: 'Asesoría número: ', style: 'normal'},
                         {text: `${asesoria.id}`, style: 'normal', decoration: 'underline'},
-                        {text: ' Tipo de asesoria: ', style: 'normal'},
+                        {text: ' Tipo de asesoría: ', style: 'normal'},
                         {text: `${asesoria.tipo}`, style: 'normal', decoration: 'underline'},
                     ],                
                 },

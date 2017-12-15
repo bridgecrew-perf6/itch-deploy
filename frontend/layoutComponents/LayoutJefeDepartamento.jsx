@@ -231,7 +231,7 @@ class LayoutJefeDepartamento extends Component{
                                 </Menu.Item>
                                 <Menu.Item key="6" >
                                     <Icon type="plus"/>
-                                    <span>Agregar periodo</span>
+                                    <span>Apertura de periodo</span>
                                 </Menu.Item>
                                 <Menu.Item key="7" >
                                     <Icon type="solution" />

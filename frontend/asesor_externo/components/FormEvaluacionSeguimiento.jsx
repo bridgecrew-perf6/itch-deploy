@@ -14,7 +14,7 @@ const CreateFormEvaluacionSeguimiento = Form.create()(
         return(
             <Modal
                 visible={visible}
-                title={`Evaluación de residencia profesional`}
+                title={`Evaluación de seguimiento de residencia`}
                 okText="Guardar"
                 onCancel={onCancel}
                 onOk={onCreate}

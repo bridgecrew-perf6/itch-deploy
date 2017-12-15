@@ -4,7 +4,7 @@ import {Select, Row, Col, Spin} from 'antd';
 const {Option} = Select
 
 import axios from 'axios';
-
+import uuid from 'uuid';
 // Components
 import Proyecto from '../components/Proyecto.jsx'
 
@@ -37,7 +37,7 @@ export default class ProyectosDeResidencia extends Component{
                 if(res.status === 200){
                     // console.warn('proyecto', res.data)
                     this.setState({
-                        renderProyecto:(<Proyecto updateProyecto={this.updateProyecto.bind(this)} proyecto={res.data} usuario={this.state.usuario}/>),
+                        renderProyecto:(<Proyecto key={uuid.v4()} updateProyecto={this.updateProyecto.bind(this)} proyecto={res.data} usuario={this.state.usuario}/>),
                         id_alumno,
                         spin: false,
                     })
@@ -51,7 +51,7 @@ export default class ProyectosDeResidencia extends Component{
             if(res.status === 200){
                 // console.warn('proyecto', res.data)
                 this.setState({
-                    renderProyecto:(<Proyecto updateProyecto={this.updateProyecto.bind(this)} proyecto={res.data} usuario={this.state.usuario}/>),
+                    renderProyecto:(<Proyecto key={uuid.v4()} updateProyecto={this.updateProyecto.bind(this)} proyecto={res.data} usuario={this.state.usuario}/>),
                     spin: false,
                 })
             }
@@ -74,7 +74,7 @@ export default class ProyectosDeResidencia extends Component{
                     >
                         {proyectos.map((proyecto, index) => {
                             return (
-                                <Option key={index} value={`${proyecto.anteproyecto.alumno.id}`}>{`${proyecto.anteproyecto.alumno.no_control} - ${proyecto.anteproyecto.alumno.nombre} ${proyecto.anteproyecto.alumno.ap_paterno} ${proyecto.anteproyecto.alumno.ap_materno}`}</Option>
+                                <Option key={uuid.v4()} value={`${proyecto.anteproyecto.alumno.id}`}>{`${proyecto.anteproyecto.alumno.no_control} - ${proyecto.anteproyecto.alumno.nombre} ${proyecto.anteproyecto.alumno.ap_paterno} ${proyecto.anteproyecto.alumno.ap_materno}`}</Option>
                             )
                         })}
                     </Select>

@@ -14,7 +14,7 @@ const CreateFormAddObservacion = Form.create()(
         return(
             <Modal
                 visible={visible}
-                title={`Agregar observacion al ${tipo}`}
+                title={`Agregar observación al ${tipo}`}
                 okText="Guardar"
                 onCancel={onCancel}
                 onOk={onCreate}

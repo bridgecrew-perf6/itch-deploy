@@ -41,7 +41,7 @@ export default class RegistrarAsesoria extends Component{
     showSolucionesRecomendadas = (soluciones_recomendadas) => {
         Modal.info({
             width: 600,
-            title: 'Soluciones recomendadas en la asesoria',
+            title: 'Soluciones recomendadas en la asesoría',
             content: (
                 <div style={{overflow: 'scroll', height: 300}}>
                     <Timeline style={{marginTop: 30, marginLeft: 30}}>
@@ -61,7 +61,7 @@ export default class RegistrarAsesoria extends Component{
         const columnasAsesoria = [
             {
                 className: 'center-text',
-                title: 'Fecha de asesoria',
+                title: 'Fecha de asesoría',
                 dataIndex: 'fecha',
                 key: 'fecha'
             },
@@ -105,7 +105,7 @@ export default class RegistrarAsesoria extends Component{
             {
                 width: 300,
                 className: 'center-text',
-                title: 'Formato de asesoria',
+                title: 'Formato de asesoría',
                 dataIndex: 'formato_asesoria',
                 key: 'formato_asesoria',
                 render: (text, record) => (
@@ -133,13 +133,13 @@ export default class RegistrarAsesoria extends Component{
             <div>
                 <Row>
                     <Col xs={24} lg={24}>
-                        <Button icon="plus" type="primary" onClick={this.showAddAsesoria}>Agregar asesoria</Button>
+                        <Button icon="plus" type="primary" onClick={this.showAddAsesoria}>Agregar asesoría</Button>
                     </Col>
                     <Col xs={24} lg={24} style={{marginTop: 10}}>
                         <Button icon="video-camera" onClick={this.showTutorialSubirAsesoria} >Tutorial para subir archivos y compartir en drive</Button>
                     </Col>
                     <Col xs={24} lg={24}>
-                        <Table title={()=> 'Lista de asesorias registradas'} columns={columnasAsesoria} dataSource={asesorias} pagination={{ pageSize: 5 }} scroll={{x: 1200}}/>
+                        <Table title={()=> 'Lista de asesorías registradas'} columns={columnasAsesoria} dataSource={asesorias} pagination={{ pageSize: 5 }} scroll={{x: 1200}}/>
                     </Col>
                 </Row>
                 <FormRegistrarAsesoria updateAsesorias={this.updateAsesorias.bind(this)} proyecto={proyecto} visible={visibleRegistrarAsesoria}/>

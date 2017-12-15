@@ -19,7 +19,7 @@ const CreateFormRegistrarAsesoria = Form.create()(
         return(
             <Modal
                 visible={visible}
-                title={`Registrar asesoria`}
+                title={`Registrar asesoría`}
                 okText="Guardar"
                 onCancel={onCancel}
                 onOk={onCreate}
@@ -28,15 +28,15 @@ const CreateFormRegistrarAsesoria = Form.create()(
                 <Form layout="vertical">
                     <FormItem label={(
                                     <span>
-                                        Fecha de asesoria&nbsp;
-                                        <Tooltip title="La fecha de asesoria tiene 3 dias habiles.">
+                                        Fecha de asesoría&nbsp;
+                                        <Tooltip title="La fecha de asesoría tiene 3 dias habiles.">
                                             <Icon type="question-circle-o" />
                                         </Tooltip>
                                     </span>
                                 )}
                     >
                         {getFieldDecorator('fecha', {
-                            rules: [{required: true, message: 'La fecha de asesoria es obligatoria.'}]
+                            rules: [{required: true, message: 'La fecha de asesoría es obligatoria.'}]
                         })(<DatePicker format="ll" disabledDate={current => {
                                     return moment(current).format('YYYY-MM-DD') < moment().format('YYYY-MM-DD') || moment(current).format('YYYY-MM-DD') > moment().add(3, 'days').format('YYYY-MM-DD') ;
                                 }
@@ -104,13 +104,13 @@ export default class FormRegistrarAsesoria extends Component{
             }).then((res) => {
                 // console.log(res)
                 if(res.status === 200){
-                    message.success("Asesoria registrada satisfactoriamente")
+                    message.success("Asesoría registrada satisfactoriamente")
                     this.setState({ visible: false });
                     form.resetFields();
                     this.props.updateAsesorias();
                 }else{
                     Modal.error({
-                        title: 'Error al registrar asesoria. Revisar los siguientes campos',
+                        title: 'Error al registrar asesoría. Revisar los siguientes campos',
                         content:(
                             <div>
                                 {res.data.errores}
