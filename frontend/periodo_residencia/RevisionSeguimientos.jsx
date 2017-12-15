@@ -17,7 +17,7 @@ export default class revisionAnteproyectos extends Component{
             carreras: props.carreras,
             renderProyecto: null,
             periodo: null,
-            id_alumno: null,
+            id_proyecto: null,
             spin: false,
         }
     }
@@ -32,15 +32,15 @@ export default class revisionAnteproyectos extends Component{
                 }
             })
     }
-    handleChangeResidente = (id_alumno) => {
+    handleChangeResidente = (id_proyecto) => {
         this.setState({spin: true, renderProyecto: null});
         const {usuario} = this.state
-        axios.get(`/api/alumno/${id_alumno}/proyecto`)
+        axios.get(`/api/alumno/revision_seguimiento/${id_proyecto}`)
             .then(res => {
                 if(res.status === 200){
                     this.setState({
                         renderProyecto: (<RevisionProyecto key={uuid.v1()} updateProyecto={this.updateProyecto.bind(this)} proyecto={res.data} usuario={usuario}/>),
-                        id_alumno,
+                        id_proyecto,
                         spin: false
                     })
                 }else{
@@ -50,13 +50,13 @@ export default class revisionAnteproyectos extends Component{
     }
     updateProyecto = () => {
         this.setState({spin: true, renderProyecto: null});
-        const {usuario, id_alumno} = this.state
-        axios.get(`/api/alumno/${id_alumno}/proyecto`)
+        const {usuario, id_proyecto} = this.state
+        axios.get(`/api/alumno/revision_seguimiento/${id_proyecto}`)
             .then(res => {
                 if(res.status === 200){
                     this.setState({
                         renderProyecto: (<RevisionProyecto key={uuid.v1()} updateProyecto={this.updateProyecto.bind(this)} proyecto={res.data} usuario={usuario}/>),
-                        id_alumno,
+                        id_proyecto,
                         spin: false
                     })
                 }else{

@@ -11,8 +11,7 @@ const TabPane = Tabs.TabPane;
 // Components
 
 import FormEvaluacion from '../components/FormEvaluacion.jsx';
-import FormEvaluacionSeguimiento from '../components/FormEvaluacionSeguimiento.jsx';
-
+import Seguimiento from './Seguimiento.jsx';
 export default class Proyecto extends Component{
 
     constructor(props){
@@ -23,8 +22,6 @@ export default class Proyecto extends Component{
             renderSeguimiento: null,
             criterios_evaluacion: null,
             visibleEvaluacionAsesorExterno: false,
-            criterios_evaluacion_seguimiento: null,
-            visibleEvaluacionSeguimientoAsesorExterno: false
         }
     }
     componentWillReceiveProps(nextProps){
@@ -33,9 +30,7 @@ export default class Proyecto extends Component{
             proyecto: nextProps.proyecto,
             renderSeguimiento: null,
             criterios_evaluacion: null,
-            visibleEvaluacionAsesorExterno: false,
-            criterios_evaluacion_seguimiento: null,
-            visibleEvaluacionSeguimientoAsesorExterno: false
+            visibleEvaluacionAsesorExterno: false
         })
     }
     showEvaluacionAsesorExterno = (alumno) => {
@@ -47,7 +42,6 @@ export default class Proyecto extends Component{
                     this.setState({
                         criterios_evaluacion: res.data,
                         visibleEvaluacionAsesorExterno: true,
-                        visibleEvaluacionSeguimientoAsesorExterno: false
                     })
                 }else{
                     message.warn('Error al realizar petición de criterios de evaluación, favor de reportar al administrador.')
@@ -61,7 +55,6 @@ export default class Proyecto extends Component{
                     this.setState({
                         criterios_evaluacion: res.data,
                         visibleEvaluacionAsesorExterno: true,
-                        visibleEvaluacionSeguimientoAsesorExterno: false
                     })
                 }else{
                     message.warn('Error al realizar petición de criterios de evaluación, favor de reportar al administrador.')
@@ -69,22 +62,6 @@ export default class Proyecto extends Component{
             })
         }
         
-    }
-    showEvaluacionSeguimientoAsesorExterno = (alumno) => {
-        alert(alumno);
-        axios.get('/api/proyecto/evaluacionAnexoXXIX/criterios/asesor_externo/')
-            .then(res => {
-                if(res.status === 200){
-                    // console.warn('cri', res.data)
-                    this.setState({
-                        visibleEvaluacionAsesorExterno: false,
-                        criterios_evaluacion_seguimiento: res.data,
-                        visibleEvaluacionSeguimientoAsesorExterno: true
-                    })
-                }else{
-                    message.warn('Error al realizar petición de criterios de evaluación, favor de reportar al administrador.')
-                }
-            })
     }
     autorizarCartaDeLiberacionAsesorExterno = (check, id_proyecto) => {
         axios.put('/api/proyecto/autorizar_carta_liberacion/asesor_externo', {
@@ -102,7 +79,7 @@ export default class Proyecto extends Component{
         this.props.updateProyecto();
     }
     render(){
-        const {criterios_evaluacion, visibleEvaluacionAsesorExterno, proyecto, usuario, renderSeguimiento, visibleEvaluacionSeguimientoAsesorExterno, criterios_evaluacion_seguimiento} = this.state
+        const {criterios_evaluacion, visibleEvaluacionAsesorExterno, proyecto, usuario, renderSeguimiento} = this.state
         // console.warn(usuario);
         // console.log('alvvvv', proyecto);
         return (
@@ -120,36 +97,7 @@ export default class Proyecto extends Component{
                         {
                             proyecto.seguimientos_proyecto.map((seguimiento, i) => {
                                 return (
-                                    <Col key={uuid.v4()} xs={24} lg={24}>
-                                        <h2 style={{marginTop: 20, marginBottom: 10}} className="border-top" >{`Seguimiento ${(i+1)}`}</h2>
-                                        {seguimiento.url_seguimiento ? 
-                                            <div style={{marginTop: 10, marginBottom: 10}}>
-                                                <p>Link del seguimiento: </p>
-                                                <Upload 
-                                                    defaultFileList= {
-                                                        [{
-                                                            uid: -2,
-                                                            name: 'seguimiento de residencia',
-                                                            status: 'done',
-                                                            url: seguimiento.url_seguimiento
-                                                        }]
-                                                    }
-                                                />
-                                            </div>
-                                        : 
-                                            <Alert style={{marginTop: 10, marginBottom: 10}} message="El alumno no ha subido el avance de su seguimiento de residencia" type="warning" showIcon/>
-                                        }
-                                        {
-                                            seguimiento.url_seguimiento
-                                            ?
-                                                <div style={{marginTop: 10, marginBottom: 10}}>
-                                                    <Button key={uuid.v4()} style={{marginBottom: 30}} onClick={() => this.showEvaluacionSeguimientoAsesorExterno(proyecto.anteproyecto.alumno)} icon="bars" type="primary">Realizar evaluación</Button>
-                                                    <FormEvaluacionSeguimiento key={uuid.v4()} seguimiento={seguimiento} visible={visibleEvaluacionSeguimientoAsesorExterno} criterios_evaluacion={criterios_evaluacion_seguimiento}/>
-                                                </div>
-                                            :
-                                                <Alert style={{marginTop: 10, marginBottom: 10}} message="El alumno debe subir su avance del seguimiento de residencia para continuar con el proceso de evaluación" type="warning" showIcon/>
-                                        }
-                                    </Col>
+                                    <Seguimiento key={uuid.v4()} proyecto={proyecto} seguimiento={seguimiento} numero={i}/>
                                 )
                             })
                         }

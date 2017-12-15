@@ -52,9 +52,7 @@ export default class LayoutResidente extends Component{
                 // })
                 axios.get(`/api/alumno/${usuario.id_alumno}/_proyecto`)
                     .then(res => {
-                        // console.warn('CTTTTM')
                         if(res.status === 200){
-                            // console.log('WHYYYYY')
                             this.setState({
                                 proyecto: res.data,
                                 isAuth: usuario.isAuth,

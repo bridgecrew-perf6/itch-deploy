@@ -5,7 +5,7 @@ import moment from 'moment';
 import uuid from 'uuid';
 const { Item } = Form;
 const TabPane = Tabs.TabPane;
-
+const {Option} = Select
 // Components
 import FormAddObservacion from '../components/FormAddObservacion.jsx';
 import FormAddSolucion from '../components/FormAddSolucion.jsx';
@@ -378,10 +378,10 @@ export default class Proyecto extends Component{
                 key: 'tipo',
                 render: (text, record) => (
                     <Select defaultValue={record.tipo} onChange={(value)=>this.updateTipoAsesoria(record.id, value)} style={{width: '100%'}}>
-                        <Option value="virtual">
+                        <Option key={uuid.v4()} value="virtual">
                             Virtual
                         </Option>
-                        <Option value="presencial">
+                        <Option key={uuid.v4()} value="presencial">
                             Presencial
                         </Option>
                     </Select>

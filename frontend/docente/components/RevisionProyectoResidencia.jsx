@@ -8,9 +8,6 @@ import uuid from 'uuid';
 // Components
 import Proyecto from '../components/Proyecto.jsx'
 
-
-
-
 export default class RevisionProyectoResidencia extends Component{
     constructor(props){
         super(props);
@@ -18,7 +15,7 @@ export default class RevisionProyectoResidencia extends Component{
             proyectos: props.proyectos,
             usuario: props.usuario,
             renderProyecto: null,
-            id_alumno: null,
+            id_proyecto: null,
             spin: false,
         }
     }
@@ -27,21 +24,21 @@ export default class RevisionProyectoResidencia extends Component{
             proyectos: nextProps.proyectos,
             usuario: props.usuario,
             renderProyecto: null,
-            id_alumno: null,
+            id_proyecto: null,
             spin: false,
         })
     }
     
 
-    onChangeResidente = (id_alumno) => {
+    onChangeResidente = (id_proyecto) => {
         this.setState({spin: true, renderProyecto: null})
-        axios.get(`/api/alumno/${id_alumno}/proyecto`)
+        axios.get(`/api/alumno/proyecto_para_asesor_interno/${id_proyecto}`)
             .then((res) => {
                 if(res.status === 200){
                     // console.warn('proyecto', res.data)
                     this.setState({
                         renderProyecto:(<Proyecto key={uuid.v1()} updateProyecto={this.updateProyectoResidente.bind(this)} proyecto={res.data} usuario={this.state.usuario}/>),
-                        id_alumno,
+                        id_proyecto,
                         spin: false,
                     })
                 }
@@ -51,13 +48,12 @@ export default class RevisionProyectoResidencia extends Component{
     
     updateProyectoResidente = () => {
         this.setState({spin: true, renderProyecto: null})
-        axios.get(`/api/alumno/${this.state.id_alumno}/proyecto`)
+        axios.get(`/api/alumno/proyecto_para_asesor_interno/${this.state.id_proyecto}`)
         .then((res) => {
             if(res.status === 200){
                 // console.warn('proyecto', res.data)
                 this.setState({
                     renderProyecto:(<Proyecto key={uuid.v1()} updateProyecto={this.updateProyectoResidente.bind(this)} proyecto={res.data} usuario={this.state.usuario}/>),
-                    id_alumno: this.state.id_alumno,
                     spin: false,
                 })
             }
@@ -81,7 +77,7 @@ export default class RevisionProyectoResidencia extends Component{
                     >
                         {proyectos.map((proyecto, index) => {
                             return (
-                                <Option key={index} value={`${proyecto.anteproyecto.alumno.id}`}>{`${proyecto.anteproyecto.alumno.no_control} - ${proyecto.anteproyecto.alumno.nombre} ${proyecto.anteproyecto.alumno.ap_paterno} ${proyecto.anteproyecto.alumno.ap_materno}`}</Option>
+                                <Option key={index} value={`${proyecto.id}`}>{`${proyecto.anteproyecto.alumno.no_control} - ${proyecto.anteproyecto.alumno.nombre} ${proyecto.anteproyecto.alumno.ap_paterno} ${proyecto.anteproyecto.alumno.ap_materno}`}</Option>
                             )
                         })}
                     </Select>

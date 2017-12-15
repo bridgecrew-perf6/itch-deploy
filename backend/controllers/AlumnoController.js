@@ -358,14 +358,14 @@ module.exports.get_Proyecto = (req, res) => {
                 // console.log('========>', _anteproyecto)
                 return Proyecto.findOrCreate({
                     where: {id_anteproyecto: _anteproyecto.id},
-                    include: [{model: evaluacion, as: 'evaluacion_asesor_interno', include: [{model: criterio_evaluacion, as: 'criterios_de_evaluacion', include: [{model: criterio, as: 'ref_criterio'}]}]},{model: evaluacion, as: 'evaluacion_asesor_externo', include: [{model: criterio_evaluacion, as: 'criterios_de_evaluacion', include: [{model: criterio, as: 'ref_criterio'}]}]},{model: seguimiento_proyecto, as: 'seguimientos_proyecto', include: [{model: Seguimiento, as: 'seguimiento'},{model: revision_seguimiento, as: 'revisiones_seguimiento', include: [{model: Docente, as: 'docente'}]}]},{model: Asesoria, as: 'asesorias', include: {model: solucion_recomendada, as: 'soluciones_recomendadas'}},{model: observaciones, as: 'observaciones'},{model: Anteproyecto, as: 'anteproyecto', include: [{model: revision_anteproyecto, as: 'revisiones', include: [{model: Docente, as: 'docente'}]},{model: Alumno, as: 'alumno'}, {model: Periodo, as: 'periodo'}, {model: asesor_externo, as: 'asesor_externo'}] }],                    
+                    include: [{model: seguimiento_proyecto, as: 'seguimientos_proyecto', include: [{model: Seguimiento, as: 'seguimiento'},{model: revision_seguimiento, as: 'revisiones_seguimiento', include: [{model: Docente, as: 'docente'}]}]},{model: Asesoria, as: 'asesorias', include: {model: solucion_recomendada, as: 'soluciones_recomendadas'}},{model: observaciones, as: 'observaciones'},{model: Anteproyecto, as: 'anteproyecto', include: [{model: revision_anteproyecto, as: 'revisiones', include: [{model: Docente, as: 'docente'}]},{model: Alumno, as: 'alumno'}, {model: Periodo, as: 'periodo'}, {model: asesor_externo, as: 'asesor_externo'}] }],                    
                     transaction: t
                 }).spread((proyecto_find, created) => {
                     if(created){
                         // buscar el proyecto :c
                         return Proyecto.findOne({
                             where: {id_anteproyecto: _anteproyecto.id},
-                            include: [{model: seguimiento_proyecto, as: 'seguimientos_proyecto', include: [{model: Seguimiento, as: 'seguimiento'},{model: revision_seguimiento, as: 'revisiones_seguimiento', include: [{model: Docente, as: 'docente'}]}]},{model: Anteproyecto, as: 'anteproyecto', include: [{model: revision_anteproyecto, as: 'revisiones', include: [{model: Docente, as: 'docente'}]},{model: Alumno, as: 'alumno'}, {model: Periodo, as: 'periodo'}, {model: asesor_externo, as: 'asesor_externo'}] }],                    
+                            include: [{model: seguimiento_proyecto, as: 'seguimientos_proyecto', include: [{model: Seguimiento, as: 'seguimiento'},{model: revision_seguimiento, as: 'revisiones_seguimiento', include: [{model: Docente, as: 'docente'}]}]},{model: Asesoria, as: 'asesorias', include: {model: solucion_recomendada, as: 'soluciones_recomendadas'}},{model: observaciones, as: 'observaciones'},{model: Anteproyecto, as: 'anteproyecto', include: [{model: revision_anteproyecto, as: 'revisiones', include: [{model: Docente, as: 'docente'}]},{model: Alumno, as: 'alumno'}, {model: Periodo, as: 'periodo'}, {model: asesor_externo, as: 'asesor_externo'}] }],                    
                         }, {transaction: t})
                     }else {
                         return proyecto_find;
@@ -410,6 +410,64 @@ module.exports.getProyectoFindOrCreate = (req, res) => {
             })
 
     }).then((_proyecto)=>{
+        res.status(200).json(_proyecto)
+    }).catch(Sequelize.ValidationError, (err) => {
+        var errores = err.errors.map((element) => {
+            return `${element.path}: ${element.message}`
+        })
+        // console.log('==>', errores)
+        res.status(202).json({errores})
+    }).catch((err) => {
+        console.log(err)
+        res.status(406).json({err: err})
+    })
+}
+module.exports.getProyectoAsesorExterno = (req, res) => {
+    const id_proyecto = req.params.id_proyecto;
+    // console.log('AQUINOMAS');
+    Proyecto.findOne({
+        where: {id: id_proyecto},
+        include: [{model: evaluacion, as: 'evaluacion_asesor_externo', include: [{model: criterio_evaluacion, as: 'criterios_de_evaluacion', include: [{model: criterio, as: 'ref_criterio'}]}]},{model: seguimiento_proyecto, as: 'seguimientos_proyecto', include: [{model: evaluacion, as: 'evaluacion_asesor_externo', include: [{model: criterio_evaluacion, as: 'criterios_de_evaluacion', include: [{model: criterio, as: 'ref_criterio'}]}]} , {model: Seguimiento, as: 'seguimiento'}]},{model: Anteproyecto, as: 'anteproyecto', include: [{model: Alumno, as: 'alumno'}, {model: Periodo, as: 'periodo'}]}]
+    }).then(_proyecto => {
+        res.status(200).json(_proyecto)
+    }).catch(Sequelize.ValidationError, (err) => {
+        var errores = err.errors.map((element) => {
+            return `${element.path}: ${element.message}`
+        })
+        // console.log('==>', errores)
+        res.status(202).json({errores})
+    }).catch((err) => {
+        console.log(err)
+        res.status(406).json({err: err})
+    })
+}
+module.exports.getProyectoAsesorInterno = (req, res) => {
+    const id_proyecto = req.params.id_proyecto;
+    // console.log('AQUINOMAS');
+    Proyecto.findOne({
+        where: {id: id_proyecto},
+        include: [{model: evaluacion, as: 'evaluacion_asesor_interno', include: [{model: criterio_evaluacion, as: 'criterios_de_evaluacion', include: [{model: criterio, as: 'ref_criterio'}]}]},{model: seguimiento_proyecto, as: 'seguimientos_proyecto', include: [{model: evaluacion, as: 'evaluacion_asesor_interno', include: [{model: criterio_evaluacion, as: 'criterios_de_evaluacion', include: [{model: criterio, as: 'ref_criterio'}]}]} , {model: Seguimiento, as: 'seguimiento'}, {model: revision_seguimiento, as: 'revisiones_seguimiento', include: [{model: Docente, as: 'docente'}]}]}, {model: Asesoria, as: 'asesorias', include: {model: solucion_recomendada, as: 'soluciones_recomendadas'}}, {model: observaciones, as: 'observaciones'}, {model: Anteproyecto, as: 'anteproyecto', include: [{model: Alumno, as: 'alumno'}, {model: Periodo, as: 'periodo'}]}]
+    }).then(_proyecto => {
+        res.status(200).json(_proyecto)
+    }).catch(Sequelize.ValidationError, (err) => {
+        var errores = err.errors.map((element) => {
+            return `${element.path}: ${element.message}`
+        })
+        // console.log('==>', errores)
+        res.status(202).json({errores})
+    }).catch((err) => {
+        console.log(err)
+        res.status(406).json({err: err})
+    })
+}
+
+module.exports.getProyectoRevisionSeguimientos = (req, res) => {
+    const id_proyecto = req.params.id_proyecto;
+    // console.log('AQUINOMAS');
+    Proyecto.findOne({
+        where: {id: id_proyecto},
+        include: [{model: seguimiento_proyecto, as: 'seguimientos_proyecto', include: [{model: Seguimiento, as: 'seguimiento'}, {model: revision_seguimiento, as: 'revisiones_seguimiento', include: [{model: Docente, as: 'docente'}]}]}, {model: Asesoria, as: 'asesorias', include: {model: solucion_recomendada, as: 'soluciones_recomendadas'}}, {model: observaciones, as: 'observaciones'}, {model: Anteproyecto, as: 'anteproyecto', include: [{model: Alumno, as: 'alumno'}, {model: Periodo, as: 'periodo'}]}]
+    }).then(_proyecto => {
         res.status(200).json(_proyecto)
     }).catch(Sequelize.ValidationError, (err) => {
         var errores = err.errors.map((element) => {

@@ -15,7 +15,7 @@ export default class ProyectosDeResidencia extends Component{
             proyectos: props.proyectos,
             usuario: props.usuario,
             renderProyecto: null,
-            id_alumno: null,
+            id_proyecto: null,
             spin: false,
         }
     }
@@ -24,21 +24,21 @@ export default class ProyectosDeResidencia extends Component{
             proyectos: nextProps.proyectos,
             usuario: props.usuario,
             renderProyecto: null,
-            id_alumno: null,
+            id_proyecto: null,
             spin: false
         })
     }
 
     
-    onChangeResidente = (id_alumno) => {
+    onChangeResidente = (id_proyecto) => {
         this.setState({spin: true});
-        axios.get(`/api/alumno/${id_alumno}/proyecto`)
+        axios.get(`/api/alumno/proyecto_para_asesor_externo/${id_proyecto}`)
             .then((res) => {
                 if(res.status === 200){
                     // console.warn('proyecto', res.data)
                     this.setState({
                         renderProyecto:(<Proyecto key={uuid.v4()} updateProyecto={this.updateProyecto.bind(this)} proyecto={res.data} usuario={this.state.usuario}/>),
-                        id_alumno,
+                        id_proyecto,
                         spin: false,
                     })
                 }
@@ -46,7 +46,7 @@ export default class ProyectosDeResidencia extends Component{
     }
     updateProyecto = () => {
         this.setState({spin: true});
-        axios.get(`/api/alumno/${this.state.id_alumno}/proyecto`)
+        axios.get(`/api/alumno/proyecto_para_asesor_externo/${this.state.id_proyecto}`)
         .then((res) => {
             if(res.status === 200){
                 // console.warn('proyecto', res.data)
@@ -60,7 +60,7 @@ export default class ProyectosDeResidencia extends Component{
 
     render(){
         const {proyectos, renderProyecto, spin} = this.state
-        // console.warn(')>', proye)
+        // console.warn(')>', proyectos)
         return (
             <Row>
                 <Col xs={24} lg={24}>
@@ -74,7 +74,7 @@ export default class ProyectosDeResidencia extends Component{
                     >
                         {proyectos.map((proyecto, index) => {
                             return (
-                                <Option key={uuid.v4()} value={`${proyecto.anteproyecto.alumno.id}`}>{`${proyecto.anteproyecto.alumno.no_control} - ${proyecto.anteproyecto.alumno.nombre} ${proyecto.anteproyecto.alumno.ap_paterno} ${proyecto.anteproyecto.alumno.ap_materno}`}</Option>
+                                <Option key={uuid.v4()} value={`${proyecto.id}`}>{`${proyecto.anteproyecto.alumno.no_control} - ${proyecto.anteproyecto.alumno.nombre} ${proyecto.anteproyecto.alumno.ap_paterno} ${proyecto.anteproyecto.alumno.ap_materno}`}</Option>
                             )
                         })}
                     </Select>
