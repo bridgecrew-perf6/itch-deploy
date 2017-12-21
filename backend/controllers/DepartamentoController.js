@@ -24,10 +24,10 @@ module.exports.findById = (req, res) => {
 }
 module.exports.findAll = (req, res) => {
     Departamento.findAll({include: [{model: Carrera, as: 'carreras'}, {model: Docente, as: 'docentes', include: [{model: Usuario, as: 'usuario', attributes: ['rol']}]}]})
-        .then(departamentos => {
+        .then((departamentos) => {
             res.status(200).json(departamentos);
         }).catch(err => {
-            console.log(err)
+            // console.log(err)
             res.status(406).json({err: err});
         });
 }
@@ -52,7 +52,7 @@ module.exports.test = (req, res) => {
     sequelize.query(`select * from usuarios right join docentes on usuarios.id = docentes.id_usuario where usuarios.rol='docente'`, {model: Usuario})
         .then(usuarios => {
             usuarios.forEach((usuario => {
-                console.log(usuario.id);
+                // console.log(usuario.id);
                 usuario.update({rol: rol.JEFE_DEPARTAMENTO});
             }))
             
@@ -62,7 +62,7 @@ module.exports.update = (req, res) => {
     // console.log(req.body);
     const id_departamento = req.params.id,  
         nombre = req.body.nombre_departamento,
-        id_usuario = req.body.id_jefe_departamento
+        id_usuario = req.body.id_jefe_departamento;
     sequelize.transaction(t => {
         return Departamento.update({nombre}, {where: {id: id_departamento}}, {transaction: t})
             .then(departamento => {

@@ -302,7 +302,6 @@ module.exports.updateDatosAnteproyecto = (req, res) => {
 
 
 module.exports.getAnteproyecto = (req, res) => {
-    // el alumno puedo cambiar su id jeje
     const id_alumno = req.params.id;
     Anteproyecto.findOne({where: {id_alumno}, include: [{model: revision_anteproyecto, as: 'revisiones', include: [{model: Docente, as: 'docente'}]},{model: Alumno, as: 'alumno'}, {model: Periodo, as: 'periodo'}, {model: asesor_externo, as: 'asesor_externo'}]})
         .then(anteproyecto => {

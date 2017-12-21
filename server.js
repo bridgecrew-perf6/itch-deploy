@@ -13,7 +13,7 @@ var numCPUs = require('os').cpus().length;
 var ClusterStore = require('strong-cluster-connect-store')(session);
 if(cluster.isMaster){
     // CronJob
-require('./backups/cron');
+    require('./backups/cron');
     ClusterStore.setup();
     for(var i = 0; i < numCPUs; i++){
         cluster.fork()
@@ -49,9 +49,6 @@ require('./backups/cron');
     
     // ROUTES
     require('./backend/routes')(app, express, passport);
-    
-    // sync db
-    // db.sync();
     app.listen(PORT, () => {
         console.log(`servidor levantado en el puerto ${PORT}` );
     })

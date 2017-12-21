@@ -10,6 +10,7 @@ const alumnoController = require('./controllers/AlumnoController');
 const periodoController = require('./controllers/PeriodoController');
 const anteproyectoController = require('./controllers/AnteproyectoController')
 const proyectoController = require('./controllers/ProyectoController');
+
 module.exports =  (app, express, passport) => {
    
     const router = express.Router();
@@ -285,7 +286,7 @@ module.exports =  (app, express, passport) => {
 
 
         
-    app.use('/api',router);
+    app.use('/api', router);
      // Redirect trafict to react app
      app.get('*', (req, res) => {
         res.render('index');
