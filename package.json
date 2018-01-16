@@ -62,6 +62,7 @@
   "scripts": {
     "start": "nodemon server.js",
     "dev": "concurrently \"nodemon server.js\" \"webpack -w\"",
-    "db": "sequelize db:migrate:undo:all && sequelize db:migrate && sequelize db:seed:all"
+    "db": "sequelize db:migrate:undo:all && sequelize db:migrate && sequelize db:seed:all",
+    "db-deploy": "sequelize db:migrate && sequelize db:seed --seed 20170918032636-create-admin.js 20170926023708-tipo_de_seguros.js 20171116031737-init_criterios.js"
   }
 }
