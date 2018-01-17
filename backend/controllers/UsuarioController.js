@@ -35,21 +35,25 @@ module.exports.findJefeDepartamento = (req, res) => {
 module.exports.updateContrasenia = (req, res) => {
 	const contrasenia = req.body.nueva_contrasenia;
 	const id_usuario = req.user.id;
-	const contraseniaHash = generateHash(contrasenia)
-	// console.log(id_usuario, contrasenia);
-	Usuario.update({contrasenia: contraseniaHash}, {where: {id: id_usuario}})
-		.then(usuario => {
-			// console.log('=>',departamento)
-			res.status(200).json(usuario)
-		}).catch(Sequelize.ValidationError, (err) => {
-			var errores = err.errors.map((element) => {
-				return `${element.path}: ${element.message}`
+	if(req.user.rol === 'admin' || req.user.id === id_usuario){
+		const contraseniaHash = generateHash(contrasenia)
+		// console.log(id_usuario, contrasenia);
+		Usuario.update({contrasenia: contraseniaHash}, {where: {id: id_usuario}})
+			.then(usuario => {
+				// console.log('=>',departamento)
+				res.status(200).json(usuario)
+			}).catch(Sequelize.ValidationError, (err) => {
+				var errores = err.errors.map((element) => {
+					return `${element.path}: ${element.message}`
+				})
+				// console.log('==>', errores)
+				res.status(202).json({errores})
+			}).catch((err) => {
+				res.status(406).json({err: err})
 			})
-			// console.log('==>', errores)
-			res.status(202).json({errores})
-		}).catch((err) => {
-			res.status(406).json({err: err})
-		})
+	}else{
+		res.status(406).json({err: 'Error no le pertenece esta cuenta :@'});
+	}
 }
 
 module.exports.updateContraseniaEmail = (req, res) => {
