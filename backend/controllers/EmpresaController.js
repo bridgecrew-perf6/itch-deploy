@@ -1,11 +1,12 @@
 const Empresa = require('../models').Empresa
+const Titular = require('../models').Titular
 const Sequelize = require('../models').Sequelize
 const sequelize = require('../models').sequelize
 const asesor_externo = require('../models').asesor_externo
 
 module.exports.findAll = (req, res) => {
     // {include: [{model: asesor_externo, as: 'asesores_externos'}]}
-    Empresa.findAll({include: [{model: asesor_externo, as: 'asesor_externos'}]})
+    Empresa.findAll({include: [{model: asesor_externo, as: 'asesor_externos'}, {model: Titular, as: 'titular'}, {model: Titular, as: 'representante_legal'}]})
         .then(empresas => {
             res.status(200).json({empresas})
         }).catch(err => {

@@ -70,11 +70,14 @@ class Empresa extends Component{
             .then(res => {
                 if(res.status === 200){
                     var empresas = res.data.empresas.map((empresa, index) => {
+                        // console.log('EMPRESA: ', empresa);
                         return {
                             key: index,
                             id: empresa.id, 
                             nombre: empresa.nombre, 
                             clasificacion: empresa.clasificacion,
+                            titular: empresa.titular,
+                            representante_legal: empresa.representante_legal,
                             detalles: {
                                 rfc: empresa.rfc,
                                 domicilio: `${empresa.domicilio} colonia ${empresa.colonia}`,

@@ -38,21 +38,13 @@ module.exports = {
       fax: {
         type: Sequelize.STRING(15)
       },
-      nombre_titular: {
-        type: Sequelize.STRING(150),
-        allowNull: false
+      id_titular: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
       },
-      puesto_titular: {
-        type: Sequelize.STRING(50),
-        allowNull: false
-      },
-      nombre_firma_acuerdo: {
-        type: Sequelize.STRING(150),
-        allowNull: false
-      },
-      puesto_firma_acuerdo: {
-        type: Sequelize.STRING(50),
-        allowNull: false
+      id_representante_legal: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
@@ -63,6 +55,7 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
+
   },
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable('Empresas');

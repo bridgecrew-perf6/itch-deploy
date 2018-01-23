@@ -35,4 +35,5 @@ module.exports = (sequelize, DataTypes) => {
         usuario.contrasenia = generateHash(usuario.contrasenia);
   });
   return Usuario;
+  
 };

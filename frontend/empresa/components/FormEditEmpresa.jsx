@@ -11,9 +11,9 @@ const CreateFormEditEmpresa = Form.create()(
     (props => {
         const { visible, onCancel, onCreate, form, empresa} = props;
         const { getFieldDecorator} = form;
-        console.log('asas', empresa);
+        // console.log('asas', empresa);
         const prefixSelectorTituloTitular = getFieldDecorator('titulo_titular', {
-            initialValue: 'ING.',
+            initialValue: empresa.titular ? empresa.titular.titulo : 'ING.',
           })(
             <Select style={{ width: 60 }}>
               <Option value="ING.">ING.</Option>
@@ -34,7 +34,7 @@ const CreateFormEditEmpresa = Form.create()(
             </Select>
           );
           const prefixSelectorTituloFirmaElAcuerdo = getFieldDecorator('titulo_firma_acuerdo', {
-            initialValue: 'ING.',
+            initialValue: empresa.representante_legal ? empresa.representante_legal.titulo : 'ING.',
           })(
             <Select style={{ width: 60 }}>
               <Option value="ING.">ING.</Option>
@@ -120,7 +120,7 @@ const CreateFormEditEmpresa = Form.create()(
                             <FormItem label="Puesto del titular" hasFeedback>
                                 {getFieldDecorator('puesto_titular', {
                                     rules: [{required: true, message: 'El titular debe tener un puesto.'}],
-                                    initialValue: empresa.detalles ? empresa.detalles.puesto_titular : '' 
+                                    initialValue: empresa.titular ? empresa.titular.puesto : '' 
                                 })(<Input placeholder="Puesto del titular"/>)}
                             </FormItem>
                         </Col>
@@ -128,7 +128,7 @@ const CreateFormEditEmpresa = Form.create()(
                             <FormItem label="Nombre completo del titular" hasFeedback>
                                 {getFieldDecorator('nombre_titular', {
                                     rules: [{required: true, message: 'El titular debe tener un nombre.'}],
-                                    initialValue: empresa.detalles ? empresa.detalles.nombre_titular : '' 
+                                    initialValue: empresa.titular ? empresa.titular.nombre : '' 
                                 })(<Input addonBefore={prefixSelectorTituloTitular} placeholder="Nombre completo del titular"/>)}
                             </FormItem>
                         </Col>
@@ -138,7 +138,7 @@ const CreateFormEditEmpresa = Form.create()(
                             <FormItem label="Puesto del que firma el acuerdo" hasFeedback>
                                 {getFieldDecorator('puesto_firma_acuerdo', {
                                     rules: [{required: true, message: 'El que firma el acuerdo debe tener un puesto.'}],
-                                    initialValue: empresa.detalles ? empresa.detalles.puesto_firma_acuerdo : '' 
+                                    initialValue: empresa.representante_legal ? empresa.representante_legal.puesto : '' 
                                 })(<Input placeholder="Puesto del que firma el acuerdo"/>)}
                             </FormItem>
                         </Col>
@@ -146,7 +146,7 @@ const CreateFormEditEmpresa = Form.create()(
                             <FormItem label="Nombre completo del que firma el acuerdo de colaboración" hasFeedback>
                                 {getFieldDecorator('nombre_firma_acuerdo', {
                                     rules: [{required: true, message: 'El que firma el acuerdo debe tener un nombre.'}],
-                                    initialValue: empresa.detalles ? empresa.detalles.nombre_firma_acuerdo : '' 
+                                    initialValue: empresa.representante_legal ? empresa.representante_legal.nombre : '' 
                                 })(<Input addonBefore={prefixSelectorTituloFirmaElAcuerdo} placeholder="Nombre completo del que firma el acuerdo de colaboración"/>)}
                             </FormItem>
                         </Col>
@@ -230,6 +230,7 @@ export default class FormEditEmpresa extends Component{
         this.form = form;
     }
     render(){
+        console.log('AQUI', this.state.empresa);
         return(
             <div>
                 <CreateFormEditEmpresa

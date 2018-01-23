@@ -33,41 +33,21 @@ module.exports = (sequelize, DataTypes) => {
     },
     fax: {
       type: DataTypes.STRING
-    },
-    nombre_titular: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-          notEmpty: {msg: 'El campo no debe estar vacio'}
-      }
-    },
-    puesto_titular: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-          notEmpty: {msg: 'El campo no debe estar vacio'}
-      }
-    },
-    nombre_firma_acuerdo: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-          notEmpty: {msg: 'El campo no debe estar vacio'}
-      }
-    },
-    puesto_firma_acuerdo: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-          notEmpty: {msg: 'El campo no debe estar vacio'}
-      }
     }
   });
   Empresa.associate = (models) => {
     Empresa.hasMany(models.asesor_externo, {
       foreignKey: 'id_empresa',
       as: 'asesor_externos'
-    })
+    });
+    Empresa.belongsTo(models.Titular, {
+      foreignKey: 'id_titular',
+      as: 'titular'
+    });
+    Empresa.belongsTo(models.Titular, {
+      foreignKey: 'id_representante_legal',
+      as: 'representante_legal'
+    });
   }
   return Empresa;
 };
