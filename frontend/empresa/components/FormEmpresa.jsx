@@ -87,7 +87,7 @@ const CreateFormEditEmpresa = Form.create()(
                                 <Select placeholder="Selecciona la clasificación de la empresa">
                                     <Option value="industrial">Industrial</Option>
                                     <Option value="servicios">Servicios</Option>
-                                    <Option value="publico">Publico</Option>
+                                    <Option value="público">Público</Option>
                                     <Option value="privado">Privado</Option>
                                 </Select>
                             )}
@@ -218,12 +218,14 @@ export default class FormEditEmpresa extends Component{
                 codigo_postal: values.codigo_postal || '',
                 fax: values.fax || '',
                 mision: values.mision || '',
+                titulo_titular: values.titulo_titular,
                 puesto_titular: values.puesto_titular,
-                nombre_titular: `${values.titulo_titular} ${values.nombre_titular}`,
+                nombre_titular: `${values.nombre_titular}`,
+                titulo_firma_acuerdo: values.titulo_firma_acuerdo,
                 puesto_firma_acuerdo: values.puesto_firma_acuerdo,
-                nombre_firma_acuerdo: `${values.titulo_firma_acuerdo} ${values.nombre_firma_acuerdo}`
+                nombre_firma_acuerdo: `${values.nombre_firma_acuerdo}`
             }).then((res) => {
-                console.log(res)
+                // console.log(res)
                 if(res.status === 200){
                     form.resetFields();
                     message.success("Empresa agregada satisfactoriamente")

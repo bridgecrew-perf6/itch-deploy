@@ -168,8 +168,8 @@ class Empresa extends Component{
                     <strong>Codigo postal</strong><p>{record.detalles.codigo_postal}</p>
                 </span>
                 <span>
-                    <strong>Nombre y puesto del titular de la empresa</strong><p>{`${record.detalles.nombre_titular} ${record.detalles.puesto_titular}`}</p>
-                    <strong>Nombre y puesto de quien firma el acuerdo con el ITCH</strong><p>{`${record.detalles.nombre_firma_acuerdo} ${record.detalles.puesto_firma_acuerdo}`}</p>
+                    <strong>Nombre y puesto del titular de la empresa</strong><p>{`${record.titular.titulo} ${record.titular.nombre} ${record.titular.puesto}`}</p>
+                    <strong>Nombre y puesto de quien firma el acuerdo con el ITCH</strong><p>{`${record.representante_legal.titulo} ${record.representante_legal.nombre} ${record.representante_legal.puesto}`}</p>
                 </span>
                 <Table style={{marginTop: 10}} title={() => 'Asesores externos de la empresa'} columns={columns} size="small" dataSource={record.detalles.asesores_externos.map((asesor, index) => {return {key: index, nombre: asesor.nombre,puesto: asesor.puesto}})}/>
             </div>

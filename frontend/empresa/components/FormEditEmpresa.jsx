@@ -200,10 +200,14 @@ export default class FormEditEmpresa extends Component{
                 codigo_postal: values.codigo_postal || '',
                 fax: values.fax || '',
                 mision: values.mision || '',
+                id_titular: empresa.titular.id,
+                titulo_titular: values.titulo_titular,
                 puesto_titular: values.puesto_titular,
-                nombre_titular: `${values.titulo_titular} ${values.nombre_titular}`,
+                nombre_titular: `${values.nombre_titular}`,
+                id_firma_acuerdo: empresa.representante_legal.id,
+                titulo_firma_acuerdo: values.titulo_firma_acuerdo,
                 puesto_firma_acuerdo: values.puesto_firma_acuerdo,
-                nombre_firma_acuerdo: `${values.titulo_firma_acuerdo} ${values.nombre_firma_acuerdo}`
+                nombre_firma_acuerdo: `${values.nombre_firma_acuerdo}`
             }).then((res) => {
                 console.log(res)
                 if(res.status === 200){
