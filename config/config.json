@@ -6,7 +6,8 @@
     "database":  "test_residencia",
     "host": "127.0.0.1",
     "dialect": "mysql",
-    "timezone": "-05:00"
+    "timezone": "-05:00",
+    "charset": 'utf8'
   },
   "production": {
     "username": "root",
@@ -14,6 +15,7 @@
     "database": "test_residencia",
     "host": "127.0.0.1",
     "dialect": "mysql",
-    "timezone": "-05:00"
+    "timezone": "-05:00",
+    "charset": 'utf8'
   }
 }
