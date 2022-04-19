@@ -13,10 +13,12 @@ module.exports.add = (req, res) => {
         id_empresa = req.body.id_empresa,
         correo = req.body.correo;
     sequelize.transaction((t) => {
+        console.log("contra del usuario gen: ", contrasenia);
         return Usuario.create({
             correo,
             contrasenia,
             rol: 'asesor_externo'
+            
         }, {transaction: t}).then((usuario) => {
             return AsesorExterno.create({
                 nombre,

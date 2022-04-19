@@ -42,8 +42,9 @@ if(cluster.isMaster){
     
     // AUTH
     app.use(session({store: new ClusterStore(), secret: '%$itch12$%', resave: true, saveUninitialized: true}));
-    app.use(passport.initialize());
+    app.use(passport.initialize()); 
     app.use(passport.session());
+    
     
     require('./config/passport/passport')(passport);
     

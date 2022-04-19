@@ -8,6 +8,8 @@ const bCrypt = require('bcrypt-nodejs');
 const generator = require('generate-password');
 const transporter = require('../../config/email');
 
+
+
 const rol = {
     JEFE_PROYECTO: 'jefe_proyecto',
     DOCENTE: 'docente',
@@ -22,6 +24,8 @@ const rol = {
 const generateHash = (contrasenia) => {
   return bCrypt.hashSync(contrasenia, bCrypt.genSaltSync(8), null);
 }
+
+
 
 module.exports.findJefeDepartamento = (req, res) => {
     const id_usuario = req.user.id;
@@ -100,6 +104,8 @@ module.exports.findAll = (req, res) => {
 		})
 }
 module.exports.isAuth = (req, res) => {
+
+	console.warn('auth: ', req.isAuthenticated())
 	if(req.isAuthenticated()){
 		console.warn('auth: ', req.user)
 		if(req.user.rol === rol.JEFE_DEPARTAMENTO || req.user.rol === rol.DOCENTE || req.user.rol==='subdirector_academico'){
@@ -134,7 +140,10 @@ module.exports.isAuth = (req, res) => {
 			res.status(203).json({isAuth: false});
 		}
 	}else{
+		console.warn(req.isAuthenticated())
+		//console.log("admin")
 		res.status(203).json({isAuth: false});
+		//res.status(200).json({isAuth: true, rol: 'admin'});
 	}
 }
 

@@ -19,14 +19,23 @@ module.exports = (passport) =>{
     }, 
         (req, correo, contrasenia, done) => {
             req.logout();
-            // console.log('======>', req.body.UUID);
+            console.log('======>', req.body.UUID);
+            console.log(">", UUID);
             if(req.body.UUID === UUID){
+                
                 var isValidContrasenia = (usuario_contrasenia, contrasenia) => {
+                    console.log(">", usuario_contrasenia);
+                    console.log(">", contrasenia);
                     return bCrypt.compareSync(contrasenia, usuario_contrasenia);
+                   
                 }
+                console.log("correo >", correo);
+
                 Usuario.findOne({ where: { correo: correo}})
                     .then(usuario => {
+                     //   console.log("usuario >", usuario);
                         if(!usuario){
+                           // console.log("usuario >", usuario);
                             return done(null, false, {message: 'El correo no existe'})
                         }
                         if(!isValidContrasenia(usuario.contrasenia, contrasenia)){

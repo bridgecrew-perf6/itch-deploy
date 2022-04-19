@@ -46,7 +46,7 @@ class LayoutAdmin extends Component{
     getIsAuth(){
         getIsAuth().then((usuario) => {
             if(usuario.rol === 'admin'){
-                // console.warn('isAdmin', usuario.rol);
+                 console.warn('isAdmin', usuario.rol);
                 this.setState({isAuth: usuario.isAuth})
             }
             else{

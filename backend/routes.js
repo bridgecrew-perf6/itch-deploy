@@ -10,15 +10,24 @@ const alumnoController = require('./controllers/AlumnoController');
 const periodoController = require('./controllers/PeriodoController');
 const anteproyectoController = require('./controllers/AnteproyectoController')
 const proyectoController = require('./controllers/ProyectoController');
+const { Passport, initialize } = require('passport');
+
+
+
+
+
 
 module.exports =  (app, express, passport) => {
    
     const router = express.Router();
+    
+    
     // USUARIO
     router.post('/usuario/auth', passport.authenticate('local-login',
         {
             successRedirect: '/api/usuario/isAuth',
             failureRedirect: '/api/usuario/isAuth'
+           
         }
     ))
 
@@ -27,7 +36,7 @@ module.exports =  (app, express, passport) => {
 
     router.put('/usuario/cambiar_contrasenia', isAuth, usuarioController.updateContrasenia);
     router.put('/usuario/cambiar_contrasenia/email', isAuth, isAdmin, usuarioController.updateContraseniaEmail); // isAuth
-    router.route('/usuarios')
+    router.route('  ')
         .get(isAuth, isAdmin, usuarioController.findAll);
 
     // DEPARTAMENTO
@@ -289,6 +298,7 @@ module.exports =  (app, express, passport) => {
     app.use('/api', router);
      // Redirect trafict to react app
      app.get('*', (req, res) => {
+        // console.log("que ondaaa")
         res.render('index');
     });
 
@@ -339,6 +349,7 @@ module.exports =  (app, express, passport) => {
     }
 
     function isAuth(req, res, next){
+       
         if(req.isAuthenticated())
             return next()
         res.status(203).json({error: "Necesita autenticarse"});

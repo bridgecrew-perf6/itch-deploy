@@ -24,11 +24,12 @@ class FormLogin extends Component{
                 .post('/api/usuario/auth')
                 .send({correo, contrasenia, UUID})
                 .end((err, res)=>{
-                    console.log(res)
+                    console.log("resultado para pasar : ",res.status)
                     if(res.status === 200 && res.body.isAuth === true){
                         // autenticado redirigir si es admin 
                         const rol = res.body.rol;
                         if(rol === 'admin'){
+                            console.log("xd")
                             this.setState({
                                 successAuth : <Redirect to="/admin"  />
                             })
@@ -53,9 +54,10 @@ class FormLogin extends Component{
                                 successAuth: <Redirect to="/residente"/>
                             })
                         }
-                        // console.log('asas', rol);
+                         console.log('asas', rol);
                         // redirigir a otros paths si es otro tipo de rol
                     }else{
+                        console.warn('asas', rol);
                         // error en la autenticación
                         this.setState({
                             successAuth: <Alert

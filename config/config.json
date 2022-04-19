@@ -2,20 +2,19 @@
   "PORT": 3000,
   "development": {
     "username": "root",
-    "password": "123456",
+    "password": "Password@123",
     "database":  "test_residencia",
     "host": "127.0.0.1",
     "dialect": "mysql",
-    "timezone": "-05:00",
-    "charset": 'utf8'
+    "timezone": "-05:00"
+    
   },
   "production": {
     "username": "root",
-    "password": "123456",
+    "password": "Password@123",
     "database": "test_residencia",
     "host": "127.0.0.1",
     "dialect": "mysql",
-    "timezone": "-05:00",
-    "charset": 'utf8'
-  }
+    "timezone": "-05:00"
+    }
 }
